@@ -1,0 +1,40 @@
+# PC CRT identities independently matched to hash-pinned VC6 LIBCMT members.
+# COFF contribution size can include embedded EH funclets; census retains their boundaries.
+rva	name	lib	confidence	source
+0x2bf840	??3@YAXPAX@Z	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2bfe55	_atexit	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2bff27	___CxxFrameHandler	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c026a	??_M@YGXPAXIHP6EX0@Z@Z	LIBCMT	HIGH	config/evidence/crt-array-iterators-verification.json; complete archive contribution and local SEH scope/funclet references checked; main and embedded helper extents recorded separately
+0x2c02ea	?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z	LIBCMT	HIGH	config/evidence/crt-array-iterators-verification.json; complete archive contribution and local SEH scope/funclet references checked; main and embedded helper extents recorded separately
+0x2c0348	?ArrayUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z	LIBCMT	HIGH	config/evidence/crt-array-iterators-verification.json; complete archive contribution and local SEH scope/funclet references checked; main and embedded helper extents recorded separately
+0x2c035e	??2@YAPAXI@Z	LIBCMT	HIGH	config/evidence/crt_identities.json; config/evidence/crt-new-identities-verification.json; full archive contribution and all outgoing relocation referents independently checked
+0x2c043b	??_L@YGXPAXIHP6EX0@Z1@Z	LIBCMT	HIGH	config/evidence/crt-array-iterators-verification.json; complete archive contribution and local SEH scope/funclet references checked; main and embedded helper extents recorded separately
+0x2c04c0	__ftol	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c04f0	__chkstk	LIBCMT	HIGH	config/evidence/crt_identities.json; unique complete 47-byte archive contribution, no relocations or masked bytes
+0x2c05f0	__CIpow	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c0816	_fclose	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c0900	_fopen	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c0920	__allshl	LIBCMT	HIGH	config/evidence/bitstream.json; actual archive member code is wholly byte-identical with no relocations
+0x2c0bb4	_time	LIBCMT	HIGH	config/evidence/crt-guid-verification.json; entire authentic VC6 archive contribution and closed code/data graph, actual import and named-forward identities independently reviewed
+0x2c0fa0	_memmove	LIBCMT	HIGH	config/evidence/crt-memmove-verification.json; entire genuine 821B contribution/all46 internal references plus independent fptostr/strlen caller graph
+0x2c12e0	__aullshr	LIBCMT	HIGH	config/evidence/bitstream.json; actual archive member code is wholly byte-identical with no relocations
+0x2c1550	__getpid	LIBCMT	HIGH	config/evidence/crt-guid-verification.json; entire authentic VC6 archive contribution and closed code/data graph, actual import and named-forward identities independently reviewed
+0x2c1556	_clock	LIBCMT	HIGH	config/evidence/crt-guid-verification.json; entire authentic VC6 archive contribution and closed code/data graph, actual import and named-forward identities independently reviewed
+0x2c15ce	_getenv	LIBCMT	HIGH	config/evidence/crt-guid-verification.json; entire authentic VC6 archive contribution and closed code/data graph, actual import and named-forward identities independently reviewed
+0x2c1670	__allshr	LIBCMT	HIGH	config/evidence/bitstream.json; actual archive member code is wholly byte-identical with no relocations
+0x2c16a0	_strstr	LIBCMT	HIGH	config/evidence/crt-strstr-verification.json; complete archive contribution and outgoing interior provider reference independently checked
+0x2c1720	_printf	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1761	_fread	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1790	__fread_lk	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1878	_fwrite	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c18a7	__fwrite_lk	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c19b1	_fseek	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1a6a	_ftell	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1bed	_fflush	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1d53	_free	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1e3c	_malloc	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c1e4e	__nh_malloc	LIBCMT	HIGH	config/evidence/crt_identities.json; config/evidence/crt-new-identities-verification.json; full archive contribution and all outgoing relocation referents independently checked
+0x2c1f76	_realloc	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
+0x2c22b0	__except_handler3	LIBCMT	HIGH	config/evidence/crt_identities.json; unique actual archive member code match with four checked relocation sites
+0x2c2388	_vsprintf	LIBCMT	HIGH	config/evidence/vsprintf.json; full actual archive member matched after mapping two verified call targets
+0x2c8050	_strchr	LIBCMT	HIGH	config/evidence/crt-strstr-verification.json; complete archive contribution and outgoing interior provider reference independently checked

@@ -1,0 +1,63 @@
+{
+  "pc": {
+    "archive_size": 1390517566,
+    "archive_member": "The Hobbit - Clean/Meridian.exe",
+    "local_header_offset": 1377019866,
+    "compressed_size": 1536366,
+    "uncompressed_size": 3551232,
+    "crc32": "192ea3c2",
+    "sha256": "631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2",
+    "downloaded_ranges": [
+      [
+        1390452030,
+        1390517565
+      ],
+      [
+        1377019866,
+        1378556292
+      ]
+    ],
+    "local_path": "build/orig/Meridian.exe"
+  },
+  "xbox": {
+    "archive_size": 1594075709,
+    "iso_size": 2177564672,
+    "root_entries": [
+      {
+        "name": "default.map",
+        "sector": 760841,
+        "size": 1901140,
+        "attributes": 32
+      },
+      {
+        "name": "default.xbe",
+        "sector": 761770,
+        "size": 2932736,
+        "attributes": 32
+      }
+    ],
+    "artifacts": [
+      {
+        "name": "default.map",
+        "sector": 760841,
+        "size": 1901140,
+        "attributes": 32,
+        "sha256": "4d958cd27e3dfd6e24bffdc66e527fde9802560e8cacc06170d2a9edf5a587f6",
+        "path": "build/orig/default.map",
+        "iso_member": "The Hobbit 2003 - XBOX.iso"
+      },
+      {
+        "name": "default.xbe",
+        "sector": 761770,
+        "size": 2932736,
+        "attributes": 32,
+        "sha256": "6c8404d2130ce5f73b92a3f3a2d135de8513c2a85b9932ccac6f6a3bfc9a0a19",
+        "path": "build/orig/default.xbe",
+        "iso_member": "The Hobbit 2003 - XBOX.iso"
+      }
+    ],
+    "archive_sha256": "4378e0058f2918bab3cbc3a6bdc4434774850bdf8fa050f26a0e53c3893e43e9",
+    "iso_sha256": "590bd17c50088bf58b63ca00d900a20a7a9fc029b5d97bc81e93b6400c484173"
+  },
+  "publication_note": "Input identities and extraction coordinates only. Supply your own files; acquisition links and original payloads are not published."
+}

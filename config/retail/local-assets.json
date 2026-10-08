@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "default_bitmap": [
+    {
+      "file": "DefaultBMP_clut.inc",
+      "rva": "0x00338328",
+      "count": 256,
+      "width": 4,
+      "sha256": "e32b43e5248645c43d821a49e8c64b37f522ff1e59779ddb5b6bcb1a05feefd0"
+    },
+    {
+      "file": "DefaultBMP_pixels.inc",
+      "rva": "0x00338728",
+      "count": 16384,
+      "width": 1,
+      "sha256": "b37bbf25ceceb2646bb121bb4be62a80e4fc3f54248cdef5baa6971fdda14f2e"
+    }
+  ],
+  "sibling_assets": {
+    "ps2_font": {
+      "source": "area51/xCore/Entropy/PS2/ps2_font.cpp",
+      "source_sha256": "cc2176ad8d7a1ffbfc696dabbe4c673708e8f416c9ca2ae7c405e590beec5bbc",
+      "arrays": [
+        {
+          "name": "Clut",
+          "type": "u32",
+          "file": "ps2_font_Clut.inc",
+          "count": 256,
+          "width": 4,
+          "sha256": "86324115fe9d1951ea71af15c401c771fd4b10866ef3d2f0237079967abfeb1a"
+        },
+        {
+          "name": "Data",
+          "type": "byte",
+          "file": "ps2_font_Data.inc",
+          "count": 65536,
+          "width": 1,
+          "sha256": "16c1940e5a30ce7337fb2ba125a1dc6a1b69b97a5b48ca6b51484cbc222537b2"
+        }
+      ]
+    },
+    "gcn_card": {
+      "source": "area51/xCore/Entropy/MemCard/memcard_gcn.cpp",
+      "source_sha256": "6ac9c1499fb87b211e38a52e66b526be4d21829999ee220ea5b215d59b210048",
+      "arrays": [
+        {
+          "name": "s_CardIcon",
+          "type": "u8",
+          "file": "gcn_card_s_CardIcon.inc",
+          "count": 2048,
+          "width": 1,
+          "sha256": "08f1902e6fd62c130e30efa76165134965745d80b2933b3c7a2c9e71151e4e65"
+        }
+      ]
+    },
+    "ps2_noise": {
+      "source": "area51/Support/Render/ps2_post.cpp",
+      "source_sha256": "9f6f5d3daa38b78792a85b7248a3140497245291ad32107a11545bd15c915388",
+      "arrays": [
+        {
+          "name": "s_NoiseMap",
+          "type": "u32",
+          "file": "ps2_noise_s_NoiseMap.inc",
+          "count": 512,
+          "width": 4,
+          "sha256": "97ffa5a3fdefab433f066610413afbc312ee95c35b65507bfaa8400003471249"
+        }
+      ]
+    },
+    "xbox_noise": {
+      "source": "area51/Support/Render/xbox_Post.inl",
+      "source_sha256": "024c41e6c21a51859622827a4b6b926205febf64891c71d77454ca474cbb0fe2",
+      "arrays": [
+        {
+          "name": "s_NoiseMap",
+          "type": "u32",
+          "file": "xbox_noise_s_NoiseMap.inc",
+          "count": 512,
+          "width": 4,
+          "sha256": "97ffa5a3fdefab433f066610413afbc312ee95c35b65507bfaa8400003471249"
+        }
+      ]
+    },
+    "audio_notfound": {
+      "source": "area51/xCore/Entropy/Audio/Debug/NotFound_gcn.hpp",
+      "source_sha256": "bc32623d556e8d0f3db5ef1410fc325c2eacc03761e966edc7a0827772520948",
+      "arrays": [
+        {
+          "name": "AUDIO_WARN_NOTFOUND",
+          "type": "unsigned char",
+          "file": "audio_notfound.inc",
+          "count": 6688,
+          "width": 1,
+          "sha256": "a38d10b9b82dd09c2aefdd384d70f22341279fc746bd15ded490854e1241e530"
+        }
+      ]
+    },
+    "audio_notloaded": {
+      "source": "area51/xCore/Entropy/Audio/Debug/NotLoaded_gcn.hpp",
+      "source_sha256": "389e1cb74ed6cbd30f6233d55925b3104ca2e1576fb1686097c029b339790394",
+      "arrays": [
+        {
+          "name": "AUDIO_WARN_NOTLOADED",
+          "type": "unsigned char",
+          "file": "audio_notloaded.inc",
+          "count": 5920,
+          "width": 1,
+          "sha256": "4fda07a203757ee1debc78d19e1bf9c923861f7b554edb6abe46a4fd969d048f"
+        }
+      ]
+    }
+  }
+}

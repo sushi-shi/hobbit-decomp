@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+"""Enter the Gruntz-derived shell while new files are still untracked.
+
+Nix's git source ignores untracked patches; path:. includes mutable ignored
+Wine prefixes. Snapshot only the environment definition into ignored build/.
+Normal `nix develop` is sufficient after the environment files are tracked.
+"""
+from pathlib import Path
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+
+repo = Path(__file__).resolve().parents[1]
+build = repo / "build"
+build.mkdir(exist_ok=True)
+# Per-invocation snapshot prevents parallel workers changing a Nix input while
+# Nix hashes it. It is small and automatically removed when the shell exits.
+with tempfile.TemporaryDirectory(prefix="nix-shell-", dir=build) as temp:
+    snapshot = Path(temp)
+    for name in ("flake.nix", "flake.lock"):
+        shutil.copy2(repo / name, snapshot / name)
+    shutil.copytree(repo / "nix", snapshot / "nix")
+    result = subprocess.run(["nix", "develop", f"path:{snapshot}", *sys.argv[1:]], cwd=repo)
+    raise SystemExit(result.returncode)

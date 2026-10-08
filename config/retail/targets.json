@@ -1,0 +1,19 @@
+{
+  "game": {
+    "name": "Meridian.exe",
+    "size": 3551232,
+    "sha256": "631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2",
+    "env_var": "HOBBIT_EXE",
+    "option": "--exe"
+  },
+  "xbox": {
+    "name": "default.xbe",
+    "size": 2932736,
+    "sha256": "6c8404d2130ce5f73b92a3f3a2d135de8513c2a85b9932ccac6f6a3bfc9a0a19"
+  },
+  "xbox_map": {
+    "name": "default.map",
+    "size": 1901140,
+    "sha256": "4d958cd27e3dfd6e24bffdc66e527fde9802560e8cacc06170d2a9edf5a587f6"
+  }
+}

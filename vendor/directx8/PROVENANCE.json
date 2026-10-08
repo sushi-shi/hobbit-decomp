@@ -1,0 +1,89 @@
+{
+  "source_root": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/3rdParty/DirectX8",
+  "source_repository": "github.com/bisc67/AerialAssault",
+  "source_revision": "4aab7137",
+  "role": "Genuine Microsoft DirectX8 SDK declarations; source dependency, not a tooling donor or game-address oracle",
+  "files": [
+    {
+      "path": "d3d8.h",
+      "sha256": "3ca75d0512eb882de054bf8d93c1a25dc356e3681d83eaf4e15e7d46d2eb80b0"
+    },
+    {
+      "path": "d3d8caps.h",
+      "sha256": "63c845525b0c45dbaa704e7b6d34125f6ca2607b4f75b5456238b9e009d8893e"
+    },
+    {
+      "path": "d3d8types.h",
+      "sha256": "bc7ec50c5fdd8e0d052f26c3ea7d7fcadde058376e946ea1410ba2f912b4cf31"
+    },
+    {
+      "path": "d3dx8.h",
+      "sha256": "a63541672d376dd1b53e95c5de443b7d5748b8442f30577b9a266b750b148824"
+    },
+    {
+      "path": "d3dx8core.h",
+      "sha256": "653a2cce35a7809f0366d7ed9a6b29b4eb23a25494f5b55fe4d84a6690cef2b5"
+    },
+    {
+      "path": "d3dx8effect.h",
+      "sha256": "10acf7c2656e0469313d7b79ba71a04e90f5e6f9f2a9c0e390a070e7dc0912fd"
+    },
+    {
+      "path": "d3dx8math.h",
+      "sha256": "aca90687de9fe896597a61aa90fee64b56cabdd23fd384cd815a027ffae6d7c1"
+    },
+    {
+      "path": "d3dx8math.inl",
+      "sha256": "3c7705680947be816db0202a1073c993440f2353f2ecdce75e7c88554cab1397"
+    },
+    {
+      "path": "d3dx8mesh.h",
+      "sha256": "d9dde4905fb7fa6fe1136193c6861920824d9250db4b6cc23b3b7c07b41c1c53"
+    },
+    {
+      "path": "d3dx8shape.h",
+      "sha256": "391fa1ca04e029e494fd4228246f1bff327f2c5920abe92cf8a92c72f12e1095"
+    },
+    {
+      "path": "d3dx8tex.h",
+      "sha256": "175d6e45a795faf1c190bdfb83900fc3102e41b23e5f4cfbc79a4423d26a23de"
+    },
+    {
+      "path": "dinput.h",
+      "sha256": "abbe366581495567abd7bd2377ad5e9cdc846402688d2d52b65b0a56b71c7213"
+    },
+    {
+      "path": "dpaddr.h",
+      "sha256": "18eda40d29470b58603945d645281ca22f44ac99c37d3fa3f7d7dacd5fe9e518"
+    },
+    {
+      "path": "dplay8.h",
+      "sha256": "e33bbdac326d5518f9dd5e6d13bdd71ba502f80e870fcc7c2a2beadadee933dc"
+    },
+    {
+      "path": "dxfile.h",
+      "sha256": "fd0270781058d24dd7d96952d93057db2b1f71105a2aefeb163820bf6a1c662b"
+    },
+    {
+      "path": "dsound.h",
+      "sha256": "4c86f8461f01a3a73a7480d66c43ee905e0a98adb95d8dffb8243a2417abf73b"
+    }
+  ],
+  "canonical_destination_hashes": {
+    "vendor/directx8/d3d8.h": "3ca75d0512eb882de054bf8d93c1a25dc356e3681d83eaf4e15e7d46d2eb80b0",
+    "vendor/directx8/d3d8caps.h": "63c845525b0c45dbaa704e7b6d34125f6ca2607b4f75b5456238b9e009d8893e",
+    "vendor/directx8/d3d8types.h": "bc7ec50c5fdd8e0d052f26c3ea7d7fcadde058376e946ea1410ba2f912b4cf31",
+    "vendor/directx8/d3dx8.h": "a63541672d376dd1b53e95c5de443b7d5748b8442f30577b9a266b750b148824",
+    "vendor/directx8/d3dx8core.h": "653a2cce35a7809f0366d7ed9a6b29b4eb23a25494f5b55fe4d84a6690cef2b5",
+    "vendor/directx8/d3dx8effect.h": "10acf7c2656e0469313d7b79ba71a04e90f5e6f9f2a9c0e390a070e7dc0912fd",
+    "vendor/directx8/d3dx8math.h": "aca90687de9fe896597a61aa90fee64b56cabdd23fd384cd815a027ffae6d7c1",
+    "vendor/directx8/d3dx8math.inl": "3c7705680947be816db0202a1073c993440f2353f2ecdce75e7c88554cab1397",
+    "vendor/directx8/d3dx8mesh.h": "d9dde4905fb7fa6fe1136193c6861920824d9250db4b6cc23b3b7c07b41c1c53",
+    "vendor/directx8/d3dx8shape.h": "391fa1ca04e029e494fd4228246f1bff327f2c5920abe92cf8a92c72f12e1095",
+    "vendor/directx8/d3dx8tex.h": "175d6e45a795faf1c190bdfb83900fc3102e41b23e5f4cfbc79a4423d26a23de",
+    "vendor/directx8/dinput.h": "abbe366581495567abd7bd2377ad5e9cdc846402688d2d52b65b0a56b71c7213",
+    "vendor/directx8/dpaddr.h": "18eda40d29470b58603945d645281ca22f44ac99c37d3fa3f7d7dacd5fe9e518",
+    "vendor/directx8/dplay8.h": "e33bbdac326d5518f9dd5e6d13bdd71ba502f80e870fcc7c2a2beadadee933dc",
+    "vendor/directx8/dxfile.h": "fd0270781058d24dd7d96952d93057db2b1f71105a2aefeb163820bf6a1c662b"
+  }
+}

@@ -1,0 +1,36 @@
+# PC structural evidence; all addresses are PC RVAs.
+# Input SHA256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
+# Donor Gruntz 7d4bd55b99e32f084834d991badf7609889481f4; see scripts/hobbit/evidence/pc_structure.py.
+rva	type_descriptor_rva	decorated	base_offset	cd_offset	hierarchy_rva
+0x2fe0bc	0x337a34	.?AVanim_loader@@	0	0	0x2fe0ac
+0x2fe11c	0x337eb8	.?AVhead_track_controller@@	0	0	0x2fe10c
+0x2fe164	0x337efc	.?AVanim_track_controller@@	0	0	0x2fe154
+0x2fe190	0x337e98	.?AVtrack_controller@@	0	0	0x2fe180
+0x2fe1d4	0x34f2dc	.?AVVertexCache@@	0	0	0x2fe1c4
+0x2fe218	0x34f2f8	.?AVVertexCacheLine@@	0	0	0x2fe208
+0x2fe25c	0x34f318	.?AVProxyVB@@	0	0	0x2fe24c
+0x2fe2a4	0x34f330	.?AVDynamicVB@@	0	0	0x2fe294
+0x2fe2ec	0x34f348	.?AVStaticVB@@	0	0	0x2fe2dc
+0x2fe330	0x353b58	.?AVio_device@@	0	0	0x2fe320
+0x2fe378	0x353b70	.?AVio_device_dvd@@	0	0	0x2fe368
+0x2fe3d8	0x355c44	.?AVui_dialog@@	0	0	0x2fe3c8
+0x2fe404	0x355c2c	.?AVui_win@@	0	0	0x2fe3f4
+0x2fe468	0x355ca4	.?AVui_frame@@	0	0	0x2fe458
+0x2fe4b4	0x355cec	.?AVui_listbox@@	0	0	0x2fe4a4
+0x2fe500	0x355d34	.?AVui_check@@	0	0	0x2fe4f0
+0x2fe54c	0x355d60	.?AVui_slider@@	0	0	0x2fe53c
+0x2fe598	0x355dec	.?AVui_dlg_list@@	0	0	0x2fe588
+0x2fe5e4	0x355e1c	.?AVui_textbox@@	0	0	0x2fe5d4
+0x2fe630	0x355e4c	.?AVui_text@@	0	0	0x2fe620
+0x2fe67c	0x355e74	.?AVui_radio@@	0	0	0x2fe66c
+0x2fe6c8	0x355ea0	.?AVui_button@@	0	0	0x2fe6b8
+0x2fe70c	0x355ecc	.?AVui_font@@	0	0	0x2fe6fc
+0x2fe754	0x355f40	.?AVui_bitmap_font@@	0	0	0x2fe744
+0x2fe79c	0x355f60	.?AVui_truetype_font@@	0	0	0x2fe78c
+0x2fe7cc	0x355c88	.?AVui_control@@	0	0	0x2fe7bc
+0x2fe848	0x357dd8	.?AVlength_error@std@@	0	0	0x2fe838
+0x2fe880	0x357db8	.?AVlogic_error@std@@	0	0	0x2fe870
+0x2fe8d0	0x357df8	.?AVout_of_range@std@@	0	0	0x2fe8c0
+0x2fe918	0x357e80	.?AVtype_info@@	0	0	0x2fe908
+0x2fe948	0x357da0	.?AVexception@@	0	0	0x2fe938
+0x2fe990	0x35b238	.?AVhead_track_controller2@@	0	0	0x2fe980

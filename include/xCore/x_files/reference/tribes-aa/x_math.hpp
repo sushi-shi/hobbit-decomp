@@ -1,0 +1,1049 @@
+//==============================================================================
+//
+//  x_math.hpp
+//
+//==============================================================================
+
+#ifndef X_MATH_HPP
+#define X_MATH_HPP
+
+//==============================================================================
+//
+//  This file provides cross platform math support.  Lots of math support.  The
+//  following areas are present:
+//
+//    - Basic math functions.  Similar to standard C math library.
+//
+//    - Definition of PI.
+//    - Various radian support macros and definitions.
+//
+//    - radian ....................... Standard angular representation.                      
+//    - radian3 ...................... Orientation via roll, pitch, yaw.
+//
+//    - vector2, vector3, vector4
+//    - matrix4
+//  
+//    - plane
+//    - bbox ......................... Axis aligned bounding box
+//
+//  TO DO: m4 transposition, matrix3, triangle?
+//
+//==============================================================================
+
+//==============================================================================
+//  DISCUSSION OF MATRIX4
+//==============================================================================
+//  
+//  In the x_files, matrices are LOGICALLY represented as follows:
+//  
+//      +----+----+----+----+
+//      | Rx | Ry | Rz | Tx |
+//      |----+----+----+----|
+//      | Rx | Ry | Rz | Ty |
+//      |----+----+----+----|
+//      | Rx | Ry | Rz | Tz |
+//      |----+----+----+----|
+//      |  0 |  0 |  0 |  1 |
+//      +----+----+----+----+
+//  
+//  A "point" is a "column vector".  To transform a point using a matrix, the 
+//  point is "post-multiplied" with the matrix.  Operations performed by a 
+//  sequence of matrix multiplications occur right to left.  Thus:
+//  
+//      |X|     | M |     | M |     | M |     |x|
+//      |Y|  =  |op3|  *  |op2|  *  |op1|  *  |y|
+//      |Z|     |   |     |   |     |   |     |z|
+//  
+//  Looking at it mathematically:
+//  
+//      |X|   |5 2 3|   |x|                       X = 5x + 2y + 3z   
+//      |Y| = |7 6 1| * |y|          and          Y = 7x + 6y + 1z   
+//      |Z|   |8 4 9|   |z|                       Z = 8x + 4y + 9z   
+//                         
+//  Note that this logical representation of matrices is the more common form
+//  used in recent books and literature regarding 3D graphics.
+//  
+//==============================================================================
+//  
+//------------------------------------------------------------------------------
+//  WARNING -- THE PHYSICAL LAYOUT OF MATRIX4 IS CHANGING!  
+//             DO NOT RELY UPON THIS COMMENT SECTION!
+//------------------------------------------------------------------------------
+//X 
+//X 
+//X Matrices are PHYSICALLY stored with the following linear memory layout:
+//X 
+//X          0    1    2    3   
+//X       +----+----+----+----+      +----+----+----+----+
+//X     0 | 00 | 04 | 08 | 12 |      | Rx | Ry | Rz | Tx |      Tx = M[12]
+//X       |----+----+----+----|      |----+----+----+----|      Tx = M[3][0]
+//X     1 | 01 | 05 | 09 | 13 |      | Rx | Ry | Rz | Ty |
+//X       |----+----+----+----|      |----+----+----+----|
+//X     2 | 02 | 06 | 10 | 14 |      | Rx | Ry | Rz | Tz |
+//X       |----+----+----+----|      |----+----+----+----|
+//X     3 | 03 | 07 | 11 | 15 |      |  0 |  0 |  0 |  1 |
+//X       +----+----+----+----+      +----+----+----+----+
+//X 
+//X The data within a matrix4 is stored as a two dimensional array.
+//X 
+//X     f32 M[4][4];
+//X 
+//X Matrix elements are accessed via M[col][row].  Note that this differs from 
+//X the way elements are normally accessed in standard 2D arrays in C/C++.  So,
+//X the "Tx" element is M[3][0].
+//X 
+//X This representation is "assignment compatible" with 4x4 matrices in both
+//X OpenGL and DirectX.  For example:
+//X 
+//X     matrix4 M;
+//X 
+//X     glMatrixMode ( GL_MODELVIEW );
+//X     glLoadMatrixf( &M );
+//X 
+//X     SetTransform( D3DTRANSFORMSTATE_WORLD, &(D3DMATRIX(M)) );
+//X 
+//==============================================================================
+//  
+//  Given a matrix which transforms Source (SRC) space to a Destination (DST) 
+//  space, the following holds:
+//  
+//      +----+----+----+----+       R012 is SRC space X-axis in DST space
+//      | R0 | R3 | R6 | TX |       R345 is SRC space Y-axis in DST space
+//      |----+----+----+----|       R678 is SRC space Z-axis in DST space
+//      | R1 | R4 | R7 | TY |       
+//      |----+----+----+----|       TXYZ is SRC space origin in DST space
+//      | R2 | R5 | R8 | TZ |       
+//      |----+----+----+----|       R036 is DST space X-axis in SRC space
+//      |  0 |  0 |  0 |  1 |       R147 is DST space Y-axis in SRC space
+//      +----+----+----+----+       R258 is DST space Z-axis in SRC space
+//                                  
+//  Example:                        
+//                                  
+//      Given a matrix W2V which transforms from World space into View (or 
+//      camera) space.  What is a "line of sight" vector in World space?
+//  
+//      A "line of sight" unit vector is just a view space (0,0,1) expressed in
+//      world space.  From above, we know that "R258" is the destination (view) 
+//      space's z-axis in the source (world) space.  This is exactly what we 
+//      need.  So:
+//  
+//          vector3  LOS;           // Line Of Sight
+//          LOS.X = W2V(0,2);       // R2
+//          LOS.Y = W2V(1,2);       // R5
+//          LOS.Z = W2V(2,2);       // R8
+//  
+//      Similarly, the "view up" and "view left" can easily be extracted.  And
+//      these vectors can be useful for things like 3D sprites for particle 
+//      systems.
+//
+//==============================================================================
+
+//==============================================================================
+//  INCLUDES
+//==============================================================================
+
+#ifndef X_TYPES_HPP
+#include "x_types.hpp"
+#endif
+                 
+// This is included so inline routines can use asserts       
+#ifndef X_DEBUG_HPP
+#include "x_debug.hpp"
+#endif
+                        
+//==============================================================================
+//  TYPE DECLARATIONS
+//==============================================================================
+
+typedef f32 radian;
+
+struct  vector2;
+struct  vector3;
+struct  vector4;
+struct  radian3;
+struct  quaternion;
+class   matrix4;
+struct  plane;
+struct  bbox;
+
+//==============================================================================
+//  DEFINES
+//==============================================================================
+
+#ifdef PI
+#undef PI
+#endif
+#define PI  (3.14159265358979323846f)
+
+//------------------------------------------------------------------------------
+//
+//  Macros for radian angles:
+//
+//      RADIAN( degrees )       - Angle in radians, given angle in degrees.
+//      DEG_TO_RAD( degrees )   - Angle in radians, given angle in degrees.
+//      RAD_TO_DEG( radians )   - Angle in degrees, given angle in radians.
+//
+//      R_0, R_1, ... R_360     - Angles in radians of all integral degree 
+//                                angles from 0 to 360.
+//
+//  As an aside:  Note that "R_0" means "no rotation" whereas "0.0f" just means
+//  "zero".  What's the difference?  None to the compiler.  But "R_0" gives more
+//  information to anybody reading the code.  Think of it as "strong typing".
+//
+//------------------------------------------------------------------------------
+
+#define RADIAN(A)     ((f32)((((A) * PI) / 180.0f)))
+#define DEG_TO_RAD(A) ((f32)((((A) * PI) / 180.0f)))
+#define RAD_TO_DEG(A) ((f32)((((A) * 180.0f) / PI)))
+
+#define R_0     RADIAN(   0 )
+#define R_1     RADIAN(   1 )
+#define R_2     RADIAN(   2 )
+#define R_3     RADIAN(   3 )
+#define R_4     RADIAN(   4 )
+#define R_5     RADIAN(   5 )
+//
+// Definitions for R_6 through R_354 are in x_math_inline.hpp.
+//
+#define R_355   RADIAN( 355 )
+#define R_356   RADIAN( 356 )
+#define R_357   RADIAN( 357 )
+#define R_358   RADIAN( 358 )
+#define R_359   RADIAN( 359 )
+#define R_360   RADIAN( 360 )
+
+//==============================================================================
+//  BASIC MATH FUNCTIONS
+//==============================================================================
+//
+//  These functions are patterned after the comperable ANSI standard C library 
+//  functions.  However...
+//
+//  *** ATTENTION ***  These functions all operate on floats (f32)!  
+//                     Not doubles (f64)!
+//
+//  x_sqrt      - Square root.
+//  x_floor     - Floor.
+//  x_ceil      - Ceiling.
+//  x_log       - Log base e.  Natural log.
+//  x_log10     - Log base 10.
+//  x_exp       - Raise e to a power.
+//  x_pow       - Raise a number to a power.
+//  x_fmod      - True modulus between two numbers.
+//  x_modf      - Break number into whole (integer) and fractional parts.
+//  x_frexp     - Break number into exponent and mantissa.
+//  x_ldexp     - Assemble number from exponent and mantissa.
+//                       
+//  Additional functions:
+//                
+//  x_sqr       - Square.
+//  x_1sqrt     - One over square root.  Optimized per platform.
+//  x_lpr       - Least Positive Residue.  Non-negative modulus value.
+//  x_abs       - Absolute value of any signed numeric type.
+//  x_log2      - Log base 2.
+//  x_round     - Round a number to nearest multiple of another number.
+//  x_isvalid   - Returns TRUE if value is valid (not INF or NAN).
+//
+//  SQR         - Simple macro to square a value.
+//
+//  The ANSI functions abs() and fabs() are both satisfied by x_abs() which 
+//  is overloaded for each signed numeric type.
+//
+//==============================================================================
+
+f32     x_abs       ( f32 a );
+f32     x_sqr       ( f32 a );
+f32     x_sqrt      ( f32 a );
+f32     x_1sqrt     ( f32 a );
+f32     x_floor     ( f32 a );
+f32     x_ceil      ( f32 a );
+f32     x_log       ( f32 a );
+f32     x_log2      ( f32 a );
+f32     x_log10     ( f32 a );
+f32     x_exp       ( f32 a );
+f32     x_pow       ( f32 a, f32 b );
+f32     x_fmod      ( f32 a, f32 b );
+f32     x_lpr       ( f32 a, f32 b );
+f32     x_round     ( f32 a, f32 b );
+f32     x_modf      ( f32 a, f32* pWhole );
+f32     x_frexp     ( f32 a, s32* pExp   );
+f32     x_ldexp     ( f32 a, s32   Exp   );
+
+xbool   x_isvalid   ( f32 a );
+
+#define SQR(a)  ((a) * (a))
+   
+//==============================================================================
+//  TRIGONOMETRIC MATH FUNCTIONS
+//==============================================================================
+//
+//  These functions are patterned after the comperable ANSI standard C library 
+//  functions.  However...
+//
+//  *** ATTENTION ***  These functions all operate on floats (f32)!  
+//                     Not doubles (f64)!
+//
+//  Pay careful attention to the use of f32 versus radian.
+//  
+//  x_sin          - Sine.
+//  x_cos          - Cosine.
+//  x_tan          - Tangent.
+//  x_asin         - Arc sine.
+//  x_acos         - Arc cosine.
+//  x_atan         - Arc tangent.
+//  x_atan2        - Standard "atan2" arc tangent where y can equal 0.
+//                
+//  Additional functions:
+//
+//  x_sincos       - Sine and cosine in one function call.
+//  x_ModAngle     - Provide equivalent angle in [    0, 360 ) degrees.
+//  x_ModAngle2    - Provide equivalent angle in [ -180, 180 ) degrees.
+//  x_MinAngleDiff - Provide smallest angle between two given angles.
+//
+//==============================================================================
+
+f32     x_sin           ( radian Angle   );
+f32     x_cos           ( radian Angle   );
+f32     x_tan           ( radian Angle   );
+radian  x_asin          ( f32    Sine    );
+radian  x_acos          ( f32    Cosine  );
+radian  x_atan          ( f32    Tangent );
+radian  x_atan2         ( f32 y, f32 x   );
+
+void    x_sincos        ( radian Angle, f32& Sine, f32& Cosine );
+radian  x_ModAngle      ( radian Angle );
+radian  x_ModAngle2     ( radian Angle );
+radian  x_MinAngleDiff  ( radian Angle1, radian Angle2 );
+
+//==============================================================================
+
+#include "Implementation/x_math_inline.hpp"
+
+//==============================================================================
+//  RADIAN3
+//==============================================================================
+
+struct radian3
+{
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    radian      Pitch,  Yaw,  Roll;
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+                                
+                        radian3             ( void ); 
+                        radian3             ( const radian3& R ); 
+                        radian3             ( radian Pitch, radian Yaw, radian Roll );
+                                            
+        void            Zero                ( void );
+
+        void            Set                 ( radian Pitch, radian Yaw, radian Roll );
+        void            operator ()         ( radian Pitch, radian Yaw, radian Roll );
+
+        void            ModAngle            ( void ) ;
+        void            ModAngle2           ( void ) ;
+        radian3         MinAngleDiff        ( const radian3& R ) const;
+
+        f32             Difference          ( const radian3& R ) const;
+        xbool           InRange             ( radian Min, radian Max ) const;
+        xbool           IsValid             ( void ) const;
+
+friend  radian3         r3_MinAngleDiff     ( const radian3& R1, const radian3& R2 );
+
+
+        radian3         operator -          ( void ) const;
+const   radian3&        operator =          ( const radian3& R );
+        radian3&        operator +=         ( const radian3& R );
+        radian3&        operator -=         ( const radian3& R );
+        radian3&        operator *=         ( f32 Scalar );
+        radian3&        operator /=         ( f32 Scalar );
+                                 
+        xbool           operator ==         ( const radian3& R ) const;
+        xbool           operator !=         ( const radian3& R ) const;
+                                 
+friend  radian3         operator +          ( const radian3& R1, const radian3& R2 );
+friend  radian3         operator -          ( const radian3& R1, const radian3& R2 );
+friend  radian3         operator /          ( const radian3& R,        f32      S  );
+friend  radian3         operator *          ( const radian3& R,        f32      S  );
+friend  radian3         operator *          (       f32      S,  const radian3& R  );
+
+
+};
+
+#include "Implementation/x_math_r3_inline.hpp"
+
+//==============================================================================
+//  VECTOR2
+//==============================================================================
+
+struct vector2
+{
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    f32     X, Y;                                                      
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                        vector2             ( void );
+                        vector2             ( const vector2& V );
+                        vector2             ( f32 X, f32 Y );
+                        vector2             ( radian Angle );
+        
+        void            Set                 ( f32 X, f32 Y );
+        void            operator ()         ( f32 X, f32 Y );
+
+        f32             operator []         ( s32 Index ) const;
+        f32&            operator []         ( s32 Index );
+
+        void            Zero                ( void );
+        void            Negate              ( void );
+        xbool           Normalize           ( void );
+        xbool           NormalizeAndScale   ( f32 Scalar );
+        void            Scale               ( f32 Scalar );
+        f32             Length              ( void ) const;
+        f32             LengthSquared       ( void ) const;
+        radian          Angle               ( void ) const;
+        f32             Difference          ( const vector2& V ) const;
+        xbool           InRange             ( f32 Min, f32 Max ) const;
+        xbool           IsValid             ( void ) const;
+                                            
+        void            Rotate              ( radian Angle );
+        
+        f32             Dot                 ( const vector2& V );
+friend  f32             v2_Dot              ( const vector2& V1, const vector2& V2 );
+
+                        operator const f32* ( void ) const;
+
+        vector2         operator -          ( void ) const;
+const   vector2&        operator =          ( const vector2& V );
+        vector2&        operator +=         ( const vector2& V );
+        vector2&        operator -=         ( const vector2& V );
+        vector2&        operator *=         ( f32 Scalar );
+        vector2&        operator /=         ( f32 Scalar );
+                                        
+        xbool           operator ==         ( const vector2& V ) const;
+        xbool           operator !=         ( const vector2& V ) const;
+                                
+friend  vector2         operator +          ( const vector2& V1, const vector2& V2 );
+friend  vector2         operator -          ( const vector2& V1, const vector2& V2 );
+friend  vector2         operator /          ( const vector2& V,        f32      S  );
+friend  vector2         operator *          ( const vector2& V,        f32      S  );
+friend  vector2         operator *          (       f32      S,  const vector2& V  );
+
+};                                          
+
+#include "Implementation/x_math_v2_inline.hpp"
+
+//==============================================================================
+//  VECTOR3
+//==============================================================================
+
+struct vector3
+{
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    f32     X, Y, Z;                                               
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                        vector3             ( void );                     
+                        vector3             ( const vector3& V );    
+                        vector3             ( f32 X, f32 Y, f32 Z ); 
+                        vector3             ( radian Pitch, radian Yaw );
+                        vector3             ( const radian3& R );
+                                            
+        void            Set                 ( radian Pitch, radian Yaw );
+        void            Set                 ( const radian3& R );
+
+        void            Set                 ( f32 X, f32 Y, f32 Z );
+        void            operator ()         ( f32 X, f32 Y, f32 Z );
+
+        f32             operator []         ( s32 Index ) const;
+        f32&            operator []         ( s32 Index );
+
+        void            Zero                ( void );                    
+        void            Negate              ( void );                    
+        xbool           Normalize           ( void );                    
+        xbool           NormalizeAndScale   ( f32 Scalar );
+        void            Scale               ( f32 Scalar );          
+        f32             Length              ( void ) const; 
+        f32             LengthSquared       ( void ) const; 
+        f32             Difference          ( const vector3& V ) const;
+        xbool           InRange             ( f32 Min, f32 Max ) const;
+        xbool           IsValid             ( void ) const;
+        
+        void            Rotate              ( const radian3& R );           
+        void            RotateX             ( radian Rx );           
+        void            RotateY             ( radian Ry );           
+        void            RotateZ             ( radian Rz );           
+        
+        f32             Dot                 ( const vector3& V ) const;
+        vector3         Cross               ( const vector3& V ) const;
+        vector3         Reflect             ( const vector3& Normal ) const;
+
+        f32             GetSqrtDistToLineSeg( const vector3& Start, const vector3& End ) const;
+        vector3         GetClosestPToLSeg   ( const vector3& Start, const vector3& End ) const;
+        vector3         GetClosestVToLSeg   ( const vector3& Start, const vector3& End ) const;
+
+friend  f32             v3_Dot              ( const vector3& V1, const vector3& V2 );
+friend  vector3         v3_Cross            ( const vector3& V1, const vector3& V2 );
+friend  vector3         v3_Reflect          ( const vector3& V,  const vector3& Normal );
+friend  radian          v3_AngleBetween     ( const vector3& V1, const vector3& V2 );
+
+        radian          GetPitch            ( void ) const;
+        radian          GetYaw              ( void ) const;
+        void            GetPitchYaw         ( radian& Pitch, radian& Yaw ) const;
+
+        // Returns axis and angle to rotate vector onto DestV
+        void            GetRotationTowards  ( const vector3& DestV,
+                                                    vector3& RotAxis, 
+                                                    radian&  RotAngle ) const;
+
+                        operator const f32* ( void ) const;
+        
+        vector3         operator -          ( void ) const;
+const   vector3&        operator =          ( const vector3& V );
+        vector3&        operator +=         ( const vector3& V );
+        vector3&        operator -=         ( const vector3& V );
+        vector3&        operator *=         ( f32 Scalar );
+        vector3&        operator /=         ( f32 Scalar );
+                                 
+        xbool           operator ==         ( const vector3& V ) const;
+        xbool           operator !=         ( const vector3& V ) const;
+                                 
+friend  vector3         operator +          ( const vector3& V1, const vector3& V2 );
+friend  vector3         operator -          ( const vector3& V1, const vector3& V2 );
+friend  vector3         operator /          ( const vector3& V,        f32      S  );
+friend  vector3         operator *          ( const vector3& V,        f32      S  );
+friend  vector3         operator *          (       f32      S,  const vector3& V  );
+
+};
+
+#include "Implementation/x_math_v3_inline.hpp"
+
+//==============================================================================
+//  VECTOR4
+//==============================================================================
+
+struct vector4
+{
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    f32     X, Y, Z, W;                                               
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                        vector4             ( void );                     
+                        vector4             ( const vector4& V );    
+                        vector4             ( f32 X, f32 Y, f32 Z, f32 W ); 
+                                            
+        void            Set                 ( f32 X, f32 Y, f32 Z, f32 W );
+        void            operator ()         ( f32 X, f32 Y, f32 Z, f32 W );
+
+        f32             operator []         ( s32 Index ) const;
+        f32&            operator []         ( s32 Index );
+
+        void            Zero                ( void );                    
+        void            Negate              ( void );                    
+        xbool           Normalize           ( void );                    
+        xbool           NormalizeAndScale   ( f32 Scalar );
+        void            Scale               ( f32 Scalar );          
+        f32             Length              ( void ) const; 
+        f32             LengthSquared       ( void ) const; 
+        f32             Difference          ( const vector4& V ) const;
+        xbool           InRange             ( f32 Min, f32 Max ) const;
+        xbool           IsValid             ( void ) const;
+        
+                        operator const f32* ( void ) const;
+        
+        vector4         operator -          ( void ) const;
+const   vector4&        operator =          ( const vector4& V );
+        vector4&        operator +=         ( const vector4& V );
+        vector4&        operator -=         ( const vector4& V );
+        vector4&        operator *=         ( f32 Scalar );
+        vector4&        operator /=         ( f32 Scalar );
+                                 
+        xbool           operator ==         ( const vector4& V ) const;
+        xbool           operator !=         ( const vector4& V ) const;
+                                 
+friend  vector4         operator +          ( const vector4& V1, const vector4& V2 );
+friend  vector4         operator -          ( const vector4& V1, const vector4& V2 );
+friend  vector4         operator /          ( const vector4& V,        f32      S  );
+friend  vector4         operator *          ( const vector4& V,        f32      S  );
+friend  vector4         operator *          (       f32      S,  const vector4& V  );
+
+};
+
+#include "Implementation/x_math_v4_inline.hpp"
+
+//==============================================================================
+//  QUATERNION
+//==============================================================================
+
+struct quaternion
+{
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    f32     X, Y, Z, W;
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                    quaternion      ( void );    
+                    quaternion      ( const quaternion& Q );
+                    quaternion      ( const radian3&    R );
+                    quaternion      ( const vector3& Axis, radian Angle );
+                    quaternion      ( f32 X, f32 Y, f32 Z, f32 W );
+                                    
+        void        Identity        ( void );
+        void        Zero            ( void );
+        
+        void        Invert          ( void );
+        void        Normalize       ( void );
+
+        void        Setup           ( const radian3& R );
+        void        Setup           ( const vector3& Axis, radian Angle );
+        void        Setup           ( const vector3& StartDir, const vector3& EndDir );
+        f32         Difference      ( const quaternion& Q ) const;
+        xbool       InRange         ( void ) const;
+        xbool       IsValid         ( void ) const;
+
+        vector3     GetAxis         ( void ) const;
+        radian      GetAngle        ( void ) const;
+
+        radian3     GetRotation     ( void ) const;
+
+        void        RotateX         ( radian Rx );
+        void        RotateY         ( radian Ry );
+        void        RotateZ         ( radian Rz );
+
+        void        PreRotateX      ( radian Rx );
+        void        PreRotateY      ( radian Ry );
+        void        PreRotateZ      ( radian Rz );
+
+        vector3     operator *      ( const vector3& V ) const;
+        vector3     Rotate          ( const vector3& V ) const;
+        void        Rotate          (       vector3* pDest, 
+                                      const vector3* pSource, 
+                                            s32      NVerts ) const;
+
+const   quaternion& operator =      ( const quaternion& Q );
+        quaternion& operator *=     ( const quaternion& Q );
+friend  quaternion  operator *      ( const quaternion& Qa, 
+                                      const quaternion& Qb );
+
+// These are the 'correct' traditional spherical blends
+
+friend  quaternion  BlendSlow       ( const quaternion& Q0, 
+                                      const quaternion& Q1, f32 T );
+
+friend  quaternion  BlendToIdentitySlow    ( const quaternion& Q1, f32 T );
+
+
+// These are fast 'cheap' blends 
+
+friend  quaternion  Blend           ( const quaternion& Q0, 
+                                      const quaternion& Q1, f32 T );
+
+friend  quaternion  BlendToIdentity ( const quaternion& Q1, f32 T );
+};
+
+#include "Implementation/x_math_q_inline.hpp"
+
+//==============================================================================
+//  MATRIX4
+//==============================================================================
+
+class matrix4
+{
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+public:
+
+                        matrix4             ( void );
+                        matrix4             ( const matrix4&    M );
+                        matrix4             ( const radian3&    R );
+                        matrix4             ( const quaternion& Q );
+                        
+                        matrix4             ( const vector3&    Scale,
+                                              const radian3&    Rotation,
+                                              const vector3&    Translation );
+
+                        matrix4             ( const vector3&    Scale,
+                                              const quaternion& Rotation,
+                                              const vector3&    Translation );
+
+        
+        f32             operator ()         ( s32 Column, s32 Row ) const;
+        f32&            operator ()         ( s32 Column, s32 Row );
+
+        void            Zero                ( void );
+        void            Identity            ( void );
+        void            Transpose           ( void );
+        void            Orthogonalize       ( void );
+        xbool           Invert              ( void );
+        xbool           InvertSRT           ( void );
+        xbool           InvertRT            ( void );
+        f32             Difference          ( const matrix4& M ) const;
+        xbool           InRange             ( f32 Min, f32 Max ) const;
+        xbool           IsValid             ( void ) const;
+
+        vector3         GetScale            ( void ) const;
+        radian3         GetRotation         ( void ) const;
+        vector3         GetTranslation      ( void ) const;
+        
+        void            ZeroScale           ( void );
+        void            ZeroRotation        ( void );
+        void            ZeroTranslation     ( void );
+
+        void            SetScale            (       f32         Scale );
+        void            SetScale            ( const vector3&    Scale );
+        void            SetRotation         ( const radian3&    Rotation );
+        void            SetRotation         ( const quaternion& Rotation );
+        void            SetTranslation      ( const vector3&    Translation );
+
+        void            Scale               (       f32         Scale );
+        void            Scale               ( const vector3&    Scale );
+        void            Rotate              ( const radian3&    Rotation );
+        void            Rotate              ( const quaternion& Rotation );
+        void            RotateX             (       radian      Rx );
+        void            RotateY             (       radian      Ry );
+        void            RotateZ             (       radian      Rz );
+        void            Translate           ( const vector3&    Translation );
+
+        void            PreScale            (       f32         Scale );
+        void            PreScale            ( const vector3&    Scale );
+        void            PreRotate           ( const radian3&    Rotation );
+        void            PreRotate           ( const quaternion& Rotation );
+        void            PreRotateX          (       radian      Rx );
+        void            PreRotateY          (       radian      Ry );
+        void            PreRotateZ          (       radian      Rz );
+        void            PreTranslate        ( const vector3&    Translation );
+        
+        void            GetRows             (       vector3& V1,       vector3& V2,       vector3& V3 ) const;
+        void            GetColumns          (       vector3& V1,       vector3& V2,       vector3& V3 ) const;
+        void            SetRows             ( const vector3& V1, const vector3& V2, const vector3& V3 );
+        void            SetColumns          ( const vector3& V1, const vector3& V2, const vector3& V3 );
+        
+        void            Setup               ( const vector3& V1, const vector3& V2, radian Angle );
+        void            Setup               ( const vector3& Axis,                  radian Angle );
+        void            Setup               ( const radian3& Rotation );
+        void            Setup               ( const quaternion& Q );
+        void            Setup               ( const vector3& Scale,
+                                              const radian3& Rotation,
+                                              const vector3& Translation );
+        void            Setup               ( const vector3&    Scale,
+                                              const quaternion& Rotation,
+                                              const vector3&    Translation );
+        
+        vector3         operator *          ( const vector3& V ) const;
+        vector4         operator *          ( const vector4& V ) const;
+
+        vector3         Transform           ( const vector3& V ) const;
+        void            Transform           (       vector3* pDest, 
+                                              const vector3* pSource, 
+                                                    s32      NVerts ) const;
+        vector4         Transform           ( const vector4& V ) const;
+        void            Transform           (       vector4* pDest, 
+                                              const vector4* pSource, 
+                                                    s32      NVerts ) const;
+
+        // Rotates vector by matrix rotation
+        // (ignores matrix translation, but it will scale the vector if the matrix contains a scale)
+        vector3         RotateVector        ( const vector3& V ) const;
+
+        // Inverse rotates vector by matrix rotation
+        // (ignores matrix translation, but it will scale the vector if the matrix contains a scale)
+        vector3         InvRotateVector     ( const vector3& V ) const;
+                                                
+const   matrix4&        operator =          ( const matrix4& M );
+        matrix4&        operator +=         ( const matrix4& M );
+        matrix4&        operator -=         ( const matrix4& M );
+        matrix4&        operator *=         ( const matrix4& M );
+                                        
+friend  matrix4         operator +          ( const matrix4& M1, const matrix4& M2 );
+friend  matrix4         operator -          ( const matrix4& M1, const matrix4& M2 );
+friend  matrix4         operator *          ( const matrix4& M1, const matrix4& M2 );
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+private:
+
+    f32     m_Cell[4][4];
+
+};
+
+#include "Implementation/x_math_m4_inline.hpp"
+
+//==============================================================================
+//  PLANE
+//==============================================================================
+
+struct plane
+{
+
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    vector3 Normal;
+    f32     D;
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                    plane           ( void );
+                    plane           ( const vector3& P1, 
+                                      const vector3& P2,
+                                      const vector3& P3 );
+                    plane           ( const vector3& Normal, f32 Distance );
+                    plane           ( f32 A, f32 B, f32 C, f32 D );
+                                    
+        void        Setup           ( const vector3& P1, 
+                                      const vector3& P2,
+                                      const vector3& P3 );
+        void        Setup           ( const vector3& Normal, f32 Distance );
+        void        Setup           ( const vector3& P, const vector3& Normal );
+        void        Setup           ( f32 A, f32 B, f32 C, f32 D );
+                                    
+        void        Negate          ( void );
+        void        Transform       ( const matrix4& M );
+                                    
+        f32         Dot             ( const vector3& P ) const;
+        f32         Distance        ( const vector3& P ) const;
+        xbool       InFront         ( const vector3& P ) const;
+        xbool       InBack          ( const vector3& P ) const;
+        void        ComputeD        ( const vector3& P );
+
+        f32         Difference      ( const plane& P ) const;
+        xbool       InRange         ( f32 Min, f32 Max ) const;
+        xbool       IsValid         ( void ) const;
+                                    
+        xbool       Intersect       (       f32&     t,
+                                      const vector3& P0, 
+                                      const vector3& P1 ) const;
+
+        void        GetComponents   ( const vector3& V,
+                                            vector3& Parallel,
+                                            vector3& Perpendicular ) const;
+
+        void        GetOrthoVectors ( vector3& AxisA,
+                                      vector3& AxisB ) const;
+                                    
+        vector3     ReflectVector   ( const vector3& V ) const;
+
+        xbool       ClipNGon        (       vector3* pDst, s32& NDstVerts, 
+                                      const vector3* pSrc, s32  NSrcVerts ) const;
+
+        void        GetBBoxIndices  ( s32* pMinIndices, s32* pMaxIndices ) const;
+
+friend  plane       operator *      ( const matrix4& M, const plane& Plane );
+
+};
+
+#include "Implementation/x_math_p_inline.hpp"
+
+//==============================================================================
+//  BBOX
+//==============================================================================
+
+struct bbox
+{
+//------------------------------------------------------------------------------
+//  Fields
+//  The order of these fields should not change because they are relied on
+//  in other code.    
+//------------------------------------------------------------------------------
+
+    vector3 Min, Max;
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                    bbox            ( void );
+                    bbox            ( const bbox&    BBox );
+                    bbox            ( const vector3& P1 );
+                    bbox            ( const vector3& P1, const vector3& P2 );
+                    bbox            ( const vector3* pVerts, s32 NVerts );
+                    bbox            ( const vector3& Center, f32 Radius );
+                                    
+        void        Clear           ( void );
+        void        Set             ( const vector3& Center, f32 Radius );
+        void        Set             ( const vector3& P1, const vector3& P2 ); 
+        void        operator ()     ( const vector3& P1, const vector3& P2 ); 
+                                    
+        vector3     GetSize         ( void ) const;
+        vector3     GetCenter       ( void ) const;
+        f32         GetRadius       ( void ) const;
+        f32         GetRadiusSquared( void ) const;
+
+        f32         Difference      ( const bbox& B ) const;
+        xbool       InRange         ( f32 Min, f32 Max ) const;
+        xbool       IsValid         ( void ) const;
+
+        void        Transform       ( const matrix4& M );
+        void        Translate       ( const vector3& T );
+                                    
+        xbool       Intersect       ( const vector3& Point ) const;
+        xbool       Intersect       ( const bbox&    BBox  ) const;
+        xbool       Intersect       ( const plane&   Plane ) const;
+        xbool       Intersect       (       f32&     t,
+                                      const vector3& P0, 
+                                      const vector3& P1 ) const;
+                                    
+        bbox&       AddVerts        ( const vector3* pVerts, s32 NVerts );
+                                    
+const   bbox&       operator =      ( const bbox&    BBox  );
+        bbox&       operator +=     ( const bbox&    BBox  );
+        bbox&       operator +=     ( const vector3& Point );
+                                    
+friend  bbox        operator +      ( const bbox&    BBox1, const bbox&    BBox2 );
+friend  bbox        operator +      ( const bbox&    BBox,  const vector3& Point );
+friend  bbox        operator +      ( const vector3& Point, const bbox&    BBox  );
+
+};
+
+#include "Implementation/x_math_bb_inline.hpp"
+
+//==============================================================================
+//  RECT
+//==============================================================================
+
+struct rect
+{
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    vector2 Min;
+    vector2 Max;
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                    rect            ( void );
+                    rect            ( const rect& Rect );
+                    rect            ( const vector2& Min, const vector2& Max );
+                    rect            ( f32 l, f32 t, f32 r, f32 b );
+
+        void        Clear           ( void );
+        void        Set             ( const vector2& Min, const vector2& Max );
+        void        Set             ( f32 l, f32 t, f32 r, f32 b );
+
+        xbool       Intersect       ( const rect& Rect );
+        xbool       Intersect       ( rect& R, const rect& Rect );
+    
+        void        AddPoint        ( const vector2& Point );
+        void        AddRect         ( const rect&    Rect  );
+
+        f32         GetWidth        ( void ) const;
+        f32         GetHeight       ( void ) const;
+        vector2     GetSize         ( void ) const;
+        vector2     GetCenter       ( void ) const;
+
+        void        SetWidth        ( f32 W );
+        void        SetHeight       ( f32 H );
+        void        SetSize         ( const vector2& S );
+
+        void        Translate       ( const vector2& T );
+        void        Inflate         ( const vector2& T );
+        void        Deflate         ( const vector2& T );
+
+        f32         Difference      ( const rect& R ) const;
+        xbool       InRange         ( f32 Min, f32 Max ) const;
+        xbool       IsValid         ( void ) const;
+};
+
+//==============================================================================
+//  IRECT
+//==============================================================================
+
+struct irect
+{
+//------------------------------------------------------------------------------
+//  Fields
+//------------------------------------------------------------------------------
+
+    s32 l;
+    s32 t;
+    s32 r;
+    s32 b;
+
+//------------------------------------------------------------------------------
+//  Functions
+//------------------------------------------------------------------------------
+
+                    irect           ( void );
+                    irect           ( const irect& Rect );
+                    irect           ( s32 l, s32 t, s32 r, s32 b );
+
+        void        Clear           ( void );
+        void        Set             ( s32 l, s32 t, s32 r, s32 b );
+
+        xbool       Intersect       ( const irect& Rect );
+        xbool       Intersect       ( irect& R, const irect& Rect );
+    
+        void        AddPoint        ( s32 X, s32 Y );
+        void        AddRect         ( const irect& Rect  );
+
+        s32         GetWidth        ( void ) const;
+        s32         GetHeight       ( void ) const;
+        vector2     GetSize         ( void ) const;
+        vector2     GetCenter       ( void ) const;
+
+        void        SetWidth        ( s32 W );
+        void        SetHeight       ( s32 H );
+        void        SetSize         ( s32 W, s32 H );
+
+        void        Translate       ( s32 X, s32 Y );
+        void        Inflate         ( s32 X, s32 Y );
+        void        Deflate         ( s32 X, s32 Y );
+
+        f32         Difference      ( const irect& R ) const;
+        xbool       InRange         ( s32 Min, s32 Max ) const;
+        xbool       IsEmpty         ( void ) const;
+        xbool       PointInRect     ( s32 X, s32 Y ) const;
+
+        bool        operator ==     ( const irect& R ) const;
+        bool        operator !=     ( const irect& R ) const;
+};
+
+//==============================================================================
+
+#include "Implementation/x_math_rect_inline.hpp"
+
+//==============================================================================
+#endif // X_MATH_HPP
+//==============================================================================

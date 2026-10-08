@@ -1,0 +1,16 @@
+{
+  "area51": {
+    "path": "/home/sheep/Projects/archive/entropy-src/area51",
+    "source_identity": "tree-sha256:3aa5a3525f477905b82d93500e5eb6bdd8e259376d5e09b4c06268b54f73df26",
+    "upstream_revision_hint": "431f72b9",
+    "hint_status": "historical provenance only; local stripped tree is independently hashed",
+    "candidates": 393
+  },
+  "tribes-aa": {
+    "path": "/home/sheep/Projects/archive/entropy-src/tribes-aa",
+    "source_identity": "tree-sha256:d92f1a585a272d2e8990ff5f0a1226b61e385783c50b680bb2ff8742fe9ed9c0",
+    "upstream_revision_hint": "4aab7137",
+    "hint_status": "historical provenance only; local stripped tree is independently hashed",
+    "candidates": 328
+  }
+}

@@ -1,0 +1,3 @@
+# Archive-proven external CRT data; no reconstructed game-source ownership.
+rva	size	name	unit	note
+0x2fd4d8	0x4	??_7type_info@@6B@		Genuine pinned VC6 LIBCMT typinfo.obj; full vtable/RTTI/destructor archive replay; config/evidence/crt-typeinfo-verification.json; no reconstructed game source ownership

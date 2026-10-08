@@ -1,0 +1,242 @@
+{
+  "source_root": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy/D3DEngine",
+  "source_revision": "4aab7137",
+  "status": "User-authorized import-first original D3D engine family. The main original state version is conditionally retained because its fields differ from directly proved Hobbit eng_locals; no fabricated PC compatibility fields. Draw/input/vram original bodies are provisionally imported unlabelled.",
+  "files": [
+    {
+      "path": "d3deng.cpp",
+      "source_sha256": "84b94c331e8facb3631874b3a25060ffd6020710305468ae6ccb1862dc306b4c"
+    },
+    {
+      "path": "d3deng_draw.cpp",
+      "source_sha256": "19c03df8db6e5078b68345ceddce09da3c09ef63e9fe2dd524580622a532d14d"
+    },
+    {
+      "path": "d3deng_input.cpp",
+      "source_sha256": "b03dfc4bf616eef689d5576cf437debbb636ab7b9fc0976431d5bf076c91e4a3"
+    },
+    {
+      "path": "d3deng_vram.cpp",
+      "source_sha256": "465026cc431fb969a64edc63007e2692baf47c7ade8aa7963ce892366fac27f1"
+    }
+  ],
+  "imported_cpp_sources": [
+    "src/xCore/Entropy/D3DEngine/d3deng.cpp",
+    "src/xCore/Entropy/D3DEngine/d3deng_draw.cpp",
+    "src/xCore/Entropy/D3DEngine/d3deng_input.cpp",
+    "src/xCore/Entropy/D3DEngine/d3deng_vram.cpp"
+  ],
+  "main_active_provisional_bodies": 42,
+  "main_retained_version_specific_bodies": 37,
+  "main_version_macro": "HOBBIT_D3DENG_TRIBES_STATE",
+  "version_specific_reason": "Original older Adapters/VideoDevice/shader-array/mouse-state fields are not inserted into the proven Hobbit eng_locals. RestoreScreen depends on the older shader state. Full owning original implementation remains conditional, no replacement bodies.",
+  "source_revision_limit": "Historical local reference policy records revision4aab7137; current source export has no .git, so full source-file SHA256 hashes are authoritative input identities.",
+  "default_compile": "All4cpp compiled successfully pinned VC6 cpp-unpooled profile via bin/hobbit-shell; imported unlabelled bodies are not evidence of byte exactness.",
+  "header_dependency": {
+    "path": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy/Common/e_cdfs.hpp",
+    "sha256": "464cde5d2afefab15c53b07210630c6f97f204768f63175da129a2d3da2987cb"
+  },
+  "canonical_destination_hashes": {
+    "src/xCore/Entropy/D3DEngine/d3deng.cpp": "3707caebaeb248eacfecb561e2174f48b9dfbc511340c974f0f9b9729df5a3ec",
+    "src/xCore/Entropy/D3DEngine/d3deng_draw.cpp": "dfea8cff5bd75655ae4039cc538ebc6f4cb2c67cbfd832ffb7788dc5725b9049",
+    "src/xCore/Entropy/D3DEngine/d3deng_input.cpp": "8624216054f997dbcee6b5466fd1a82c030a007b5bbf3c5198c55379ef8f042d",
+    "src/xCore/Entropy/D3DEngine/d3deng_platform.inc": "5beba91eeb6b188844d7ae28c4f7608a411999729eee22ef99924c84c63c097b",
+    "src/xCore/Entropy/D3DEngine/d3deng_tribes.inc": "17498bfd810ab2b4c7c8c3ba8e7529bbc2c5edd117ac9799e14219d550e796b8",
+    "src/xCore/Entropy/D3DEngine/d3deng_vram.cpp": "63d237345e41bb4b89c16a7ad5f242b29a8318f2deeb3fa95ace9e616be4c587"
+  },
+  "additional_proven_platform_functions": [
+    {
+      "symbol": "?d3deng_ExitPoint@@YAHXZ",
+      "rva": "0x25c170",
+      "body_size": 8,
+      "contribution_size": 16,
+      "relocations": [
+        {
+          "site": "0x25c171",
+          "symbol": "_x_Kill",
+          "base_rva": "0x255460",
+          "addend": 0,
+          "coff_kind": 20
+        }
+      ]
+    },
+    {
+      "symbol": "?ENG_TextColor@@YAXABUxcolor@@@Z",
+      "rva": "0x25c9a0",
+      "body_size": 40,
+      "contribution_size": 48,
+      "relocations": [
+        {
+          "site": "0x25c9a9",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 19,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25c9b2",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 18,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25c9bb",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 17,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25c9c3",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 16,
+          "coff_kind": 6
+        }
+      ]
+    },
+    {
+      "symbol": "?eng_End@@YAXXZ",
+      "rva": "0x25f430",
+      "body_size": 11,
+      "contribution_size": 16,
+      "relocations": [
+        {
+          "site": "0x25f432",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 28,
+          "coff_kind": 6
+        }
+      ]
+    },
+    {
+      "symbol": "?eng_ActivateView@@YAXH@Z",
+      "rva": "0x25fc10",
+      "body_size": 74,
+      "contribution_size": 80,
+      "relocations": [
+        {
+          "site": "0x25fc16",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9356,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc27",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9348,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc33",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 100,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc3a",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9316,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc40",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9348,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc46",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9356,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc4f",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9348,
+          "coff_kind": 6
+        },
+        {
+          "site": "0x25fc55",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9356,
+          "coff_kind": 6
+        }
+      ]
+    },
+    {
+      "symbol": "?eng_GetView@@YAPBVview@@H@Z",
+      "rva": "0x25fce0",
+      "body_size": 16,
+      "contribution_size": 16,
+      "relocations": [
+        {
+          "site": "0x25fceb",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 100,
+          "coff_kind": 6
+        }
+      ]
+    },
+    {
+      "symbol": "?eng_GetNActiveViews@@YAHXZ",
+      "rva": "0x25fcf0",
+      "body_size": 6,
+      "contribution_size": 16,
+      "relocations": [
+        {
+          "site": "0x25fcf1",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9348,
+          "coff_kind": 6
+        }
+      ]
+    },
+    {
+      "symbol": "?eng_GetActiveView@@YAPBVview@@H@Z",
+      "rva": "0x25fd00",
+      "body_size": 12,
+      "contribution_size": 16,
+      "relocations": [
+        {
+          "site": "0x25fd07",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 9316,
+          "coff_kind": 6
+        }
+      ]
+    },
+    {
+      "symbol": "?d3deng_GetWindowHandle@@YAPAUHWND__@@XZ",
+      "rva": "0x2605b0",
+      "body_size": 6,
+      "contribution_size": 16,
+      "relocations": [
+        {
+          "site": "0x2605b1",
+          "symbol": "_s",
+          "base_rva": "0x3edad8",
+          "addend": 4,
+          "coff_kind": 6
+        }
+      ]
+    }
+  ],
+  "cohort14": "Ten additional genuine complete platform bodies proved: eight original leafs missing boundary census plus full PC absolute/relative mouse getters. Older getter variants preserved in full original HOBBIT_D3DENG_TRIBES_STATE source; PC adaptation uses actual mode3 and natural ABSMouse float/relative integer fields. No global/type/padding additions.",
+  "cohort14_resolution": "Complete PC eng_GetRes/MaximizeViewport/SetBackColor behavior reconstructed against qualified SDK/state fields; real global D3DPRESENT_PARAMETERS52 at3f0448 independently proven by CreateDevice pointer and13DWORDcopy. Descriptive global spelling inferred, wholeTU BSS order still open. Old bodies retained in original conditional version.",
+  "cohort14_deactivate": "Original complete eng_DeactivateView110B/full112 at25fc60 with all10refs. Actual _memmove2c0fa0 independently established by pinned LIBCMT whole821B contribution/internal tables plus fptostr typed call graph, admitted in config/evidence/crt-memmove-verification.json. No provider alias or wholeTU BSS-order claim."
+}

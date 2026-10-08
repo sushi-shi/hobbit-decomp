@@ -1,0 +1,28 @@
+{
+  "source_root": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy",
+  "source_revision": "4aab7137",
+  "integration": "Authorized import-first engine family port; compatible header paths adapted; known PC state/render bodies override source-supported cross-build originals; no unproved PC address annotations",
+  "references": [
+    {
+      "path": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy/Entropy.hpp",
+      "sha256": "cb1b0711601f67f7d3d6af4bb2f03cbca96b543528223ec432d1653c9c303bcd"
+    },
+    {
+      "path": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy/e_Engine.hpp",
+      "sha256": "e90a4920a1e788f9b94a79310622cf4de18a9f5fcac72f24722550ae4156c1a4"
+    },
+    {
+      "path": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy/e_VRAM.hpp",
+      "sha256": "76bdd30acc86e88b232ae520707e50482716ec5fae30d2bb6542184a11e1fa7f"
+    },
+    {
+      "path": "/home/sheep/Projects/archive/entropy-src/tribes-aa/aa/xcore/entropy/D3DEngine/d3deng_private.hpp",
+      "sha256": "081a8b39b528bd63fc160613b628a8f956fd7397ba41e79dfe8d6630b926fbc1"
+    }
+  ],
+  "canonical_destination_hashes": {
+    "include/xCore/Entropy/D3DEngine/d3deng_private.hpp": "e9a3d947ba4d2e7538bcdd2ae617979cd29a18059d1c365a1b1511935d36700c",
+    "include/xCore/Entropy/D3DEngine/d3deng_state.hpp": "b0e3aeb6faa6b41ae09a2075f7abe84c7b74fe7d0abe6efef0d857689aa662d2"
+  },
+  "clang_portability": "Uses genuine VC6 internal xstring basic_string/wstring header directly; avoids unrelated legacy stream templates. Clang generated lowercase mirror removes two redundant default template arguments from UTILITY definitions only; VC6 SDK/compiler headers and real STL types/bodies remain unchanged."
+}

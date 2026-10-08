@@ -1,0 +1,66 @@
+{
+  "compiler": "VC6 SP5 plus Processor Pack for SP5",
+  "files": {
+    "CL.EXE": {
+      "sha256": "1bf99f206271ecdbd13da2829192ea2c02e2a44c740b8d72935d5d9cb753b156",
+      "file_version": "12.0.8804.0"
+    },
+    "C1.DLL": {
+      "sha256": "0792033fc3d2fec262ff95478c6a9e70a06e836ed55f0a9710200fa06c204754",
+      "file_version": "12.0.8867.0"
+    },
+    "C1XX.DLL": {
+      "sha256": "f014b3bee650224adf6cb44e51f0eeac5abbf5da666fa299d5250b2f3d1937c6",
+      "file_version": "12.0.8964.0"
+    },
+    "C2.DLL": {
+      "sha256": "6c8e3988a5ccd69a9f9829b5c7512848d71c018b8d24be3928d7b00b5f79f231",
+      "file_version": "13.0.9044.0"
+    },
+    "LINK.EXE": {
+      "sha256": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc",
+      "file_version": "6.0.8447.0"
+    },
+    "MSPDB60.DLL": {
+      "sha256": "7c90b80d42914562332e28c253415e72a80c6651003d08a9ffdc4ba6e27fc37c",
+      "file_version": "6.0.8168.0"
+    },
+    "RC.EXE": {
+      "sha256": "582d0e68739b1128199d0ffc12eb62f48a17a3216a791fd6be948ff9e2eb2ffa",
+      "file_version": "5.0.1641.1"
+    },
+    "RCDLL.DLL": {
+      "sha256": "5932342fc326b056988cebc710b414592b81c9ba18b9ae247b838a6021f2e434",
+      "file_version": "5.0.1641.1"
+    }
+  },
+  "donors": [
+    {
+      "project": "Gruntz",
+      "revision": "7d4bd55b99e32f084834d991badf7609889481f4",
+      "paths": [
+        "flake.nix",
+        "flake.lock",
+        "nix/toolchain.nix",
+        "scripts/gruntz/tool",
+        "scripts/gruntz/core/paths.py"
+      ]
+    },
+    {
+      "project": "HoMM1 Buka",
+      "revision": "d3c9297135800ee0d198b292f2424464d20b6f5c",
+      "paths": [
+        "config/toolchains.json",
+        "nix/patches/vostok-fixed-manifest-iat.patch",
+        "nix/patches/vostok-skip-inline-switch-tables.patch",
+        "nix/patches/vostok-unpadded-function-extents.patch"
+      ]
+    }
+  ],
+  "processor_pack": {
+    "url": "https://download.microsoft.com/download/vb60ent/Update/6/W9X2KXP/EN-US/vcpp5.exe",
+    "sha256": "96817df1bb0cb58e5b1d0fbcc5b993a63548182add1fbff66365401203ecfb6c",
+    "compiler_banner": "Microsoft (R) Optimizing Compiler Version 12.00.9044.0",
+    "note": "C2 file version resource is 13.0.9044.0; its compiler banner is 12.00.9044.0. Build 9044 equals Hobbit dominant Rich Utc12_2_CPP build 0x2354. CL frontend driver remains 12.00.8804."
+  }
+}

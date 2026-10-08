@@ -1,0 +1,37 @@
+# PC structural evidence; all addresses are PC RVAs.
+# Input SHA256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
+# Donor Gruntz 7d4bd55b99e32f084834d991badf7609889481f4; see scripts/hobbit/evidence/pc_structure.py.
+rva	decorated
+0x337a18	.?AVrsc_loader@@
+0x337a34	.?AVanim_loader@@
+0x337e98	.?AVtrack_controller@@
+0x337eb8	.?AVhead_track_controller@@
+0x337efc	.?AVanim_track_controller@@
+0x34f2dc	.?AVVertexCache@@
+0x34f2f8	.?AVVertexCacheLine@@
+0x34f318	.?AVProxyVB@@
+0x34f330	.?AVDynamicVB@@
+0x34f348	.?AVStaticVB@@
+0x353b58	.?AVio_device@@
+0x353b70	.?AVio_device_dvd@@
+0x355c2c	.?AVui_win@@
+0x355c44	.?AVui_dialog@@
+0x355c88	.?AVui_control@@
+0x355ca4	.?AVui_frame@@
+0x355cec	.?AVui_listbox@@
+0x355d34	.?AVui_check@@
+0x355d60	.?AVui_slider@@
+0x355dec	.?AVui_dlg_list@@
+0x355e1c	.?AVui_textbox@@
+0x355e4c	.?AVui_text@@
+0x355e74	.?AVui_radio@@
+0x355ea0	.?AVui_button@@
+0x355ecc	.?AVui_font@@
+0x355f40	.?AVui_bitmap_font@@
+0x355f60	.?AVui_truetype_font@@
+0x357da0	.?AVexception@@
+0x357db8	.?AVlogic_error@std@@
+0x357dd8	.?AVlength_error@std@@
+0x357df8	.?AVout_of_range@std@@
+0x357e80	.?AVtype_info@@
+0x35b238	.?AVhead_track_controller2@@

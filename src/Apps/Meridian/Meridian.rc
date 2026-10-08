@@ -1,0 +1,6 @@
+// Recovered from the pinned PC Meridian.exe resource directory.
+// Original symbolic ID spelling is retained by the PE: IDC_ICON1.
+// Nine image payloads, in original order; English (United States).
+// hobbit rsrc check stages this script and extracts its local-only icon in build/.
+LANGUAGE 9, 1
+IDC_ICON1 ICON "res/meridian.ico"

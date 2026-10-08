@@ -1,0 +1,14 @@
+{
+  "source": "/home/sheep/Projects/archive/entropy-src/area51/xCore/3rdParty/DirectX9/dsound.h",
+  "source_revision": "431f72b9",
+  "sha256": "fc964971bb51b5ee924e0d319c51c397ccf81e978a7054428705004156ee1eb2",
+  "role": "Unchanged genuine DX9 SDK header required by Area51 original IAL; explicit DirectX9/dsound.h include avoids globally shadowing dsound.h; no Hobbit ABI/address claim",
+  "header_closure": [
+    {
+      "source": "/home/sheep/Projects/archive/entropy-src/area51/xCore/3rdParty/DirectX9/basetsd.h",
+      "destination": "vendor/directx9/DirectX9/basetsd.h",
+      "sha256": "8d1069181dbacf416e239cbe2a51cf24fa605ac8639319d8b7c56ac29c31fbf6",
+      "role": "Unchanged SDK-supplied base sized types; explicit include before Windows selects original _BASETSD_H_ guard; no global header shadow"
+    }
+  ]
+}

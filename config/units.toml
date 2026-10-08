@@ -1,0 +1,1466 @@
+# Gruntz ownership/profile contract; hypothesis rationale: docs/first-structure.md.
+# Reconstructed and provisional imported translation units; evidence inventory is separate.
+[build]
+compiler = "msvc6.0"
+platform = "win32"
+msvc_compat = "12.00"
+
+[flags]
+cpp = ["/nologo", "/c", "/O2", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
+
+# Guid: PC packed user/process/time generator and pooled literal storage.
+# Unit-local /DX_EDITOR branch; evidence: docs/imports/cohort14-guid-pc.json.
+cpp-guid-editor = ["/nologo", "/c", "/O2", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC", "/DX_EDITOR"]
+
+cpp-unpooled = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
+
+# fx_Ctrl: all three original bodies and references match /G5; /G6 differs.
+# Evidence: config/evidence/fx-ctrl.json.
+cpp-unpooled-g5 = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G5", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
+
+# Original key-controller TUs have one-slot vtables without RTTI; /G6 and /GR
+# controls differ. Evidence: config/evidence/fx-key-controllers.json.
+cpp-unpooled-g5-no-rtti = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G5", "/MT", "/GX", "/GR-", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
+
+# Provisional C provider build profile; original per-TU settings await polish.
+c-import = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G6", "/MT", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
+
+# Genuine PCRE project defines; remaining compiler options are provisional.
+c-pcre-import = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G6", "/MT", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC", "/DPCRE_STATIC", "/DPOSIX_MALLOC_THRESHOLD=10"]
+
+# Genuine PCRE project defines; remaining compiler options are provisional.
+cpp-pcre-import = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC", "/DPCRE_STATIC", "/DPOSIX_MALLOC_THRESHOLD=10"]
+
+[[unit]]
+unit = "Animation_AnimKeyData"
+source = "src/Support/Animation/AnimKeyData.cpp"
+# Distinct physical path literals require natural unpooled $SG storage.
+# Full code/reference controls: config/evidence/animation-keydata.json.
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_LinearKeyCtrl"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_LinearKeyCtrl.cpp"
+flags = "cpp-unpooled-g5-no-rtti"
+
+[[unit]]
+unit = "fx_RunTime_fx_SmoothKeyCtrl"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_SmoothKeyCtrl.cpp"
+flags = "cpp-unpooled-g5-no-rtti"
+
+[[unit]]
+unit = "fx_RunTime_fx_Mgr"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Mgr.cpp"
+flags = "cpp-unpooled-g5"
+
+[[unit]]
+unit = "x_files_x_plus"
+source = "src/xCore/x_files/Implementation/x_plus.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_threads"
+source = "src/xCore/x_files/Implementation/x_threads.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_time"
+source = "src/xCore/x_files/Implementation/x_time.cpp"
+flags = "cpp"
+
+[[unit]]
+unit = "x_files_x_context"
+source = "src/xCore/x_files/Implementation/x_context.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bytestream"
+source = "src/xCore/x_files/Implementation/x_bytestream.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_memory"
+source = "src/xCore/x_files/Implementation/x_memory.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_string"
+source = "src/xCore/x_files/Implementation/x_string.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_math"
+source = "src/xCore/x_files/Implementation/x_math.cpp"
+flags = "cpp"
+
+[[unit]]
+unit = "x_files_x_files"
+source = "src/xCore/x_files/Implementation/x_files.cpp"
+flags = "cpp"
+
+[[unit]]
+unit = "x_files_x_math_basic"
+source = "src/xCore/x_files/Implementation/x_math_basic.cpp"
+flags = "cpp"
+
+[[unit]]
+unit = "x_files_x_stdio"
+source = "src/xCore/x_files/Implementation/x_stdio.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_vsprintf"
+source = "src/xCore/x_files/Implementation/x_vsprintf.cpp"
+flags = "cpp"
+
+[[unit]]
+unit = "x_files_x_mutex"
+source = "src/xCore/x_files/Implementation/x_mutex.cpp"
+flags = "cpp"
+
+[[unit]]
+unit = "x_files_x_mqueue"
+source = "src/xCore/x_files/Implementation/x_mqueue.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Parsing_bitstream"
+source = "src/xCore/Auxiliary/Parsing/bitstream.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_debug"
+source = "src/xCore/x_files/Implementation/x_debug.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap"
+source = "src/xCore/x_files/Implementation/x_bitmap.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap_io"
+source = "src/xCore/x_files/Implementation/x_bitmap_io.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap_convert"
+source = "src/xCore/x_files/Implementation/x_bitmap_convert.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap_cmap"
+source = "src/xCore/x_files/Implementation/x_bitmap_cmap.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap_quant"
+source = "src/xCore/x_files/Implementation/x_bitmap_quant.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_Load_BMP"
+source = "src/xCore/Auxiliary/Bitmap/Load_BMP.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_Load_TGA"
+source = "src/xCore/Auxiliary/Bitmap/Load_TGA.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Parsing_tokenizer"
+source = "src/xCore/Auxiliary/Parsing/tokenizer.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "StringMgr_StringMgr"
+source = "src/Support/StringMgr/StringMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_Virtual"
+source = "src/xCore/Entropy/Common/e_Virtual.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Parsing_TextIn"
+source = "src/xCore/Auxiliary/Parsing/TextIn.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Parsing_TextOut"
+source = "src/xCore/Auxiliary/Parsing/TextOut.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Parsing_BinIn"
+source = "src/xCore/Auxiliary/Parsing/BinIn.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Parsing_BinOut"
+source = "src/xCore/Auxiliary/Parsing/BinOut.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_ScratchMem"
+source = "src/xCore/Entropy/Common/e_ScratchMem.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_aux_Bitmap"
+source = "src/xCore/Auxiliary/Bitmap/aux_Bitmap.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_DefaultBMP"
+source = "src/xCore/Auxiliary/Bitmap/DefaultBMP.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_SimpleAllocator"
+source = "src/xCore/Entropy/Common/e_SimpleAllocator.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_mgr"
+source = "src/xCore/Entropy/IOManager/io_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_cache"
+source = "src/xCore/Entropy/IOManager/io_cache.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_request"
+source = "src/xCore/Entropy/IOManager/io_request.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_View"
+source = "src/xCore/Entropy/Common/e_View.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_device"
+source = "src/xCore/Entropy/IOManager/io_device.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_Text"
+source = "src/xCore/Entropy/Common/e_Text.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Ctrl"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Ctrl.cpp"
+flags = "cpp-unpooled-g5"
+
+[[unit]]
+unit = "Entropy_d3deng"
+source = "src/xCore/Entropy/D3DEngine/d3deng.cpp"
+flags = "cpp-unpooled"
+
+# Source-first engine imports. Each complete profile is a provisional build
+# hypothesis, not a claim of original PC compiler settings or addresses.
+# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
+
+[[unit]]
+unit = "Animation_AnimDecompress"
+source = "src/Support/Animation/AnimDecompress.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Animation_AnimEvent"
+source = "src/Support/Animation/AnimEvent.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Animation_AnimGroup"
+source = "src/Support/Animation/AnimGroup.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Animation_AnimInfo"
+source = "src/Support/Animation/AnimInfo.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Animation_AnimPlayer"
+source = "src/Support/Animation/AnimPlayer.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Animation_AnimTrack"
+source = "src/Support/Animation/AnimTrack.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Animation_CharAnimPlayer"
+source = "src/Support/Animation/CharAnimPlayer.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "AudioMgr_AudioMgr"
+source = "src/Support/AudioMgr/AudioMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "CollisionMgr_CollisionMgr"
+source = "src/Support/CollisionMgr/CollisionMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "CollisionMgr_CollisionPrimatives"
+source = "src/Support/CollisionMgr/CollisionPrimatives.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "CollisionMgr_GridWalker"
+source = "src/Support/CollisionMgr/GridWalker.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "CollisionMgr_PolyCache"
+source = "src/Support/CollisionMgr/PolyCache.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ConversationMgr_ConversationMgr"
+source = "src/Support/ConversationMgr/ConversationMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Decals_DecalDefinition"
+source = "src/Support/Decals/DecalDefinition.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Decals_DecalLoader"
+source = "src/Support/Decals/DecalLoader.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Decals_DecalMgr"
+source = "src/Support/Decals/DecalMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Decals_DecalMgr_StaticDecals"
+source = "src/Support/Decals/DecalMgr_StaticDecals.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Decals_DecalPackage"
+source = "src/Support/Decals/DecalPackage.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Dictionary_Global_Dictionary"
+source = "src/Support/Dictionary/Global_Dictionary.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "EventMgr_EventMgr"
+source = "src/Support/EventMgr/EventMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Font_font"
+source = "src/Support/Font/font.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "InputMgr_GamePad"
+source = "src/Support/InputMgr/GamePad.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "InputMgr_InputMgr"
+source = "src/Support/InputMgr/InputMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "InputMgr_Monkey"
+source = "src/Support/InputMgr/Monkey.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MoviePlayer_MoviePlayer"
+source = "src/Support/MoviePlayer/MoviePlayer.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MoviePlayer_MoviePlayer_Bink"
+source = "src/Support/MoviePlayer/MoviePlayer_Bink.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ObjectMgr_Collider"
+source = "src/Support/ObjectMgr/Collider.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ObjectMgr_ColliderCannon"
+source = "src/Support/ObjectMgr/ColliderCannon.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ObjectMgr_Object"
+source = "src/Support/ObjectMgr/Object.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ObjectMgr_ObjectMgr"
+source = "src/Support/ObjectMgr/ObjectMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ObjectMgr_Pain"
+source = "src/Support/ObjectMgr/Pain.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "OccluderMgr_OccluderMgr"
+source = "src/Support/OccluderMgr/OccluderMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_CollisionVolume"
+source = "src/Support/Render/CollisionVolume.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_LightMgr"
+source = "src/Support/Render/LightMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_Material"
+source = "src/Support/Render/Material.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_MaterialArray"
+source = "src/Support/Render/MaterialArray.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_ProjTextureMgr"
+source = "src/Support/Render/ProjTextureMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_Render"
+source = "src/Support/Render/Render.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_RigidGeom"
+source = "src/Support/Render/RigidGeom.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_SkinGeom"
+source = "src/Support/Render/SkinGeom.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_SoftVertexMgr"
+source = "src/Support/Render/SoftVertexMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_Texture"
+source = "src/Support/Render/Texture.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_VertexMgr"
+source = "src/Support/Render/VertexMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_editor_icons"
+source = "src/Support/Render/editor_icons.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Render_geom"
+source = "src/Support/Render/geom.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ResourceMgr_ResourceMgr"
+source = "src/Support/ResourceMgr/ResourceMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "SpatialDBase_SpatialDBase"
+source = "src/Support/SpatialDBase/SpatialDBase.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "TemplateMgr_TemplateMgr"
+source = "src/Support/TemplateMgr/TemplateMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_button"
+source = "src/Support/UI/ui_button.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_check"
+source = "src/Support/UI/ui_check.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_control"
+source = "src/Support/UI/ui_control.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_dialog"
+source = "src/Support/UI/ui_dialog.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_dlg_list"
+source = "src/Support/UI/ui_dlg_list.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_dlg_vkeyboard"
+source = "src/Support/UI/ui_dlg_vkeyboard.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_edit"
+source = "src/Support/UI/ui_edit.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_font"
+source = "src/Support/UI/ui_font.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_frame"
+source = "src/Support/UI/ui_frame.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_listbox"
+source = "src/Support/UI/ui_listbox.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_manager"
+source = "src/Support/UI/ui_manager.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_radio"
+source = "src/Support/UI/ui_radio.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_slider"
+source = "src/Support/UI/ui_slider.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_text"
+source = "src/Support/UI/ui_text.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_textbox"
+source = "src/Support/UI/ui_textbox.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "UI_ui_win"
+source = "src/Support/UI/ui_win.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_Cclist"
+source = "src/xCore/3rdParty/DXTLibrary/Cclist.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_CodeBook"
+source = "src/xCore/3rdParty/DXTLibrary/CodeBook.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_CodeBook4MMX"
+source = "src/xCore/3rdParty/DXTLibrary/CodeBook4MMX.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_DXTCGen"
+source = "src/xCore/3rdParty/DXTLibrary/DXTCGen.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_Image"
+source = "src/xCore/3rdParty/DXTLibrary/Image.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_ImageDXTC"
+source = "src/xCore/3rdParty/DXTLibrary/ImageDXTC.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_Lloyd"
+source = "src/xCore/3rdParty/DXTLibrary/Lloyd.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_MedianCut"
+source = "src/xCore/3rdParty/DXTLibrary/MedianCut.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_Table"
+source = "src/xCore/3rdParty/DXTLibrary/Table.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_ccDoubleHeap"
+source = "src/xCore/3rdParty/DXTLibrary/ccDoubleHeap.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_ccHeap"
+source = "src/xCore/3rdParty/DXTLibrary/ccHeap.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_cfVector"
+source = "src/xCore/3rdParty/DXTLibrary/cfVector.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "3rdParty_DXTLibrary_fCodeBook"
+source = "src/xCore/3rdParty/DXTLibrary/fCodeBook.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_Load_PNG"
+source = "src/xCore/Auxiliary/Bitmap/Load_PNG.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_Load_PSD"
+source = "src/xCore/Auxiliary/Bitmap/Load_PSD.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_adler32"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/adler32.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_compress"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/compress.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_crc32"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/crc32.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_deflate"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/deflate.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_gzio"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/gzio.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_infblock"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/infblock.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_infcodes"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/infcodes.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_inffast"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/inffast.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_inflate"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/inflate.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_inftrees"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/inftrees.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_infutil"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/infutil.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_trees"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/trees.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_uncompr"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/uncompr.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_ZLib_zutil"
+source = "src/xCore/Auxiliary/Bitmap/PNG/ZLib/zutil.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_png"
+source = "src/xCore/Auxiliary/Bitmap/PNG/png.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngerror"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngerror.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pnggccrd"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pnggccrd.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngget"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngget.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngmem"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngmem.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngpread"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngpread.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngread"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngread.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngrio"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngrio.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngrtran"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngrtran.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngrutil"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngrutil.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngset"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngset.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngtrans"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngtrans.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngvcrd"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngvcrd.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngwio"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngwio.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngwrite"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngwrite.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngwtran"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngwtran.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_PNG_pngwutil"
+source = "src/xCore/Auxiliary/Bitmap/PNG/pngwutil.c"
+flags = "c-import"
+
+[[unit]]
+unit = "aux_Bitmap_aux_Compress"
+source = "src/xCore/Auxiliary/Bitmap/aux_Compress.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "CommandLine_CommandLine"
+source = "src/xCore/Auxiliary/CommandLine/CommandLine.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MiscUtils_Guid"
+source = "src/xCore/Auxiliary/MiscUtils/Guid.cpp"
+flags = "cpp-guid-editor"
+
+[[unit]]
+unit = "MiscUtils_Property"
+source = "src/xCore/Auxiliary/MiscUtils/Property.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MiscUtils_dictionary"
+source = "src/xCore/Auxiliary/MiscUtils/dictionary.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MiscUtils_mem_stream"
+source = "src/xCore/Auxiliary/MiscUtils/mem_stream.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Cylinder"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Cylinder.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Effect"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Effect.cpp"
+flags = "cpp-unpooled-g5"
+
+[[unit]]
+unit = "fx_RunTime_fx_Element"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Element.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Handle"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Handle.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Plane"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Plane.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_SPEmitter"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_SPEmitter.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_ShockWave"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_ShockWave.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Sphere"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Sphere.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "fx_RunTime_fx_Sprite"
+source = "src/xCore/Auxiliary/fx_RunTime/fx_Sprite.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_MP3DEC"
+source = "src/xCore/Entropy/Audio/Codecs/MP3DEC.CPP"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_mp3api"
+source = "src/xCore/Entropy/Audio/Codecs/mp3api.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_hardware_pc"
+source = "src/xCore/Entropy/Audio/Hardware/audio_hardware_pc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_stream_pc"
+source = "src/xCore/Entropy/Audio/Hardware/audio_stream_pc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_IAL"
+source = "src/xCore/Entropy/Audio/IAL/IAL.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_channel_mgr"
+source = "src/xCore/Entropy/Audio/audio_channel_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_debug"
+source = "src/xCore/Entropy/Audio/audio_debug.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_io_request"
+source = "src/xCore/Entropy/Audio/audio_io_request.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_mgr"
+source = "src/xCore/Entropy/Audio/audio_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_mp3_mgr"
+source = "src/xCore/Entropy/Audio/audio_mp3_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_package"
+source = "src/xCore/Entropy/Audio/audio_package.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_ram_mgr"
+source = "src/xCore/Entropy/Audio/audio_ram_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_stream_controller"
+source = "src/xCore/Entropy/Audio/audio_stream_controller.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_stream_mgr"
+source = "src/xCore/Entropy/Audio/audio_stream_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_audio_voice_mgr"
+source = "src/xCore/Entropy/Audio/audio_voice_mgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_Draw"
+source = "src/xCore/Entropy/Common/e_Draw.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_Input"
+source = "src/xCore/Entropy/Common/e_Input.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_cdfs"
+source = "src/xCore/Entropy/Common/e_cdfs.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_d3deng_draw"
+source = "src/xCore/Entropy/D3DEngine/d3deng_draw.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_d3deng_input"
+source = "src/xCore/Entropy/D3DEngine/d3deng_input.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_d3deng_vram"
+source = "src/xCore/Entropy/D3DEngine/d3deng_vram.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_device_dvd"
+source = "src/xCore/Entropy/IOManager/Device_DVD/io_device_dvd.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_device_dvd_pc"
+source = "src/xCore/Entropy/IOManager/Device_DVD/io_device_dvd_pc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_device_net"
+source = "src/xCore/Entropy/IOManager/device_net/io_device_net.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_dfs"
+source = "src/xCore/Entropy/IOManager/io_dfs.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_filesystem"
+source = "src/xCore/Entropy/IOManager/io_filesystem.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_io_stdio"
+source = "src/xCore/Entropy/IOManager/io_stdio.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_memcard"
+source = "src/xCore/Entropy/MemCard/memcard.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_memcard_pc"
+source = "src/xCore/Entropy/MemCard/memcard_pc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_NetCommon"
+source = "src/xCore/Entropy/Network/NetCommon.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_NetLib"
+source = "src/xCore/Entropy/Network/PC/NetLib.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_fifo"
+source = "src/xCore/Entropy/Network/fifo.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_netaddress"
+source = "src/xCore/Entropy/Network/netaddress.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_netsocket"
+source = "src/xCore/Entropy/Network/netsocket.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_netstream"
+source = "src/xCore/Entropy/Network/netstream.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_e_Profile"
+source = "src/xCore/Entropy/e_Profile.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_MatxMisc"
+source = "src/xCore/MeshUtil/MatxMisc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_RawAnim"
+source = "src/xCore/MeshUtil/RawAnim.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_RawMaterial"
+source = "src/xCore/MeshUtil/RawMaterial.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_RawMaterial2"
+source = "src/xCore/MeshUtil/RawMaterial2.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_RawMesh"
+source = "src/xCore/MeshUtil/RawMesh.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_RawMesh2"
+source = "src/xCore/MeshUtil/RawMesh2.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "MeshUtil_RawSettings"
+source = "src/xCore/MeshUtil/RawSettings.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap_dxtc"
+source = "src/xCore/x_files/Implementation/x_bitmap_dxtc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_bitmap_resize"
+source = "src/xCore/x_files/Implementation/x_bitmap_resize.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_locale"
+source = "src/xCore/x_files/Implementation/x_locale.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_log"
+source = "src/xCore/x_files/Implementation/x_log.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_malloc"
+source = "src/xCore/x_files/Implementation/x_malloc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_math_misc"
+source = "src/xCore/x_files/Implementation/x_math_misc.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_math_sphere"
+source = "src/xCore/x_files/Implementation/x_math_sphere.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_memfile"
+source = "src/xCore/x_files/Implementation/x_memfile.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_profile"
+source = "src/xCore/x_files/Implementation/x_profile.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "x_files_x_tool"
+source = "src/xCore/x_files/Implementation/x_tool.cpp"
+flags = "cpp-unpooled"
+
+# Source-first engine imports. Each complete profile is a provisional build
+# hypothesis, not a claim of original PC compiler settings or addresses.
+# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
+
+[[unit]]
+unit = "Loco_Loco"
+source = "src/Support/Loco/Loco.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoAdditiveController"
+source = "src/Support/Loco/LocoAdditiveController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoAimController"
+source = "src/Support/Loco/LocoAimController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoAnimController"
+source = "src/Support/Loco/LocoAnimController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoCharAnimPlayer"
+source = "src/Support/Loco/LocoCharAnimPlayer.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoEyeController"
+source = "src/Support/Loco/LocoEyeController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoIKSolver"
+source = "src/Support/Loco/LocoIKSolver.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoLipSyncController"
+source = "src/Support/Loco/LocoLipSyncController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoMaskController"
+source = "src/Support/Loco/LocoMaskController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoMotionController"
+source = "src/Support/Loco/LocoMotionController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoPhysics"
+source = "src/Support/Loco/LocoPhysics.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoRagdollController"
+source = "src/Support/Loco/LocoRagdollController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoUtil"
+source = "src/Support/Loco/LocoUtil.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Loco_LocoWheelController"
+source = "src/Support/Loco/LocoWheelController.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PainMgr_Pain"
+source = "src/Support/PainMgr/Pain.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PainMgr_PainMgr"
+source = "src/Support/PainMgr/PainMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ZoneMgr_ZoneMgr"
+source = "src/Support/ZoneMgr/ZoneMgr.cpp"
+flags = "cpp-unpooled"
+
+# Source-first engine imports. Each complete profile is a provisional build
+# hypothesis, not a claim of original PC compiler settings or addresses.
+# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
+
+[[unit]]
+unit = "DataVault_DataVault"
+source = "src/Support/DataVault/DataVault.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PhysicsMgr_Collider"
+source = "src/Support/PhysicsMgr/Collider.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PhysicsMgr_CollisionShape"
+source = "src/Support/PhysicsMgr/CollisionShape.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PhysicsMgr_Constraint"
+source = "src/Support/PhysicsMgr/Constraint.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PhysicsMgr_PhysicsInst"
+source = "src/Support/PhysicsMgr/PhysicsInst.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PhysicsMgr_PhysicsMgr"
+source = "src/Support/PhysicsMgr/PhysicsMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PhysicsMgr_RigidBody"
+source = "src/Support/PhysicsMgr/RigidBody.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PlaySurfaceMgr_PlaySurfaceDBase"
+source = "src/Support/PlaySurfaceMgr/PlaySurfaceDBase.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PlaySurfaceMgr_PlaySurfaceMgr"
+source = "src/Support/PlaySurfaceMgr/PlaySurfaceMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "TweakMgr_TweakMgr"
+source = "src/Support/TweakMgr/TweakMgr.cpp"
+flags = "cpp-unpooled"
+
+# Source-first engine imports. Each complete profile is a provisional build
+# hypothesis, not a claim of original PC compiler settings or addresses.
+# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
+
+[[unit]]
+unit = "Locomotion_CharacterPhysics"
+source = "src/Support/Locomotion/CharacterPhysics.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Ragdoll_DistRule"
+source = "src/Support/Ragdoll/DistRule.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Ragdoll_GeomBone"
+source = "src/Support/Ragdoll/GeomBone.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Ragdoll_Particle"
+source = "src/Support/Ragdoll/Particle.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Ragdoll_Ragdoll"
+source = "src/Support/Ragdoll/Ragdoll.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Ragdoll_StickBone"
+source = "src/Support/Ragdoll/StickBone.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Ragdoll_VerletCollision"
+source = "src/Support/Ragdoll/VerletCollision.cpp"
+flags = "cpp-unpooled"
+
+# Source-first engine imports. Each complete profile is a provisional build
+# hypothesis, not a claim of original PC compiler settings or addresses.
+# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
+
+[[unit]]
+unit = "GameLib_RigidGeomCollision"
+source = "src/Support/GameLib/RigidGeomCollision.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ScriptVM_xsc_vm_core"
+source = "src/Support/scriptvm/xsc_vm_core.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ScriptVM_xsc_vm_disasm"
+source = "src/Support/scriptvm/xsc_vm_disasm.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ScriptVM_xsc_vm_exec"
+source = "src/Support/scriptvm/xsc_vm_exec.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ScriptVM_xsc_vm_module"
+source = "src/Support/scriptvm/xsc_vm_module.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "ScriptVM_xsc_vm_system"
+source = "src/Support/scriptvm/xsc_vm_system.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "NvTriStrip_NvTriStrip"
+source = "src/xCore/3rdParty/Nvidia/NvTriStrip/NvTriStrip.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "NvTriStrip_NvTriStripObjects"
+source = "src/xCore/3rdParty/Nvidia/NvTriStrip/NvTriStripObjects.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "PCRE_chartables"
+source = "src/xCore/Auxiliary/PCRE/chartables.c"
+flags = "c-pcre-import"
+
+[[unit]]
+unit = "PCRE_get"
+source = "src/xCore/Auxiliary/PCRE/pcre-4.4-src/src/pcre-4.4/get.c"
+flags = "c-pcre-import"
+
+[[unit]]
+unit = "PCRE_maketables"
+source = "src/xCore/Auxiliary/PCRE/pcre-4.4-src/src/pcre-4.4/maketables.c"
+flags = "c-pcre-import"
+
+[[unit]]
+unit = "PCRE_pcre"
+source = "src/xCore/Auxiliary/PCRE/pcre-4.4-src/src/pcre-4.4/pcre.c"
+flags = "c-pcre-import"
+
+[[unit]]
+unit = "PCRE_pcreposix"
+source = "src/xCore/Auxiliary/PCRE/pcre-4.4-src/src/pcre-4.4/pcreposix.c"
+flags = "c-pcre-import"
+
+[[unit]]
+unit = "PCRE_study"
+source = "src/xCore/Auxiliary/PCRE/pcre-4.4-src/src/pcre-4.4/study.c"
+flags = "c-pcre-import"
+
+[[unit]]
+unit = "PCRE_regex"
+source = "src/xCore/Auxiliary/PCRE/regex.cpp"
+flags = "cpp-pcre-import"
+
+# Source-first engine imports. Each complete profile is a provisional build
+# hypothesis, not a claim of original PC compiler settings or addresses.
+# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
+
+[[unit]]
+unit = "Characters_factions"
+source = "src/Support/Characters/factions.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "GameLib_DebugCheats"
+source = "src/Support/GameLib/DebugCheats.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "GameLib_StatsMgr"
+source = "src/Support/GameLib/StatsMgr.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Geometry_RenderInterface"
+source = "src/Support/Geometry/RenderInterface.cpp"
+flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Inventory_Inventory2"
+source = "src/Support/Inventory/Inventory2.cpp"
+flags = "cpp-unpooled"
+
+# Complete surviving object source; provisional profile, no PC claims.
+[[unit]]
+unit = "Objects_ParticleEventEmitter"
+source = "src/Support/Objects/ParticleEventEmitter.cpp"
+flags = "cpp-unpooled"
+
+# Complete surviving object source; provisional profile, no PC claims.
+[[unit]]
+unit = "Objects_ParticleEmiter"
+source = "src/Support/Objects/ParticleEmiter.cpp"
+flags = "cpp-unpooled"
+
+# Complete surviving audio event source; provisional profile, no PC claims.
+[[unit]]
+unit = "Sound_EventSoundEmitter"
+source = "src/Support/Sound/EventSoundEmitter.cpp"
+flags = "cpp-unpooled"

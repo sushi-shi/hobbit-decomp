@@ -1,0 +1,19 @@
+# Adapted from Gruntz. Navigation reads the same per-unit database as claims;
+# VC6 under Wine remains the matching compiler.
+CompileFlags:
+  CompilationDatabase: build/clangd
+  Add:
+    - --target=i386-pc-windows-msvc
+    - -fms-compatibility-version=12.00
+    - -fms-extensions
+    - -fdelayed-template-parsing
+    - -ferror-limit=0
+    - -Wno-writable-strings
+Diagnostics:
+  Suppress:
+    - -Wignored-pragmas
+    - -Wpragma-pack
+    - -Wnonportable-include-path
+  UnusedIncludes: None
+  ClangTidy:
+    Remove: "*"

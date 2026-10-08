@@ -1,0 +1,58 @@
+{
+  "status": "Evidence-backed PC reconstruction of two genuine RenderInterface far-clip settings methods. Remaining original source is unreconstructed, never replaced by stubs.",
+  "target_sha256": "631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2",
+  "owner": "Support/Geometry/RenderInterface.cpp",
+  "ownership_basis": {
+    "pc_source_markers": [
+      {
+        "site_rva": "0x1a355c",
+        "owner_rva": "0x1a34a0",
+        "owner_size": 611,
+        "bytes": "6800427400",
+        "source_file": "C:\\projects\\meridian\\Support\\Geometry\\RenderInterface.cpp"
+      },
+      {
+        "site_rva": "0x1a37b0",
+        "owner_rva": "0x1a3720",
+        "owner_size": 585,
+        "bytes": "6800427400",
+        "source_file": "C:\\projects\\meridian\\Support\\Geometry\\RenderInterface.cpp"
+      },
+      {
+        "site_rva": "0x1a3a0a",
+        "owner_rva": "0x1a3980",
+        "owner_size": 796,
+        "bytes": "6800427400",
+        "source_file": "C:\\projects\\meridian\\Support\\Geometry\\RenderInterface.cpp"
+      }
+    ],
+    "source_path_rva": "0x344200",
+    "common_configuration_loader": "0x1a3dc0",
+    "loader_name_inferred": "LoadRenderSettings",
+    "pc_family_bounds_supported": [
+      "0x1a34a0",
+      "0x1a3ef4"
+    ],
+    "next_pc_family_marker": "collmesh::GetTriVertsAndBBox at1a4118; CollMesh.cpp path references from1a5df4",
+    "model": "Existing local Gruntz contribution arrival/TU family approach. Three direct PC source-path anchors and shared loader support owning RenderInterface source family; interleaved shared inline/virtual folded code is not treated as independent owner evidence."
+  },
+  "inferred_spellings": [
+    "GetViewFarDistance",
+    "SetRenderFarClipDistance",
+    "g_RenderFarClipDistance"
+  ],
+  "identity_limits": [
+    "Only the two reconstructed settings methods are supplied; remaining original RenderInterface source remains unreconstructed, not replaced with stubs.",
+    "Original getter/setter/global spelling and static-vs-external linkage are inferred, not recovered from Xbox names.",
+    "Xbox RenderInterface.obj confirms original family/class source lineage only; no direct PC RVAs or settings method names.",
+    "Kingjoyer getter/setter are unnamed and its MemFailPanic loader label is contradicted by settings behavior.",
+    "No canonical fact tables or unit manifest changed; root owns enrollment/admission."
+  ],
+  "behavior": "Mutable float initialized10000; setter preserves actual PC unordered-value behavior and clamps1000..20000. Getter returns this single real shared datum.",
+  "proof": "build/probes/cohort13_admissions/farclip/proof.json",
+  "tooling_provenance": "Hobbit pinned VC6 cpp-unpooled profile; existing local Gruntz/HoMM1-derived COFF/PE readers and Capstone independent decoder; existing contribution-arrival TU model. No external tooling donor.",
+  "canonical_destination_hashes": {
+    "src/Support/Geometry/RenderInterface.cpp": "ae1c0f6bbf7500c0841dd39578ff7c07d7630f347f10c1a5acc1275d55bb2044",
+    "include/Support/Geometry/RenderInterface.hpp": "245bf89b63fc2db2f03a7c15654a2dcb51eef2acde3fb6ab3626bd029ac21ff7"
+  }
+}
