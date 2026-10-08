@@ -105,9 +105,15 @@ struct xhandle {
     xbool IsNull() const { return Handle == HNULL; }
 };
 
-// VC6's genuine <new> supplies the same placement-new/delete definitions as
-// the sibling helper. Use one owner so real STL headers can include it too.
-#include <new>
+// Genuine sibling allocation declarations retain the engine's throwing
+// delete contract; system <new> changes implicit member cleanup generation.
+#ifndef __PLACEMENT_NEW_INLINE
+#define __PLACEMENT_NEW_INLINE
+inline void* operator new(xalloctype Size, void* pData) { (void)Size; return pData; }
+inline void operator delete(void* pMemory, void* pData) { (void)pMemory; (void)pData; }
+#endif
+void* operator new(xalloctype Size);
+void operator delete(void* pMemory);
 template<class T> inline void xConstruct(T* Ptr) {
     (void)new (Ptr) T;
 }

@@ -46,6 +46,8 @@ ui_manager* g_UiMgr = NULL;
 //=========================================================================
 
 s32 g_uiLastSelectController = 0;
+DATA(0x00413040)
+static s32 s_EndDialogCount;
 
 //=========================================================================
 //  Helpers
@@ -1336,6 +1338,7 @@ xbool ui_manager::ProcessInput( f32 DeltaTime, s32 UserID )
                 }
             }
 
+            s_EndDialogCount=0;
             // Issue window calls for pad navigation
             if( tDPadUp    ) { Iterate = TRUE; pWin->OnPadNavigate( pWin, NAV_UP,    pDPadUp,    rDPadUp    ); };
             if( tDPadDown  ) { Iterate = TRUE; pWin->OnPadNavigate( pWin, NAV_DOWN,  pDPadDown,  rDPadDown  ); };
@@ -1709,6 +1712,7 @@ void ui_manager::EndDialog( s32 UserID, xbool ResetCursor )
         pUser->DialogStack.Delete( Count-1 );
         pDialog->Destroy();
         delete pDialog;
+        s_EndDialogCount++;
     }
 }
 

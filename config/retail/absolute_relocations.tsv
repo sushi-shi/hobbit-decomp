@@ -68580,6 +68580,7 @@ site_rva	kind
 0x318a3c	dir32
 0x318a54	dir32
 0x318a5c	dir32
+0x318a70	dir32
 0x318a88	dir32
 0x318a90	dir32
 0x318a98	dir32
@@ -68592,6 +68593,7 @@ site_rva	kind
 0x318b24	dir32
 0x318b48	dir32
 0x318b74	dir32
+0x318b80	dir32
 0x318b98	dir32
 0x318ba4	dir32
 0x318bbc	dir32

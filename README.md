@@ -33,15 +33,18 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-Engine import checkpoint (8 October 2026): **282 translation units enrolled**,
+Engine source checkpoint (8 October 2026): **282 translation units enrolled**,
 up from 46. The frozen broad build verifies **255 objects** and records
-**27 compilation failures**. Cohort20 adds the complete 19-method ADPCM codec,
-restores earlier DirectSound, IO filesystem, speaker and pan source, and admits
-more Audio and UI identities. Complete donor and predecessor versions are retained.
-The score block currently records the last verified cohort19 bank; cohort20's
-normal full-reference comparison is pending. Source presence, compilation and
-banked matches are measured separately; the whole-game target count does not yet
-distinguish engine from game code.
+**27 compilation failures**. Cohort21 restores the UI counter, codec integer
+arithmetic, IO destructor/EH contract and DirectSound channel initialization.
+Complete donor and predecessor versions are retained.
+
+All 98 claimed source owners compile and the model has zero violations. Strict
+target generation now stops at the earlier `ui_dialog::Render` context provider
+at PC RVA `0x355c64`; a new full-reference comparison and bank remain pending.
+The score block above records the last verified cohort19 bank. Source presence,
+compilation and banked matches are measured separately; the whole-game target
+count does not yet distinguish engine from game code.
 See [engine-source-imports.md](docs/engine-source-imports.md) for scope and
 [the contributor worklist](docs/matching-worklist.md) for what to match next.
 
@@ -87,7 +90,8 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current integration checkpoint](config/evidence/cohort19-strict.json): strict results, remaining mismatches and open verification gates.
+- [Current integration checkpoint](config/evidence/cohort21-integration-checkpoint.json): current source/build/model and the remaining strict provider gap.
+- [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.
 - [Tooling inheritance](docs/tooling-inheritance.md): donor inventory and tested capabilities.

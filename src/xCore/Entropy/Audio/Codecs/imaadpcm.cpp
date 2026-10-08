@@ -780,7 +780,7 @@ CImaAdpcmCodec::IsValidImaAdpcmFormat
  *     ULONGLONG: Difference of the two buffers
  *
  ****************************************************************************/
-// PC identity from complete authentic codec graph; nonexact source version, full predecessor retained.
+// Earlier Hobbit PC integer revision; complete later floating-point algorithm retained below.
 RVA(0x281b50, 0x122)
 ULONGLONG CImaAdpcmCodec::CalcDifference(LPBYTE pvBuffer1, LPBYTE pvBuffer2, UINT cBlocks, UINT cTotalBlocks, DWORD dwBlockSize)
 {
@@ -814,7 +814,12 @@ ULONGLONG CImaAdpcmCodec::CalcDifference(LPBYTE pvBuffer1, LPBYTE pvBuffer2, UIN
         assert( ullBlockDiff <= ullMaxBlockDiff );
 
         // Add the contribution of this block to the error
+        #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_IMAADPCM_ALGORITHMS)
+        // Earlier PC: wrapped unsigned64 multiplication, then integer division.
+        ullDiff += ( ullBlockDiff * ullMaxBlockContribution ) / ullMaxBlockDiff;
+#else
         ullDiff += (ULONGLONG)( ( (DOUBLE)ullBlockDiff / (DOUBLE)ullMaxBlockDiff ) * ullMaxBlockContribution );
+#endif
     }
 
     assert( ullDiff <= cBlocks * ullMaxBlockContribution );

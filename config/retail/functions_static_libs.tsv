@@ -38,4 +38,6 @@ rva	name	lib	confidence	source
 0x2c1f76	_realloc	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
 0x2c22b0	__except_handler3	LIBCMT	HIGH	config/evidence/crt_identities.json; unique actual archive member code match with four checked relocation sites
 0x2c2388	_vsprintf	LIBCMT	HIGH	config/evidence/vsprintf.json; full actual archive member matched after mapping two verified call targets
+0x2c2750	__allmul	LIBCMT	HIGH	Complete pinned archive member/4402/52B exact zero refs; cohort21_codec_polish/runtime-proof.json
+0x2c2790	__aulldiv	LIBCMT	HIGH	Complete pinned archive member/4518/104B exact zero refs; cohort21_codec_polish/runtime-proof.json
 0x2c8050	_strchr	LIBCMT	HIGH	config/evidence/crt-strstr-verification.json; complete archive contribution and outgoing interior provider reference independently checked

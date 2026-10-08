@@ -9,6 +9,9 @@
 // await revision recovery; full prior and later originals remain retained.
 #if defined(TARGET_PC) && !defined(HOBBIT_IO_LATER_FILESYSTEM)
 
+// Natural implicit entry destructor; no authored destructor body.
+RVA_COMPGEN(0x00276ec0, 0x56, ??1io_dfs_data@io_fs@@QAE@XZ)
+
 DATA(0x003f72c0)
 io_fs g_IOFSMgr;
 

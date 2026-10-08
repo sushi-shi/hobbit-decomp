@@ -843,35 +843,36 @@ void audio_hardware::InitChannel(channel* pChannel)
     pChannel->EndPosition=0;
     pChannel->CurrBufferPosition=0;
     pChannel->PrevBufferPosition=0;
-    pChannel->StartPosition=(u32)-1;
-    pChannel->MidPoint=0;
+    pChannel->MidPoint=(u32)-1;
     pChannel->ReleasePosition=0;
+    pChannel->Dirty=0;
     LPDIRECTSOUNDBUFFER pdsb=pChannel->Hardware.pdsBuffer;
+    DWORD BufferBytes=0;
     if(pSample->nSamples*2==pSample->WaveformLength)
         pSample->CompressionType=PCM;
-    DWORD BufferBytes=0;
-    switch(pSample->CompressionType)
+    switch((s32)pSample->CompressionType)
     {
     case ADPCM: BufferBytes=((pSample->WaveformLength+35)/36)*128; break;
-    case PCM:
+    case PCM: BufferBytes=pSample->WaveformLength; break;
     case MP3: BufferBytes=pSample->WaveformLength; break;
     }
     WAVEFORMATEX wfx;
     ZeroMemory(&wfx,sizeof(wfx));
-    wfx.wFormatTag=WAVE_FORMAT_PCM;
-    wfx.nChannels=1;
     wfx.nSamplesPerSec=pSample->SampleRate;
-    wfx.nAvgBytesPerSec=pSample->SampleRate*2;
-    wfx.nBlockAlign=2;
+    wfx.wFormatTag=WAVE_FORMAT_PCM;
     wfx.wBitsPerSample=16;
+    wfx.nChannels=1;
+    wfx.nBlockAlign=2;
+    wfx.nAvgBytesPerSec=wfx.nSamplesPerSec*wfx.nBlockAlign;
     DSBUFFERDESC desc;
     ZeroMemory(&desc,sizeof(desc));
-    DWORD ExtraBytes=pChannel->Hardware.IsLooped?0:8820;
+    DWORD ExtraBytes=8820;
+    if(pChannel->Hardware.IsLooped) ExtraBytes=0;
     desc.dwBufferBytes=BufferBytes+ExtraBytes;
     desc.lpwfxFormat=&wfx;
-    desc.guid3DAlgorithm=DS3DALG_DEFAULT;
     desc.dwSize=sizeof(desc);
     desc.dwFlags=DSBCAPS_CTRLPAN|DSBCAPS_CTRLVOLUME|DSBCAPS_GETCURRENTPOSITION2|DSBCAPS_LOCDEFER;
+    desc.guid3DAlgorithm=DS3DALG_DEFAULT;
     s_pDirectSound->CreateSoundBuffer(&desc,&pdsb,NULL);
     s_ChannelsInUse++;
     if(pSample->CompressionType==ADPCM)
@@ -882,6 +883,7 @@ void audio_hardware::InitChannel(channel* pChannel)
     {
         void* pData1;void* pData2;DWORD Bytes1;DWORD Bytes2;
         pdsb->Lock(BufferBytes,ExtraBytes,&pData1,&Bytes1,&pData2,&Bytes2,0);
+        memset(pData1,ExtraBytes,0);
         pdsb->Unlock(pData1,Bytes1,pData2,Bytes2);
     }
     pdsb->SetCurrentPosition(0);
@@ -906,15 +908,19 @@ static channel s_Channels[64];
 RVA(0x0027b580, 153)
 static LPDIRECTSOUNDBUFFER CreatePrimaryBuffer()
 {
-    LPDIRECTSOUNDBUFFER pBuffer=NULL;
-    WAVEFORMATEX wfx={0};
-    DSBUFFERDESC desc={0};
-    wfx.wFormatTag=WAVE_FORMAT_PCM;
-    wfx.nChannels=2;
+    LPDIRECTSOUNDBUFFER pBuffer;
+    WAVEFORMATEX wfx;
+    ZeroMemory(&wfx,sizeof(wfx));
+    DSBUFFERDESC desc;
+    ZeroMemory(&desc,sizeof(desc));
+    desc.dwBufferBytes=0;
+    desc.lpwfxFormat=NULL;
     wfx.nSamplesPerSec=44100;
-    wfx.nAvgBytesPerSec=44100*4;
-    wfx.nBlockAlign=4;
+    wfx.wFormatTag=WAVE_FORMAT_PCM;
     wfx.wBitsPerSample=16;
+    wfx.nChannels=2;
+    wfx.nBlockAlign=4;
+    wfx.nAvgBytesPerSec=44100*4;
     desc.dwSize=sizeof(desc);
     desc.dwFlags=DSBCAPS_PRIMARYBUFFER;
     s_pDirectSound->CreateSoundBuffer(&desc,&pBuffer,NULL);
