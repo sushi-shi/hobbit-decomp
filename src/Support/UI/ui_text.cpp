@@ -71,6 +71,7 @@ xbool ui_text::Create( s32 UserID, ui_manager* pManager, const irect& Position, 
 RVA(0x2a72a0, 0x298)
 void ui_text::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_text::Render");
     s32     State = ui_manager::CS_NORMAL;
 
     // Only render is visible

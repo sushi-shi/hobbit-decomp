@@ -536,6 +536,7 @@ def _definitions(coff: CoffObject) -> tuple[Definition, ...]:
 
 
 def _family(name: str) -> tuple[str, str | None] | None:
+    name = msvc_names.local_source_name(name)
     if VOLATILE_SG.fullmatch(name):
         return "sg", None
     if VOLATILE_T.fullmatch(name):

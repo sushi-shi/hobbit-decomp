@@ -120,6 +120,7 @@ void ui_textbox::SetLabel( const xwstring& Text )
 RVA(0x2a6840, 0x4db)
 void ui_textbox::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_textbox::Render");
     // Only render is visible
     if( m_Flags & WF_VISIBLE )
     {

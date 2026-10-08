@@ -205,6 +205,39 @@ def _local_data_defined(unit: str, name: str) -> bool:
         obj.section_chars[matches[0][0] - 1] & IMAGE_SCN_CNT_CODE
 
 
+
+def _local_compiler_string_defined(binding):
+    """Namespace only one real internal initialized compiler string per owner."""
+    import re
+    from hobbit.compare.canonicalize import CoffObject
+    from hobbit.evidence.pc_structure import checked_pe
+    from pathlib import Path
+    if binding.channel != "data_compgen" or binding.kind != "string" or not re.fullmatch(r"\$SG[0-9]+", binding.name):
+        return False
+    path = BUILD / "objdiff/base" / (binding.unit + ".obj")
+    if not binding.unit or not path.is_file():
+        return False
+    obj = CoffObject(path.read_bytes())
+    symbols = [s for s in obj.symbols.values() if s.name == binding.name]
+    if len(symbols) != 1:
+        return False
+    symbol = symbols[0]
+    if symbol.storage_class != 3 or symbol.typ != 0 or not 1 <= symbol.section <= len(obj.sections):
+        return False
+    section = obj.sections[symbol.section - 1]
+    if (section.name not in (".data", ".rdata") or not section.characteristics & 0x40 or section.characteristics & (0x80 | 0x20 | 0x20000000)):
+        return False
+    end = min([s.value for s in obj.symbols.values() if s.section == symbol.section and s.value > symbol.value] + [section.raw_size])
+    if binding.size <= 0 or symbol.value + binding.size > end:
+        return False
+    payload = obj.section_bytes(section)[symbol.value:symbol.value + binding.size]
+    if len(payload) != binding.size or not payload.endswith(b"\0") or b"\0" in payload[:-1]:
+        return False
+    if any(symbol.value <= r.site < symbol.value + binding.size for r in obj.relocations if r.section == symbol.section):
+        return False
+    return checked_pe(Path("build/orig/Meridian.exe")).read(binding.rva, binding.size) == payload
+
+
 def _disambiguate(data: list[Binding], violations: list[str]) -> list[Binding]:
     """One name per address image-wide, for proved TU-local data.
 
@@ -231,8 +264,9 @@ def _disambiguate(data: list[Binding], violations: list[str]) -> list[Binding]:
     vc6_locals = {name for name in shared
                   if len({b.unit for b in data if b.name == name}) ==
                      sum(b.name == name for b in data)
-                  and all(b.channel == "src" and
-                          _local_data_defined(b.unit, b.name)
+                  and all((b.channel == "src" and
+                          _local_data_defined(b.unit, b.name)) or
+                          _local_compiler_string_defined(b)
                           for b in data if b.name == name)}
     out, stuck = [], Counter()
     for b in data:

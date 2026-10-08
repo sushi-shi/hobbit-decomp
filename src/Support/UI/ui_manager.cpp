@@ -1454,6 +1454,7 @@ void ui_manager::Update( f32 DeltaTime )
 
 void ui_manager::Render( void )
 {
+    x_mem_owner __owner__("ui_manager::Render");
     s32 i;
 
     eng_Begin( "UI" );

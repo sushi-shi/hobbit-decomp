@@ -32,15 +32,20 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-**Current local integration: cohort23 (8 October 2026; publication pending).**
+**Current checkpoint: cohort23 (8 October 2026).**
 Eleven complete UI source successors restore
 verified outer memory-owner scopes and native string providers, including the
 former frontier at PC RVA `0x355cbc`. The build verifies **255 of 282 units**
 (11 fresh UI objects, 244 cached objects), with 27 known failures. Canonical
 native payloads and typed references agree with the independently reviewed
-proposals. Claims and census are refreshed. The model currently reports two
-namespace violations because two translation units reuse the private compiler
-name `$SG58046` for different strings; strict comparison is pending that fix.
+proposals. Claims and census are refreshed; all **99 claimed source owners**
+build and the model has **zero violations**. A reviewed compiler-local string
+qualification resolves the repeated `$SG58046` names without changing native
+payloads or references. Strict target generation passes the former UI gap and
+now stops at an unidentified writable-data provider, PC RVA `0x41303c`.
+A fresh comparison and match bank remain pending.
+Normal verification also retains open TU-order, dead-code, undefined-closure
+and data-evidence findings; the checkpoint records them without exemptions.
 
 The refreshed census contains **8,526 admitted function targets**, including
 **1,366 with reconstructed source identities**. These are whole-game counts;
@@ -94,7 +99,7 @@ visible in the verification results.
 
 ## Documentation
 
-- [Latest published integration checkpoint](config/evidence/cohort22-integration-checkpoint.json): cohort22 model and strict-generation results; cohort23 is in progress locally.
+- [Current integration checkpoint](config/evidence/cohort23-integration-checkpoint.json): source/build/model verification and the remaining strict provider gap.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.

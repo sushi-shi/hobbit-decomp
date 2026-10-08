@@ -139,6 +139,7 @@ xbool ui_dlg_list::Create( s32                        UserID,
 RVA(0x2a6360, 0x115)
 void ui_dlg_list::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_dlg_list::Render");
     // Only render is visible
     if( m_Flags & WF_VISIBLE )
     {

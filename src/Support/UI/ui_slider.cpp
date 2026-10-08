@@ -89,6 +89,7 @@ xbool ui_slider::Create( s32 UserID, ui_manager* pManager, const irect& Position
 RVA(0x2a5ac0, 0x1ff)
 void ui_slider::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_slider::Render");
     s32     State = ui_manager::CS_NORMAL;
 
     // Only render is visible

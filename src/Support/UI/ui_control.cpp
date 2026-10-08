@@ -56,6 +56,7 @@ xbool ui_control::Create( s32 UserID, ui_manager* pManager, const irect& Positio
 RVA(0x2aa720, 0x102)
 void ui_control::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_control::Render");
     // Only render is visible
     if( m_Flags & WF_VISIBLE )
     {

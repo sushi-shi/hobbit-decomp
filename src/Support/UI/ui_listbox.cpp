@@ -103,6 +103,7 @@ xbool ui_listbox::Create( s32 UserID, ui_manager* pManager, const irect& Positio
 
 void ui_listbox::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_listbox::Render");
     s32     i;
 
     // Only render is visible

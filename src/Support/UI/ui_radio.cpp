@@ -72,6 +72,7 @@ xbool ui_radio::Create( s32 UserID, ui_manager* pManager, const irect& Position,
 RVA(0x2a7650, 0x215)
 void ui_radio::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_radio::Render");
     s32     State = ui_manager::CS_NORMAL;
 
     // Only render is visible
