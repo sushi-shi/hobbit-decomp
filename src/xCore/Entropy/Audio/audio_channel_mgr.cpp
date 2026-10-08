@@ -101,6 +101,7 @@ void audio_channel_mgr::Kill( void )
 
 xbool DEBUG_ACQUIRE_CHANNEL_FAIL = 0;
 
+RVA(0x0027aa90, 0x1af)
 xbool audio_channel_mgr::Acquire( element* pElement )
 {
     CONTEXT( "audio_channel_mgr::Acquire" );
@@ -257,6 +258,7 @@ void audio_channel_mgr::Release( channel* pChannel )
         
 //------------------------------------------------------------------------------
 
+RVA(0x0027ad10, 0xe)
 void audio_channel_mgr::Start( channel* pChannel )
 {
     // Error check.
@@ -422,6 +424,7 @@ f32 audio_channel_mgr::GetPitch( channel* pChannel )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ae80, 0x54)
 void audio_channel_mgr::SetPitch( channel* pChannel, f32 Pitch )
 {
     // Error check.
@@ -459,6 +462,7 @@ f32 audio_channel_mgr::GetEffectSend( channel* pChannel )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027aef0, 0x54)
 void audio_channel_mgr::SetEffectSend( channel* pChannel, f32 EffectSend )
 {
     // Error check.

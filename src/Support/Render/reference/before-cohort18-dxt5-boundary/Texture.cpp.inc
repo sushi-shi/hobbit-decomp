@@ -42,9 +42,7 @@ static struct texture_loader : public rsc_loader
         case xbitmap::FMT_16_RGB_565:
         case xbitmap::FMT_DXT1:
         case xbitmap::FMT_DXT3:
-#if !defined(TARGET_PC) || defined(HOBBIT_BITMAP_LATER_FORMATS)
         case xbitmap::FMT_DXT5:
-#endif
         case xbitmap::FMT_A8:
             break;
         #endif
@@ -70,9 +68,7 @@ static struct texture_loader : public rsc_loader
         case xbitmap::FMT_16_RGB_565:
         case xbitmap::FMT_DXT1:
         case xbitmap::FMT_DXT3:
-#if !defined(TARGET_PC) || defined(HOBBIT_BITMAP_LATER_FORMATS)
         case xbitmap::FMT_DXT5:
-#endif
             break;
         #endif
 

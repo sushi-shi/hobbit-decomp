@@ -419,7 +419,12 @@ inline voice* IdToVoice( voice_id VoiceID )
     }
 
     // Does the sequence match?
+#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
     if( ((pVoice+Index)->Sequence & 0x0000ffff) == Sequence )
+#else
+    // The earlier PC decoder compares the complete stored sequence.
+    if( (pVoice+Index)->Sequence == Sequence )
+#endif
         return pVoice+Index;
     else
         return NULL;
@@ -1132,6 +1137,7 @@ s32 audio_mgr::AppendCold( u32 Index, f32 DeltaTime, u16* pDescriptor, voice* pV
 
 //------------------------------------------------------------------------------
 
+RVA(0x00258800, 0x98)
 s32 audio_mgr::AppendSimple( f32 BaseTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     u32 ElementIndex  = (u32)(*pDescriptor);
@@ -1177,6 +1183,7 @@ s32 audio_mgr::AppendSimple( f32 BaseTime, u16* pDescriptor, voice* pVoice, audi
 
 //------------------------------------------------------------------------------
 
+RVA(0x002588b0, 0x115)
 s32 audio_mgr::AppendComplex( f32 BaseTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     s32 Result       = 0;
@@ -1243,6 +1250,7 @@ s32 audio_mgr::AppendComplex( f32 BaseTime, u16* pDescriptor, voice* pVoice, aud
 
 //------------------------------------------------------------------------------
 
+RVA(0x002589e0, 0x1f1)
 s32 audio_mgr::AppendRandomList( f32 BaseTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     s32  ElementCount    = (s32)(*pDescriptor++);
@@ -1350,6 +1358,7 @@ s32 audio_mgr::AppendRandomList( f32 BaseTime, u16* pDescriptor, voice* pVoice, 
 
 //------------------------------------------------------------------------------
 
+RVA(0x00258bf0, 0x113)
 s32 audio_mgr::AppendWeightedList( f32 BaseTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {   
     s32  ElementCount  = (s32)(*pDescriptor++);

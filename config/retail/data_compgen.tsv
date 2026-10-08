@@ -1,4 +1,4 @@
-# No admitted PC ownership/identity claims in this channel yet.
-# Structure and candidate evidence are in config/retail/pc and config/evidence.
-# Xbox symbol names or link order alone do not prove PC source-emitted identities or bands.
+# One root-reviewed native compiler-private datum; see cohort18-context-provider.json.
+# Original retail private spelling is unknown. Recheck the current owner object after source/profile changes.
 rva	size	name	owner	class
+0x352d68	0x1b	$SG51057	Entropy_audio_channel_mgr	string

@@ -1423,3 +1423,10 @@ int xwstring::StartsWith(const xwstring& prefix) const
     xwstring left = Left(prefix.GetLength());
     return left == prefix;
 }
+
+// Genuine later SetLength API adapted to the established older explicit length field.
+void xstring::SetLength(int length)
+{
+    EnsureCapacity(length);
+    m_Length = length;
+}

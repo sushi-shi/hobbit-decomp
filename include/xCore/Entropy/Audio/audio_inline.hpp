@@ -1,5 +1,7 @@
+#include <rva.h>
 // Source import: Area51 original revision 431f72b9; sibling engine version.
-// Provisional Hobbit correspondence; no PC address or layout claim.
+// Shared sibling helper source; the two Calculate*Volume identities below are
+// independently reviewed PC exceptions. Other helpers retain provisional correspondence.
 // Provenance: docs/imports/entropy-audio-io.json.
 #ifndef AUDIO_INLINE_HPP
 #define AUDIO_INLINE_HPP
@@ -68,6 +70,7 @@ inline void InsertElementIntoList( element* pElement, element* pInsertionPoint )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027a300, 0x24)
 inline f32 CalculateVoiceVolume( voice* pVoice )
 {
     f32 Result = pVoice->UserVolume * pVoice->Params.Volume * pVoice->pPackage->GetComputedVolume();
@@ -120,6 +123,7 @@ inline f32 CalculateVoiceEffectSend( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027a330, 0x24)
 inline f32 CalculateElementVolume( element* pElement )
 {
     f32 Result = pElement->Params.Volume * pElement->PositionalVolume * pElement->VolumeVariance * pElement->pVoice->Volume;

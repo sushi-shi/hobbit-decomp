@@ -27,7 +27,9 @@ public:
     void GetPitchYaw(float& pitch, float& yaw) const;
     int PointInView(const vector3& p, system s) const;
     int SphereInView(const vector3& p, float radius, system s) const;
-    int BBoxInView(const bbox& b, system s) const;
+    enum visibility { VISIBLE_NONE, VISIBLE_FULL, VISIBLE_PARTIAL };
+    int BBoxInView(const bbox& b, system s = WORLD) const;
+    int BBoxInView(const bbox& b, unsigned& CheckPlaneMask, system s = WORLD) const;
     float GetYFOV() const;
     vector3 GetPosition() const;
     vector3 ConvertV2W(const vector3& V)const;

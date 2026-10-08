@@ -376,7 +376,8 @@ s32 monkey::ChooseMode() const
     ASSERT( AreAllModesDisabled() == FALSE );
 
     s32 nActiveModes = 0;
-    for ( s32 i=0; i < k_NumMonkeyModes; i++ )
+    s32 i;
+    for ( i=0; i < k_NumMonkeyModes; i++ )
     {
         if ( g_MonkeyOptions.ModeEnabled[i] )
             nActiveModes++;
@@ -386,7 +387,7 @@ s32 monkey::ChooseMode() const
     
     // iterate through all available modes until we reach the choice-th 
     s32 j = 0;
-    for ( s32 i=0; i < k_NumMonkeyModes; i++ )
+    for ( i=0; i < k_NumMonkeyModes; i++ )
     {
         if ( g_MonkeyOptions.ModeEnabled[i] )
         {

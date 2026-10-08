@@ -64,6 +64,7 @@ struct vector3
 {
     RVA(0x0001def0, 0x3)
     vector3() {}
+    vector3(float Pitch,float Yaw) { Set(Pitch,Yaw); }
     vector3(const vector3& value) : X(value.X), Y(value.Y), Z(value.Z) {}
     RVA(0x00001f00, 0x19)
     vector3(float x, float y, float z) : X(x), Y(y), Z(z) {}
@@ -198,6 +199,9 @@ struct quaternion
     void Identity(){X=Y=Z=0.0f;W=1.0f;}
     void Invert(){W=-W;}
     quaternion& operator*=(const quaternion& R);
+    vector3 operator*(const vector3& V) const;
+    vector3 Rotate(const vector3& V) const;
+    void Rotate(vector3* pDest,const vector3* pSource,s32 NVerts) const;
     void Normalize()
     {
         float scale = 1.0f / static_cast<float>(sqrt(X * X + Y * Y + Z * Z + W * W));
@@ -586,6 +590,7 @@ inline vector3 operator*(const vector3& a,float s);
 
 struct bbox
 {
+    void operator()(const vector3& P1,const vector3& P2);
     vector3 Min,Max;
     bbox(){Min.Set(3.402823466e38f,3.402823466e38f,3.402823466e38f);Max.Set(-3.402823466e38f,-3.402823466e38f,-3.402823466e38f);}
     void Clear(){Min.Set(3.402823466e38f,3.402823466e38f,3.402823466e38f);Max.Set(-3.402823466e38f,-3.402823466e38f,-3.402823466e38f);}
@@ -1191,6 +1196,55 @@ inline int bbox::Intersect(const vector3& Center,float Radius)const{
  if(Center.GetY()<Min.GetY()){d=Center.GetY()-Min.GetY();dmin+=d*d;}else if(Center.GetY()>Max.GetY()){d=Center.GetY()-Max.GetY();dmin+=d*d;}
  if(Center.GetZ()<Min.GetZ()){d=Center.GetZ()-Min.GetZ();dmin+=d*d;}else if(Center.GetZ()>Max.GetZ()){d=Center.GetZ()-Max.GetZ();dmin+=d*d;}
  if(dmin<=Radius*Radius)return 1;return 0;
+}
+
+inline
+vector3 quaternion::operator * ( const vector3& V ) const
+{
+    vector3 Result;
+    vector3 v1;
+    vector3 v2;
+
+    Result.Set( X, Y, Z );
+    v1     = v3_Cross( Result, V  );
+    v2     = v3_Cross( Result, v1 );
+    v1    *= 2.0f * W;
+    v2    *= 2.0f;
+    Result = V + v1 + v2;
+
+    return( Result );
+}
+
+//==============================================================================
+
+inline
+vector3 quaternion::Rotate( const vector3& V ) const
+{
+    return( *this * V );
+}
+
+//==============================================================================
+
+inline
+void quaternion::Rotate(       vector3* pDest, 
+                         const vector3* pSource, 
+                               s32      NVerts ) const
+{
+    s32 i;
+
+    for( i = 0; i < NVerts; i++ )
+    {
+        *pDest = *this * *pSource;
+        pDest++;
+        pSource++;
+    }
+}
+
+
+inline void bbox::operator()(const vector3& P1,const vector3& P2)
+{
+    Min( MIN(P1.X,P2.X), MIN(P1.Y,P2.Y), MIN(P1.Z,P2.Z) );
+    Max( MAX(P1.X,P2.X), MAX(P1.Y,P2.Y), MAX(P1.Z,P2.Z) );
 }
 
 #include <xCore/x_files/Implementation/x_math_scalar_closure.hpp>

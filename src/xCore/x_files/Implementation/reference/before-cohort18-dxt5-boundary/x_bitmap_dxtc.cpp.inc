@@ -457,9 +457,7 @@ xbitmap UnpackImage( const xbitmap& Source )
         {
             case xbitmap::FMT_DXT1: Method = DC_DXT1; break;
             case xbitmap::FMT_DXT3: Method = DC_DXT3; break;
-#if !defined(TARGET_PC) || defined(HOBBIT_BITMAP_LATER_FORMATS)
             case xbitmap::FMT_DXT5:
-#endif
             default:
                 return Source;
         }

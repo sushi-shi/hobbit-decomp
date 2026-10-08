@@ -41,6 +41,7 @@ public:
     char GetAt(int index) const { return m_pData[index]; }
     void SetAt(int index, char character) { m_pData[index] = character; }
     int IsEmpty() const { return m_Length == 0; }
+    void SetLength(int length);
     void Clear();
     void FreeExtra();
     void IndexToRowCol(int index, int& row, int& column) const;

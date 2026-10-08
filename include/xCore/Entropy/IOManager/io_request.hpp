@@ -48,6 +48,10 @@ public:
         callback_fn* callback = 0
     );
 
+
+    // Complete genuine donor inline APIs; existing PC fields, no layout changes.
+inline  void                AcquireSemaphore( void )            { m_Semaphore.Acquire(); }
+
 private:
     io_request* m_pPrev;
     io_request* m_pNext;

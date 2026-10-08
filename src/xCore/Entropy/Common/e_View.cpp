@@ -910,3 +910,60 @@ float view::CalcScreenSize  ( const vector3& Position,
     
     return ((float)m_ShotSize * WorldRadius * 2 * m_ScreenDist)/ZDist;
 }
+
+// Genuine complete later overload, provisional source extension without PC identity.
+s32 view::BBoxInView( const bbox&  BBox,
+                            u32&   CheckPlaneMask,
+                            system System ) const
+{
+    s32 ReturnValue = VISIBLE_FULL ;    // Means "Fully In View".
+    CheckPlaneMask  = 0;
+
+    // Be sure planes have been constructed.
+    if( m_Dirty & (1 << 8) )
+        UpdatePlanes();
+
+    // Decide which planes to use.
+    plane* pPlane = (System==WORLD) ? (m_WorldSpacePlane)    : (m_ViewSpacePlane);
+    s32*   pMinI  = (System==WORLD) ? (m_WorldPlaneMinIndex) : (m_ViewPlaneMinIndex);
+    s32*   pMaxI  = (System==WORLD) ? (m_WorldPlaneMaxIndex) : (m_ViewPlaneMaxIndex);
+    f32*   pF     = (f32*)&BBox;
+
+    // Loop through planes looking for a trivial reject.
+    for( s32 i=0; i<6; i++ )
+    {
+        // Compute max dist along normal
+        f32 MaxDist = pPlane->Normal.GetX() * pF[pMaxI[0]] +
+                      pPlane->Normal.GetY() * pF[pMaxI[1]] +
+                      pPlane->Normal.GetZ() * pF[pMaxI[2]] +
+                      pPlane->D;
+
+        // If outside plane, we are culled.
+        if( MaxDist < 0 )
+        {
+            CheckPlaneMask = 0;
+            return( VISIBLE_NONE );
+        }
+
+        // Compute min dist along normal
+        f32 MinDist = pPlane->Normal.GetX() * pF[pMinI[0]] +
+                      pPlane->Normal.GetY() * pF[pMinI[1]] +
+                      pPlane->Normal.GetZ() * pF[pMinI[2]] +
+                      pPlane->D;
+
+        // If partially out, remember.
+        if( MinDist < 0 )
+        {
+            ReturnValue     = VISIBLE_PARTIAL ;
+            CheckPlaneMask |= (1<<i);
+        }
+
+        // Move to next plane
+        pMinI += 3;
+        pMaxI += 3;
+        pPlane++;
+    }
+
+    return( ReturnValue );
+} 
+

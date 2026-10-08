@@ -2288,6 +2288,7 @@ inline void audio_voice_mgr::UpdateStartPending( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x00279c80, 0xe5)
 inline voice* audio_voice_mgr::UpdateCheckElements( voice* pVoice )
 {
     CONTEXT( "audio_voice_mgr::UpdateCheckElements" );
@@ -2351,6 +2352,7 @@ inline voice* audio_voice_mgr::UpdateCheckElements( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x002790e0, 0x58)
 void audio_voice_mgr::UpdateReleaseTime( voice* pVoice )
 {
     CONTEXT( "audio_voice_mgr::UpdateReleaseTime" );
@@ -2605,6 +2607,7 @@ inline void audio_voice_mgr::UpdateVoicePan( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027a3c0, 0xbf)
 inline void audio_voice_mgr::UpdateVoicePitch( voice* pVoice )
 {
     CONTEXT( "audio_voice_mgr::UpdateVoicePitch" );
@@ -2637,6 +2640,7 @@ inline void audio_voice_mgr::UpdateVoicePitch( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027a480, 0xbf)
 inline void audio_voice_mgr::UpdateVoiceEffectSend( voice* pVoice )
 {
     CONTEXT( "audio_voice_mgr::UpdateVoiceEffectSend" );
@@ -3176,6 +3180,8 @@ void audio_voice_mgr::UpdateCheckQueued( void )
 s32 VOICE_PRIORITY_HIT=0;
 s32 VOICE_PRIORITY_MISS=0;
 
+RVA(0x00279570, 0x62)
+#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
 void audio_voice_mgr::PrioritizeVoice( voice* pVoice, xbool RemoveFromList )
 {
     // Error check.
@@ -3234,6 +3240,31 @@ void audio_voice_mgr::PrioritizeVoice( voice* pVoice, xbool RemoveFromList )
     }
 
 }
+#else
+void audio_voice_mgr::PrioritizeVoice( voice* pVoice, xbool RemoveFromList )
+{
+    // Error check.
+    ASSERT( VALID_VOICE(pVoice) );
+
+    // Remove the channel from its current list?
+    if( RemoveFromList )
+        RemoveVoiceFromList( pVoice );
+
+    // Get first used voice.
+    voice* pInsert = UsedVoices()->Link.pNext;
+
+    // Find the insertion point (based on priority only).
+    while( pInsert->Params.Priority > pVoice->Params.Priority )
+        pInsert = pInsert->Link.pNext;
+
+    // Volume is secondary key.
+    while( (pInsert->Params.Priority == pVoice->Params.Priority) && (pInsert->Volume > pVoice->Volume) )
+        pInsert = pInsert->Link.pNext;
+
+    // Insert it into the used list.
+    InsertVoiceIntoList( pVoice, pInsert );
+}
+#endif
 
 //------------------------------------------------------------------------------
 
