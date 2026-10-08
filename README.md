@@ -9,9 +9,13 @@ Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
-The score below is the last verified cohort19 bank. Cohort20 source is integrated;
-its strict target generation currently needs the UI counter at PC RVA `0x413040`.
-See the [integration checkpoint](config/evidence/cohort20-integration-checkpoint.json).
+**Current checkpoint: cohort22.** 255 of 282 units compile; all 98 claimed
+owners build with zero model violations. The current model owns 1,366 of 8,526
+admitted function targets. The Render memory-owner marker is restored; fresh
+strict target generation now stops at an unidentified writable-data provider,
+PC RVA `0x355cbc`. See the
+[current checkpoint](config/evidence/cohort22-integration-checkpoint.json).
+The score block below is the **historical cohort19 bank**, pending a fresh comparison.
 
 <!-- match-score:start -->
 ## Match status
@@ -37,11 +41,13 @@ Engine source checkpoint (8 October 2026): **282 translation units enrolled**,
 up from 46. The frozen broad build verifies **255 objects** and records
 **27 compilation failures**. Cohort21 restores the UI counter, codec integer
 arithmetic, IO destructor/EH contract and DirectSound channel initialization.
-Complete donor and predecessor versions are retained.
+Complete donor and predecessor versions are retained. Cohort22 restores the
+verified [`ui_dialog::Render` memory-owner scope and literal](config/evidence/cohort22-memory-owner-provider.json).
 
-All 98 claimed source owners compile and the model has zero violations. Strict
-target generation now stops at the earlier `ui_dialog::Render` context provider
-at PC RVA `0x355c64`; a new full-reference comparison and bank remain pending.
+All 98 claimed source owners compile and the model has zero violations. Fresh
+strict target generation passes the former marker at PC RVA `0x355c64` and stops
+at the next unidentified writable provider, `0x355cbc`. A new full-reference
+comparison and bank remain pending.
 The score block above records the last verified cohort19 bank. Source presence,
 compilation and banked matches are measured separately; the whole-game target
 count does not yet distinguish engine from game code.
@@ -90,7 +96,7 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current integration checkpoint](config/evidence/cohort21-integration-checkpoint.json): current source/build/model and the remaining strict provider gap.
+- [Current integration checkpoint](config/evidence/cohort22-integration-checkpoint.json): current source/build/model and the remaining strict provider gap.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.

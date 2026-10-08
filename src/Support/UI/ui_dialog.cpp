@@ -160,6 +160,7 @@ xbool ui_dialog::Create( s32                        UserID,
 RVA(0x2a2880, 0xcc)
 void ui_dialog::Render( s32 ox, s32 oy )
 {
+    x_mem_owner __owner__("ui_dialog::Render");
 #ifdef TARGET_PC
     // If this is not a TAB dialog page
 /*    if( !(GetFlags() & ui_win::WF_TAB) )

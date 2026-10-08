@@ -1,3 +1,4 @@
-# No manual data_compgen rows; the reviewed Audio context datum now pairs automatically.
-# See cohort19-context-provider-retirement.json; preserve actual native members in proof, never as aliases.
+# Reviewed actual native compiler data; source literals and private ordinals are not retail spellings.
+# Reprove defining source/header/profile/object and retire a row if genuine automatic pairing supersedes it.
 rva	size	name	owner	class
+0x355c64	0x12	$SG58381	UI_ui_dialog	string
