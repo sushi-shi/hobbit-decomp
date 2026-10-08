@@ -9,13 +9,8 @@ Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
-**Current checkpoint: cohort22.** 255 of 282 units compile; all 98 claimed
-owners build with zero model violations. The current model owns 1,366 of 8,526
-admitted function targets. The Render memory-owner marker is restored; fresh
-strict target generation now stops at an unidentified writable-data provider,
-PC RVA `0x355cbc`. See the
-[current checkpoint](config/evidence/cohort22-integration-checkpoint.json).
-The score block below is the **historical cohort19 bank**, pending a fresh comparison.
+The score below is the **last verified match bank (cohort19)**. Source imports
+have advanced to cohort23; a fresh comparison is pending the issue described below.
 
 <!-- match-score:start -->
 ## Match status
@@ -37,22 +32,25 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-Engine source checkpoint (8 October 2026): **282 translation units enrolled**,
-up from 46. The frozen broad build verifies **255 objects** and records
-**27 compilation failures**. Cohort21 restores the UI counter, codec integer
-arithmetic, IO destructor/EH contract and DirectSound channel initialization.
-Complete donor and predecessor versions are retained. Cohort22 restores the
-verified [`ui_dialog::Render` memory-owner scope and literal](config/evidence/cohort22-memory-owner-provider.json).
+**Current local integration: cohort23 (8 October 2026; publication pending).**
+Eleven complete UI source successors restore
+verified outer memory-owner scopes and native string providers, including the
+former frontier at PC RVA `0x355cbc`. The build verifies **255 of 282 units**
+(11 fresh UI objects, 244 cached objects), with 27 known failures. Canonical
+native payloads and typed references agree with the independently reviewed
+proposals. Claims and census are refreshed. The model currently reports two
+namespace violations because two translation units reuse the private compiler
+name `$SG58046` for different strings; strict comparison is pending that fix.
 
-All 98 claimed source owners compile and the model has zero violations. Fresh
-strict target generation passes the former marker at PC RVA `0x355c64` and stops
-at the next unidentified writable provider, `0x355cbc`. A new full-reference
-comparison and bank remain pending.
-The score block above records the last verified cohort19 bank. Source presence,
-compilation and banked matches are measured separately; the whole-game target
-count does not yet distinguish engine from game code.
-See [engine-source-imports.md](docs/engine-source-imports.md) for scope and
-[the contributor worklist](docs/matching-worklist.md) for what to match next.
+The refreshed census contains **8,526 admitted function targets**, including
+**1,366 with reconstructed source identities**. These are whole-game counts;
+the engine/game split remains unresolved. The historical bank above used
+8,493 targets, so its percentage does not describe the current census.
+
+Complete later Render bodies remain NONEXACT; the manager's two additional
+nested lifetimes remain open. Source import, compilation and exact matching
+are separate measurements. See [engine-source-imports.md](docs/engine-source-imports.md)
+and [the matching worklist](docs/matching-worklist.md) for current scope and tasks.
 
 ## Branches
 
@@ -96,7 +94,7 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current integration checkpoint](config/evidence/cohort22-integration-checkpoint.json): current source/build/model and the remaining strict provider gap.
+- [Latest published integration checkpoint](config/evidence/cohort22-integration-checkpoint.json): cohort22 model and strict-generation results; cohort23 is in progress locally.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.
