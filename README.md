@@ -9,8 +9,9 @@ Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
-The score below is the **last verified match bank (cohort19)**. Source imports
-have advanced to cohort24; a fresh comparison is pending the issue described below.
+The score below is the **historical cohort19 match bank**. The latest integrated
+checkpoint is cohort24; reviewed cohort25 UI changes await integration and a
+fresh comparison. Current build and review progress appear immediately below the score.
 
 <!-- match-score:start -->
 ## Match status
@@ -50,6 +51,17 @@ The refreshed census contains **8,526 admitted function targets**, including
 **1,366 with reconstructed source identities**. These are whole-game counts;
 the engine/game split remains unresolved. The historical bank above used
 8,493 targets, so its percentage does not describe the current census.
+
+**Work in progress: cohort25 UI recovery (8 October 2026).**
+Independent review confirms a missing **44-byte `xstring` font-name member**
+in `ui_win` and the constructor's genuine six-byte `"large\0"` provider for
+`0x31ceac`. A complete earlier checkbox Render body also passed native and
+control-flow review; downstream PC reads establish its UTF-16 text arguments.
+These proposals remain **NONEXACT and are not yet integrated**. Next come the
+shared-header rebuild, native string-symbol renewal, fresh claims/model and
+strict target generation, followed by a new all-reference comparison and bank.
+The current build counts and historical score above therefore remain unchanged.
+See the [review progress receipt](config/evidence/cohort25-review-progress.json).
 
 Complete later Render bodies remain NONEXACT. Source import, compilation and exact matching
 are separate measurements. See [engine-source-imports.md](docs/engine-source-imports.md)
@@ -97,6 +109,7 @@ visible in the verification results.
 
 ## Documentation
 
+- [Current review progress](config/evidence/cohort25-review-progress.json): independently reviewed UI proposals and remaining integration checks.
 - [Current integration checkpoint](config/evidence/cohort24-integration-checkpoint.json): current source/build/model checks and remaining strict/normal findings.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
