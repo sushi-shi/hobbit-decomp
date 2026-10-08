@@ -9,9 +9,10 @@ Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
-The score below is the **historical cohort19 match bank**. Current integration
-has reached cohort26. Strict target generation still stops at `OptionSelect`
-(PC RVA `0x323150`), so a fresh comparison and score bank remain pending.
+The score below is the **historical cohort19 match bank**. Source integration
+has reached cohort26 and current verification is cohort27. Strict target
+generation now stops at `ui_font::TextSize` (PC RVA `0x355ee4`), so a fresh
+comparison and score bank remain pending.
 Current source and build progress appear immediately below the score.
 
 <!-- match-score:start -->
@@ -44,26 +45,34 @@ They remain **NONEXACT**: font and virtual-method revisions still differ.
 
 The current broad build verifies **255 of 282 units** (two fresh objects,
 253 cached objects), with the same 27 failures: 18 missing-header dependencies
-and nine source/API differences. All 16 UI string providers are renewed; four
+and nine source/API differences. Fourteen explicit UI string providers remain;
+two others now use independently corroborated automatic pairing. Four
 checkbox and three text-renderer copies of `"large"` remain unbound. Fresh
 claims, census and model checks pass; all **99 claimed source owners** build
 and the model has **zero violations**. The changed sources were freshly scanned
 against independently verified unchanged headers, profiles and prior whole-scan
 provenance. The known failed, unclaimed LLVM owner contributes no active claims.
-Strict target generation fails at `OptionSelect` (PC RVA `0x323150`). Its
-reviewed source provider is present in the current model but absent from the
-generated data manifest: explicit and automatically inferred records name the
-same 13-byte datum differently, causing both to be rejected as overlaps.
-The [enrollment diagnosis](config/evidence/cohort26-optionselect-enrollment.json)
-records this tooling failure.
+Source and headers are unchanged in cohort27.
+
+**Current verification: cohort27 (9 October 2026).**
+Retiring the redundant explicit OptionSelect and dialog-list context records
+under the existing provider contract resolves both duplicate enrollments.
+The same physical strings, extents and qualified callers remain proved; all
+fourteen other explicit providers are retained. Strict generation passes
+`0x323150` and `0x355e08`, with zero manifest overlaps, and now fails at
+`0x355ee4`, the 18-byte `ui_font::TextSize` scope string. This is a genuine
+source revision gap: the complete PC method uses a virtual token-based font
+backend, while current imported source scans glyphs directly. The
+[font frontier diagnosis](config/evidence/cohort27-font-frontier.json) records
+the unresolved backend declarations and behavior.
 A fresh comparison and bank remain pending.
 See the [source integration proof](config/evidence/cohort26-source-providers.json)
 and [build receipt](config/evidence/engine-source-import-build.json).
 
-Current cohort26 normal verification records five open gates: 13 TU-order findings,
+Current cohort27 normal verification records five open gates: 13 TU-order findings,
 220 dead-code annotation findings, 112 undefined-closure findings, one
 data-access finding and one data-coverage finding. No exemptions or gate
-baselines were added. The [current checkpoint](config/evidence/cohort26-integration-checkpoint.json)
+baselines were added. The [current checkpoint](config/evidence/cohort27-integration-checkpoint.json)
 records those results separately from the historical score.
 
 The latest published census contains **8,526 admitted function targets**,
@@ -118,8 +127,9 @@ visible in the verification results.
 ## Documentation
 
 - [Current source integration](config/evidence/cohort26-source-providers.json): restored UI behavior, reviewed native objects and pending matching renewal.
-- [Current verification checkpoint](config/evidence/cohort26-integration-checkpoint.json): build, claims/model and strict/normal findings.
-- [OptionSelect enrollment diagnosis](config/evidence/cohort26-optionselect-enrollment.json): duplicate identity records block strict target generation.
+- [Current verification checkpoint](config/evidence/cohort27-integration-checkpoint.json): resolved enrollments, current model and strict/normal findings.
+- [Provider retirement](config/evidence/cohort27-ui-provider-retirement.json): automatic pairing supersedes two redundant explicit identities; fourteen remain required.
+- [Font source frontier](config/evidence/cohort27-font-frontier.json): original token-based backend differs from imported glyph scanning.
 - [Review milestone](config/evidence/cohort25-review-progress.json): evidence retained from before integration.
 - [Previous verification checkpoint](config/evidence/cohort25-integration-checkpoint.json): prior build, claims/model and strict/normal findings.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
