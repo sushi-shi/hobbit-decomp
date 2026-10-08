@@ -447,11 +447,7 @@ void audio_manager::Init( s32 MemSize )
 
     //matrix4 W2V;
     //W2V.Identity();
-#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-    g_AudioMgr.SetSpeakerConfig( -90, +90, 0, 0, 2 );
-#else
     g_AudioMgr.SetSpeakerConfig( SPEAKERS_STEREO );
-#endif
     //g_AudioMgr.SetSpeakerConfig(-90,+90,0,0,2);
     //g_AudioMgr.SetSpeakerConfig(-45,45,45+90,45+180,4);
     //g_AudioManager.SetEar( W2V, NEAR_CLIP, FAR_CLIP );

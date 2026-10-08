@@ -110,12 +110,7 @@ public:
 
             void            EnableAudioDucking      ( void );
             void            DisableAudioDucking     ( void );
-            xbool           IsAudioDuckingEnabled   ( void )
-#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-                { return (m_AudioDuckLevel > 0); }
-#else
-                ;
-#endif
+            xbool           IsAudioDuckingEnabled   ( void )            ;
 
             void            Pause                   ( voice_id          VoiceID );
             void            PauseAll                ( void );
@@ -191,12 +186,8 @@ public:
             void            SetSFXVolume            ( f32               Volume );
             void            SetVoiceVolume          ( f32               Volume );
             f32             GetAudioTime            ( void ) { return m_Time; }
-#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_MGR_API)
             void            SetSpeakerConfig        ( s32               SpeakerConfig );
             s32             GetSpeakerConfig        ( void )            { return m_SpeakerConfig; }
-#else
-            void            SetSpeakerConfig        ( s32 FrontLeft, s32 FrontRight, s32 BackRight, s32 BackLeft, s32 nSpeakers );
-#endif
 
 
 
@@ -209,13 +200,11 @@ public:
 
 private:                                            
                                                     
-#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_MGR_API)
             void            SetSpeakerAngles        ( s32               FrontLeft, 
                                                       s32               FrontRight, 
                                                       s32               BackRight, 
                                                       s32               BackLeft, 
                                                       s32               nSpeakers );
-#endif
             void            GetSpeakerAngles        ( s32&              FrontLeft,
                                                       s32&              FrontRight, 
                                                       s32&              BackRight, 
@@ -309,11 +298,7 @@ private:
             s32                 m_BackRight;
             s32                 m_BackLeft;
             s32                 m_nSpeakers;
-#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_MGR_API)
             s32                 m_SpeakerConfig;
-#else
-            s32                 m_AudioDuckLevel;
-#endif
             f32                 m_Time;
             matrix4             m_W2V;
             f32                 m_NearClip;

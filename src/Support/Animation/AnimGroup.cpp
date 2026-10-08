@@ -330,9 +330,11 @@ void anim_group::Clear(void) {
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 const byte* anim_group::GetCompressedDataPtr(void) const {
     return m_pCompressedData;
 }
+#endif
 
 //=========================================================================
 

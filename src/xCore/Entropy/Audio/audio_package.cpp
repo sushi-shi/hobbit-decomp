@@ -592,6 +592,7 @@ void audio_package::SetUserFarDiffuse( f32 FarDiffuse )
 
 //------------------------------------------------------------------------------
 
+RVA(0x27ce70, 0x3d)
 void audio_package::ComputeVolume( void )
 {
     f32 Volume;

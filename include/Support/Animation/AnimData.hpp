@@ -828,7 +828,11 @@ public:
     void SetupOffsetsAndPtrs(xbool UseIndices);
     void SetupForSaving(xbool bSetupIndices, xbool bToggleEndian);
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
     const byte* GetCompressedDataPtr(void) const;
+#else
+    const byte* GetCompressedDataPtr(void) const { return m_pCompressedData; }
+#endif
     const char* GetFileName(void) const;
 
     void GetEventNames(xarray<xstring>& Names) const;

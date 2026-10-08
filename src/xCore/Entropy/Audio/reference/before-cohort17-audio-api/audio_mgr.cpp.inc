@@ -447,11 +447,7 @@ audio_mgr::audio_mgr( void )
     m_NearClip = 0.0f;
     m_FarClip = 1.0f;
     m_Time = 0.0f;
-#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_MGR_API)
     m_SpeakerConfig = 0;
-#else
-    m_AudioDuckLevel = 0;
-#endif
     m_Link.pPrev = &m_Link;
     m_Link.pNext = &m_Link;
     m_Link.pPackage = NULL;
@@ -478,11 +474,7 @@ void audio_mgr::Init( s32 MemSize )
     m_NearClip = 0.0f;
     m_FarClip = 1.0f;
     m_Time = 0.0f;
-#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_MGR_API)
     m_SpeakerConfig = 0;
-#else
-    m_AudioDuckLevel = 0;
-#endif
 
     // Initialize the channel manager.
     g_AudioChannelMgr.Init();
@@ -1439,7 +1431,6 @@ s32 audio_mgr::AppendWeightedList( f32 BaseTime, u16* pDescriptor, voice* pVoice
 
 //------------------------------------------------------------------------------
 
-RVA(0x258d20, 0xfc)
 s32 audio_mgr::AppendDescriptor( f32 BaseTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     u32 DescriptorIndex = (u32)(*pDescriptor++);
@@ -2278,7 +2269,6 @@ void audio_mgr::ReleaseLoop( voice_id VoiceID )
 */
 //------------------------------------------------------------------------------
 
-RVA(0x259c80, 0x5a)
 void audio_mgr::Release( voice_id VoiceID, f32 Time )
 {
     // Error check.
@@ -2411,7 +2401,6 @@ xbool audio_mgr::IsReleasing( voice_id VoiceID )
 
 //------------------------------------------------------------------------------
 
-RVA(0x259f30, 0x5b)
 xbool audio_mgr::IsValidVoiceId( voice_id VoiceID )
 {
     // Error check.
@@ -3261,12 +3250,7 @@ f32 audio_mgr::GetNearFalloff( const char* pIdentifier )
 
 //------------------------------------------------------------------------------
 
-#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-RVA(0x0025b180, 1307)
-void audio_mgr::SetSpeakerConfig( s32 FrontLeft, s32 FrontRight, s32 BackRight, s32 BackLeft, s32 nSpeakers )
-#else
 void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, s32 BackLeft, s32 nSpeakers )
-#endif
 {
     s32 i;
     s32 j;
@@ -3318,11 +3302,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             ASSERT( FrontRight >= 0 );
 
             // Set the diffuse vector for 2 speakers.
-            #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-            P0 = 1.0f / x_sqrt( DATA_COMPGEN(0x002f9440, 2.0) );
-#else
             P0 = 1.0f / x_sqrt( 2.0f );
-#endif
             m_Diffuse.Set( P0, P0, 0.0f, 0.0f );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
@@ -3369,11 +3349,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             ASSERT( BackRight  <= (FrontLeft+360) );
 
             // Set the diffuse vector for 3 speakers.
-            #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-            P0 = 1.0f / x_sqrt( DATA_COMPGEN(0x002efe48, 3.0) );
-#else
             P0 = 1.0f / x_sqrt( 3.0f );
-#endif
             m_Diffuse.Set( P0, P0, P0, 0.0f );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
@@ -3437,11 +3413,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             ASSERT( BackLeft   <= (FrontLeft+360) );
 
             // Set the diffuse vector for 4 speakers.
-            #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-            P0 = 1.0f / x_sqrt( DATA_COMPGEN(0x002f9438, 4.0) );
-#else
             P0 = 1.0f / x_sqrt( 4.0f );
-#endif
             m_Diffuse.Set( P0, P0, P0, P0 );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
@@ -3537,7 +3509,6 @@ void audio_mgr::GetSpeakerAngles( s32& FrontLeft, s32& FrontRight, s32& BackRigh
 
 //------------------------------------------------------------------------------
 
-#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_MGR_API)
 void audio_mgr::SetSpeakerConfig( s32 SpeakerConfig )
 {
     m_SpeakerConfig = SpeakerConfig;
@@ -3562,7 +3533,6 @@ void audio_mgr::SetSpeakerConfig( s32 SpeakerConfig )
             break;
     }
 }
-#endif
 
 //------------------------------------------------------------------------------
 

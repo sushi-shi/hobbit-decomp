@@ -3318,11 +3318,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             ASSERT( FrontRight >= 0 );
 
             // Set the diffuse vector for 2 speakers.
-            #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-            P0 = 1.0f / x_sqrt( DATA_COMPGEN(0x002f9440, 2.0) );
-#else
             P0 = 1.0f / x_sqrt( 2.0f );
-#endif
             m_Diffuse.Set( P0, P0, 0.0f, 0.0f );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
@@ -3369,11 +3365,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             ASSERT( BackRight  <= (FrontLeft+360) );
 
             // Set the diffuse vector for 3 speakers.
-            #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-            P0 = 1.0f / x_sqrt( DATA_COMPGEN(0x002efe48, 3.0) );
-#else
             P0 = 1.0f / x_sqrt( 3.0f );
-#endif
             m_Diffuse.Set( P0, P0, P0, 0.0f );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
@@ -3437,11 +3429,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             ASSERT( BackLeft   <= (FrontLeft+360) );
 
             // Set the diffuse vector for 4 speakers.
-            #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_MGR_API)
-            P0 = 1.0f / x_sqrt( DATA_COMPGEN(0x002f9438, 4.0) );
-#else
             P0 = 1.0f / x_sqrt( 4.0f );
-#endif
             m_Diffuse.Set( P0, P0, P0, P0 );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );

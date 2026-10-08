@@ -11,6 +11,8 @@ retain full hashes and evidence without download locations. Run
 `python3 scripts/check_public_tree.py --staged` before committing and the
 same command without `--staged` before pushing. See
 `docs/public-repository.md` and `docs/reference-binaries.md`.
+Publish verified checkpoints to GitHub periodically as requested by the user;
+keep `CONTRIBUTING.md` and `docs/matching-worklist.md` current.
 
 ## Tooling and workflow
 

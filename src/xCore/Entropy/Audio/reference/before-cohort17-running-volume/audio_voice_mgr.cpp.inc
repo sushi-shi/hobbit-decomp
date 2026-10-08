@@ -407,8 +407,6 @@ inline void audio_voice_mgr::StartElement( element* pElement )
 
 extern void AudioDebug( const char* pString );
 
-RVA(0x278450, 0x71)
-#if defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
 voice* audio_voice_mgr::AcquireVoice( s32 Priority, f32 AbsoluteVolume )
 {
     voice* pVoice;
@@ -477,75 +475,6 @@ voice* audio_voice_mgr::AcquireVoice( s32 Priority, f32 AbsoluteVolume )
     // Tell the world
     return( pVoice );
 }
-#else
-voice* audio_voice_mgr::AcquireVoice( s32 Priority, f32 AbsoluteVolume )
-{
-    voice* pVoice;
-
-    // Error check.
-    ASSERT( s_IsInitialized );
-
-    // Snag the mutex.
-    Lock();
-
-    // Get a voice from the free list.
-    pVoice = FreeVoices()->Link.pNext;
-
-    // Free list empty?
-    if( pVoice == FreeVoices() )
-    {
-        // Get oldest, lowest priority voice.
-        pVoice = UsedVoices()->Link.pPrev;
-        ASSERT( VALID_VOICE(pVoice) );
-
-        // Which voice is more important?
-        if( (pVoice->Params.Priority < Priority) /*|| ((pVoice->Params.Priority == Priority) && (pVoice->Volume < AbsoluteVolume))*/ ) 
-        {
-#if defined(rbrannon)
-            if( pVoice == g_DebugVoice )
-            {
-                LOG_WARNING( "AudioDebug(audio_voice_mgr::AcquireVoice)",
-                             "Freed - g_DebugVoice" );
-            }
-#endif // defined(rbrannon)
-            // Free the voice, don't put it in the free list.
-            FreeVoice( pVoice, FALSE );
-        }
-        else
-        {
-            // Cannot aquire a voice...
-            //AudioDebug( xfs( "Cannot acquire voice! Priority = %d, Voice Priority = %d\n", Priority, pVoice->Params.Priority) );
-            pVoice = NULL;
-        }
-    }
-    else
-    {
-        // Take it out of the free list.
-        ASSERT( VALID_VOICE(pVoice) );
-        RemoveVoiceFromList( pVoice );
-    }
-
-    // Was a voice aquired?
-    if( pVoice )
-    {
-        // Earlier PC does not store Priority here; only the comparison consumes it.
-
-        // Set voices volume directly for the priority insertion.
-        pVoice->Volume = AbsoluteVolume;
-
-        // Initialize the degreestosiund
-
-        // Insert it into the list by its priority and volume (don't remove it from a list).
-        PrioritizeVoice( pVoice, FALSE );  
-    }
-
-    // Release it.
-    Unlock();
-
-    // Tell the world
-    return( pVoice );
-}
-#endif
 
 //------------------------------------------------------------------------------
 
@@ -920,8 +849,6 @@ void audio_voice_mgr::ReleaseVoiceLoop( voice* pVoice )
 */
 //------------------------------------------------------------------------------
 
-RVA(0x278790, 0x4c)
-#if defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
 void audio_voice_mgr::ReleaseVoice( voice* pVoice, f32 Time )
 {
     // Error check.
@@ -966,44 +893,6 @@ void audio_voice_mgr::ReleaseVoice( voice* pVoice, f32 Time )
     // Release it.
     Unlock();
 }
-#else
-void audio_voice_mgr::ReleaseVoice( voice* pVoice, f32 Time )
-{
-    // Error check.
-    ASSERT( s_IsInitialized );
-
-    // Snag the mutex.
-    Lock();
-
-    // Only if its valid.
-    if( pVoice )
-    {
-        xbool    bFreeImmediate = TRUE;
-        
-        // Gotta be valid.
-        ASSERT( VALID_VOICE(pVoice) );
-
-        // Earlier PC walks real element state, retaining the immediate-release decision.
-        element* pHead = (element*)&pVoice->Elements;
-        element* pElement = pHead->Link.pNext;
-        while( (pElement != pHead) && bFreeImmediate )
-        {
-            if( pElement->State == ELEMENT_PLAYING )
-                bFreeImmediate = FALSE;
-            pElement = pElement->Link.pNext;
-        }
-        // Actual earlier PC ignores Time and releases immediately after this walk.
-        FreeVoice( pVoice, TRUE );
-    }
-    else
-    {
-        // TODO: Warning message.
-    }
-
-    // Release it.
-    Unlock();
-}
-#endif
                                    
 //------------------------------------------------------------------------------
 
@@ -2152,8 +2041,6 @@ xbool audio_voice_mgr::SetVoiceRelativeFalloff( voice* pVoice, f32 Near, f32 Far
 
 //------------------------------------------------------------------------------
 
-RVA(0x2790d0, 0x5)
-#if defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
 xbool audio_voice_mgr::SetVoiceUserDiffuse( voice* pVoice, f32 Near, f32 Far )
 {
     // Error check.
@@ -2183,14 +2070,6 @@ xbool audio_voice_mgr::SetVoiceUserDiffuse( voice* pVoice, f32 Near, f32 Far )
 
     return FALSE;
 }
-#else
-xbool audio_voice_mgr::SetVoiceUserDiffuse( voice* pVoice, f32 Near, f32 Far )
-{
-    // Genuine API is feature-disabled in the pinned PC version: no state accesses.
-    // Named three-argument caller + surviving declaration establish its identity.
-    return FALSE;
-}
-#endif
 
 //------------------------------------------------------------------------------
 
@@ -2556,9 +2435,7 @@ inline void audio_voice_mgr::UpdateVoiceVolume( voice* pVoice )
         pElement->Volume = CalculateElementVolume( pElement );
         if( pElement->State == ELEMENT_PLAYING ) 
         {
-            ASSERT( VALID_ELEMENT( pElement ) );
-            ASSERT( VALID_CHANNEL( pElement->pChannel ) );
-            g_AudioChannelMgr.SetVolume( pElement->pChannel, pElement->Volume );
+            ApplyElementVolume( pElement );
         }
 
         // Walk the list.
@@ -3370,7 +3247,6 @@ void audio_voice_mgr::AppendElementToVoice( element* pElement, voice* pVoice )
 
 //------------------------------------------------------------------------------
 
-RVA(0x279760, 0x107)
 void audio_voice_mgr::InitSingleVoice( voice* pVoice, audio_package* pPackage )
 {
     ASSERT( pVoice );

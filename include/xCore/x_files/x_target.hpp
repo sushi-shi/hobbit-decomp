@@ -17,9 +17,6 @@ enum platform {
 #ifndef LITTLE_ENDIAN
 #define LITTLE_ENDIAN
 #endif
-#ifndef VENDOR_MS
-#define VENDOR_MS
-#endif
 #endif
 
 #endif

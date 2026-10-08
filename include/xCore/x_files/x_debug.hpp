@@ -26,7 +26,7 @@ int xExceptionThrowHandler(const char* file, int line, const char* message, int 
 #if defined(X_ASSERT)
 #define ASSERT(expr) ((expr) || RTFHandler(__FILE__, __LINE__, #expr, 0))
 #define ASSERTS(expr,msg) ((expr) || RTFHandler(__FILE__, __LINE__, #expr, (msg)))
-#elif defined(_MSC_VER)
+#elif defined(TARGET_PC) && defined(VENDOR_MS)
 #define ASSERT(expr) __assume(expr)
 #define ASSERTS(expr,msg) __assume(expr)
 #else

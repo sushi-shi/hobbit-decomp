@@ -33,7 +33,7 @@ Animation_AnimDecompress	18	18
 Animation_AnimEvent	36	35
 Animation_AnimGroup	8	8
 Animation_AnimInfo	3	3
-Animation_AnimKeyData	7	5
+Animation_AnimKeyData	7	7
 Animation_CharAnimPlayer	2	2
 CollisionMgr_CollisionMgr	6	6
 CollisionMgr_CollisionPrimatives	1	1
@@ -42,10 +42,10 @@ Decals_DecalMgr_StaticDecals	1	1
 Entropy_audio_channel_mgr	3	3
 Entropy_audio_hardware_pc	4	4
 Entropy_audio_io_request	2	2
-Entropy_audio_mgr	16	15
-Entropy_audio_package	15	14
+Entropy_audio_mgr	20	16
+Entropy_audio_package	16	16
 Entropy_audio_stream_mgr	3	3
-Entropy_audio_voice_mgr	56	54
+Entropy_audio_voice_mgr	60	57
 Entropy_d3deng	29	28
 Entropy_d3deng_draw	3	3
 Entropy_d3deng_vram	1	0
@@ -67,14 +67,14 @@ MiscUtils_Guid	11	11
 Parsing_BinIn	22	22
 Parsing_BinOut	30	28
 Parsing_TextIn	28	28
-Parsing_TextOut	18	18
+Parsing_TextOut	18	17
 Parsing_bitstream	76	76
 Parsing_tokenizer	22	22
 StringMgr_StringMgr	21	21
 UI_ui_win	23	23
 aux_Bitmap_DefaultBMP	1	1
 aux_Bitmap_Load_BMP	2	2
-aux_Bitmap_Load_TGA	2	1
+aux_Bitmap_Load_TGA	2	2
 aux_Bitmap_aux_Bitmap	24	22
 fx_RunTime_fx_Ctrl	3	3
 fx_RunTime_fx_Cylinder	1	1
@@ -173,8 +173,8 @@ Animation_AnimInfo	?IsEventTypeActive@anim_info@@QBEHHM@Z	100.0000	100.0000	1	ef
 Animation_AnimKeyData	??0vector3@@QAE@MMM@Z	100.0000	100.0000	1	cpp:6bad853c3976	0x1f00	100.0000	
 Animation_AnimKeyData	??1anim_keys@@QAE@XZ	100.0000	100.0000	1	7a39a86ba2ed	0x13f790	100.0000	
 Animation_AnimKeyData	??4vector3@@QAEABU0@ABU0@@Z	100.0000	100.0000	1	cpp:2bc838a797d1	0x357e0	100.0000	
-Animation_AnimKeyData	?AcquireStreams@anim_key_block@@QAEPAUanim_key_stream@@ABVanim_group@@@Z	99.9583	92.3583	1	8cae0c0425ba	0x13f540	99.9583	
-Animation_AnimKeyData	?ReleaseStreams@anim_key_block@@QAEXXZ	100.0000	99.8781	1	f72c976b3c59	0x13f6f0	100.0000	
+Animation_AnimKeyData	?AcquireStreams@anim_key_block@@QAEPAUanim_key_stream@@ABVanim_group@@@Z	100.0000	100.0000	1	8cae0c0425ba	0x13f540	100.0000	
+Animation_AnimKeyData	?ReleaseStreams@anim_key_block@@QAEXXZ	100.0000	100.0000	1	f72c976b3c59	0x13f6f0	100.0000	
 Animation_AnimKeyData	?Set@vector3@@QAEXMMM@Z	100.0000	100.0000	1	cpp:2bc838a797d1	0x4870	100.0000	
 Animation_AnimKeyData	?anim_SetMaxAllowedDecompressedBytes@@YAXH@Z	100.0000	100.0000	1	ecbb0c556994	0x13f530	100.0000	
 Animation_CharAnimPlayer	??0xcolor@@QAE@EEEE@Z	100.0000	100.0000	1	cpp:8ea1d51baf2b	0x13480	100.0000	
@@ -197,8 +197,9 @@ Entropy_audio_hardware_pc	?ReleaseChannel@audio_hardware@@QAEXPAUchannel@@@Z	100
 Entropy_audio_hardware_pc	?Unlock@audio_hardware@@QAEXXZ	100.0000	100.0000	1	9d9860b148e0	0x27be20	100.0000	
 Entropy_audio_io_request	??0audio_io_request@@QAE@XZ	100.0000	100.0000	1	0bbf3ae65b5b	0x282380	100.0000	
 Entropy_audio_io_request	?SetRequest@audio_io_request@@QAEXW4transfer_type@1@PAX1HW4request_priority@1@P6AXPAV1@@Z@Z	100.0000	100.0000	1	ae5c685fd88a	0x2823b0	100.0000	
-Entropy_audio_mgr	??0audio_mgr@@QAE@XZ	100.0000	100.0000	1	056c183e8cf8	0x257d90	100.0000	
+Entropy_audio_mgr	??0audio_mgr@@QAE@XZ	100.0000	100.0000	2	29095bfb2617	0x257d90	100.0000	
 Entropy_audio_mgr	??1audio_mgr@@QAE@XZ	100.0000	100.0000	1	d88c6e37909c	0x257df0	100.0000	
+Entropy_audio_mgr	?AppendDescriptor@audio_mgr@@AAEHMPAGPAUvoice@@PAVaudio_package@@@Z	99.7802	99.7802	1	c3e67889d2da	0x258d20	99.7802	
 Entropy_audio_mgr	?Calculate2dPan@audio_mgr@@AAEXMAAUvector4@@@Z	100.0000	100.0000	1	2baabf59257e	0x2592a0	100.0000	
 Entropy_audio_mgr	?Calculate3dVolume@audio_mgr@@AAEXMMHABUvector3@@AAM@Z	100.0000	100.0000	1	769bf6ab6271	0x258ef0	100.0000	
 Entropy_audio_mgr	?ComputeFalloff@audio_mgr@@AAEMMH@Z	100.0000	100.0000	1	fb3ef697ce63	0x258e60	100.0000	
@@ -208,17 +209,21 @@ Entropy_audio_mgr	?FindDescriptorByName@audio_mgr@@QAEPAGPBDPAPAVaudio_package@@
 Entropy_audio_mgr	?GetEar@audio_mgr@@QAEXAAVmatrix4@@AAM1@Z	100.0000	100.0000	1	601a51b88b48	0x258410	100.0000	
 Entropy_audio_mgr	?GetSpeakerAngles@audio_mgr@@AAEXAAH0000@Z	100.0000	100.0000	1	37b7fee85e8f	0x25b6b0	100.0000	
 Entropy_audio_mgr	?GetVoiceParameters@audio_mgr@@AAEXPAUuncompressed_parameters@@PAGPAVaudio_package@@@Z	100.0000	100.0000	1	6c3488d033cd	0x25abf0	100.0000	
-Entropy_audio_mgr	?Play@audio_mgr@@AAEHPBDHABUvector3@@HH@Z	99.8727	99.8727	1	b2ccd6658b79	0x259670	99.8727	
+Entropy_audio_mgr	?IsValidVoiceId@audio_mgr@@QAEHH@Z	67.5000	67.5000	1	75762e67db30	0x259f30	67.5000	
+Entropy_audio_mgr	?Play@audio_mgr@@AAEHPBDHABUvector3@@HH@Z	100.0000	100.0000	1	b2ccd6658b79	0x259670	100.0000	
 Entropy_audio_mgr	?Play@audio_mgr@@QAEHPBDABUvector3@@H@Z	100.0000	100.0000	1	b2ccd6658b79	0x259630	100.0000	
 Entropy_audio_mgr	?Play@audio_mgr@@QAEHPBDH@Z	100.0000	100.0000	1	b2ccd6658b79	0x259600	100.0000	
 Entropy_audio_mgr	?PlayVolumeClipped@audio_mgr@@QAEHPBDABUvector3@@H@Z	100.0000	100.0000	1	6a380d769607	0x259650	100.0000	
+Entropy_audio_mgr	?Release@audio_mgr@@QAEXHM@Z	72.5185	72.5185	1	a4460bb5e578	0x259c80	72.5185	
 Entropy_audio_mgr	?SetEar@audio_mgr@@QAEXABVmatrix4@@MM@Z	100.0000	100.0000	1	7ff54b43263c	0x258470	100.0000	
+Entropy_audio_mgr	?SetSpeakerConfig@audio_mgr@@QAEXHHHHH@Z	84.8608	84.8608	1	265e8399e94a	0x25b180	84.8608	
 Entropy_audio_package	?ComputeEffectSend@audio_package@@QAEXXZ	100.0000	100.0000	1	af1ff28fc326	0x27cee0	100.0000	
 Entropy_audio_package	?ComputeFarDiffuse@audio_package@@QAEXXZ	100.0000	100.0000	1	34d21f87ee59	0x27cfa0	100.0000	
 Entropy_audio_package	?ComputeFarFalloff@audio_package@@QAEXXZ	100.0000	100.0000	1	eab925a361e3	0x27cf40	100.0000	
 Entropy_audio_package	?ComputeNearDiffuse@audio_package@@QAEXXZ	100.0000	100.0000	2	313f48c26718	0x27cf70	100.0000	
 Entropy_audio_package	?ComputeNearFalloff@audio_package@@QAEXXZ	100.0000	100.0000	1	ee8dc8f08261	0x27cf10	100.0000	
 Entropy_audio_package	?ComputePitch@audio_package@@QAEXXZ	100.0000	100.0000	1	31626728f7b7	0x27ceb0	100.0000	
+Entropy_audio_package	?ComputeVolume@audio_package@@QAEXXZ	100.0000	100.0000	1	69b343d7ef48	0x27ce70	100.0000	
 Entropy_audio_package	?GetMusicIntensity@audio_package@@QAEHAAPAUmusic_intensity@@@Z	100.0000	100.0000	1	d1e52283937f	0x27cfe0	100.0000	
 Entropy_audio_package	?GetMusicType@audio_package@@QAEPADXZ	100.0000	100.0000	1	0c80b2e43f86	0x27cfd0	100.0000	
 Entropy_audio_package	?SetUserEffectSend@audio_package@@QAEXM@Z	100.0000	100.0000	1	e0f2c8e8af8f	0x27cdd0	100.0000	
@@ -227,10 +232,11 @@ Entropy_audio_package	?SetUserFarFalloff@audio_package@@QAEXM@Z	100.0000	100.000
 Entropy_audio_package	?SetUserNearDiffuse@audio_package@@QAEXM@Z	100.0000	100.0000	1	350d0ee1a805	0x27ce30	100.0000	
 Entropy_audio_package	?SetUserNearFalloff@audio_package@@QAEXM@Z	100.0000	100.0000	1	95c5a081f3c4	0x27cdf0	100.0000	
 Entropy_audio_package	?SetUserPitch@audio_package@@QAEXM@Z	100.0000	100.0000	1	7d737fd0a8cb	0x27cdb0	100.0000	
-Entropy_audio_package	?SetUserVolume@audio_package@@QAEXM@Z	98.7500	98.7500	1	f072c25dfd6b	0x27cd90	98.7500	
+Entropy_audio_package	?SetUserVolume@audio_package@@QAEXM@Z	100.0000	100.0000	1	f072c25dfd6b	0x27cd90	100.0000	
 Entropy_audio_stream_mgr	??0audio_stream_mgr@@QAE@XZ	100.0000	100.0000	1	70f1438b8c44	0x277750	100.0000	
 Entropy_audio_stream_mgr	??1audio_stream_mgr@@QAE@XZ	100.0000	100.0000	1	054ac53a6e1e	0x2777b0	100.0000	
 Entropy_audio_stream_mgr	?ReleaseStream@audio_stream_mgr@@QAEXPAUaudio_stream@@@Z	100.0000	100.0000	1	e2e982256c32	0x277970	100.0000	
+Entropy_audio_voice_mgr	?AcquireVoice@audio_voice_mgr@@QAEPAUvoice@@HM@Z	99.8809	99.8809	1	119e7d0c6964	0x278450	99.8809	
 Entropy_audio_voice_mgr	?AppendElementToVoice@audio_voice_mgr@@AAEXPAUelement@@PAUvoice@@@Z	100.0000	100.0000	1	177bb36a63e9	0x279730	100.0000	
 Entropy_audio_voice_mgr	?ApplyElementPan@audio_voice_mgr@@AAEXPAUelement@@@Z	100.0000	100.0000	1	4c32c2d9645f	0x27a380	100.0000	
 Entropy_audio_voice_mgr	?ApplyElementVolume@audio_voice_mgr@@AAEXPAUelement@@@Z	100.0000	100.0000	1	2b60fa830702	0x27a360	100.0000	
@@ -251,6 +257,7 @@ Entropy_audio_voice_mgr	?GetVoiceUserPitch@audio_voice_mgr@@QAEMPAUvoice@@@Z	100
 Entropy_audio_voice_mgr	?GetVoiceUserVolume@audio_voice_mgr@@QAEMPAUvoice@@@Z	100.0000	100.0000	1	f814d841d1cc	0x278b50	100.0000	
 Entropy_audio_voice_mgr	?HasLipSync@audio_voice_mgr@@QAEHPAUvoice@@@Z	100.0000	100.0000	1	bf7c3d83b068	0x2785e0	100.0000	
 Entropy_audio_voice_mgr	?Init@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	ffcc1cf5ebfa	0x278250	100.0000	
+Entropy_audio_voice_mgr	?InitSingleVoice@audio_voice_mgr@@QAEXPAUvoice@@PAVaudio_package@@@Z	100.0000	100.0000	1	2a4076dd157e	0x279760	100.0000	
 Entropy_audio_voice_mgr	?IsVoicePlaying@audio_voice_mgr@@QAEHPAUvoice@@@Z	100.0000	100.0000	1	6ef30236f4a0	0x278a10	100.0000	
 Entropy_audio_voice_mgr	?IsVoiceReady@audio_voice_mgr@@QAEHPAUvoice@@@Z	100.0000	100.0000	1	6775d3ef32b9	0x278ad0	100.0000	
 Entropy_audio_voice_mgr	?IsVoiceReleasing@audio_voice_mgr@@QAEHPAUvoice@@@Z	100.0000	100.0000	1	28c4798693d3	0x278a90	100.0000	
@@ -262,6 +269,7 @@ Entropy_audio_voice_mgr	?PauseVoice@audio_voice_mgr@@QAEXPAUvoice@@@Z	100.0000	1
 Entropy_audio_voice_mgr	?ReleaseAllVoices@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	a6cabff7f58b	0x2787e0	100.0000	
 Entropy_audio_voice_mgr	?ReleaseElement@audio_voice_mgr@@AAEXPAUelement@@H@Z	100.0000	100.0000	1	cbefc1ca229a	0x278390	100.0000	
 Entropy_audio_voice_mgr	?ReleasePackagesVoices@audio_voice_mgr@@QAEXPAVaudio_package@@@Z	100.0000	100.0000	1	273c8c778601	0x278810	100.0000	
+Entropy_audio_voice_mgr	?ReleaseVoice@audio_voice_mgr@@QAEXPAUvoice@@M@Z	100.0000	100.0000	1	4239d2874148	0x278790	100.0000	
 Entropy_audio_voice_mgr	?ResumeAllVoices@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	8afb21e27f1e	0x2789d0	100.0000	
 Entropy_audio_voice_mgr	?ResumeVoice@audio_voice_mgr@@QAEXPAUvoice@@@Z	100.0000	100.0000	1	914f74da569b	0x278960	100.0000	
 Entropy_audio_voice_mgr	?Segue@audio_voice_mgr@@QAEHPAUvoice@@0@Z	100.0000	100.0000	1	c3950663a6b3	0x278880	100.0000	
@@ -273,6 +281,7 @@ Entropy_audio_voice_mgr	?SetVoiceRelativeEffectSend@audio_voice_mgr@@QAEHPAUvoic
 Entropy_audio_voice_mgr	?SetVoiceRelativeFalloff@audio_voice_mgr@@QAEHPAUvoice@@MM@Z	100.0000	100.0000	1	f612c3443c5e	0x279070	100.0000	
 Entropy_audio_voice_mgr	?SetVoiceRelativePitch@audio_voice_mgr@@QAEHPAUvoice@@M@Z	100.0000	100.0000	1	45529a528150	0x278de0	100.0000	
 Entropy_audio_voice_mgr	?SetVoiceRelativeVolume@audio_voice_mgr@@QAEHPAUvoice@@M@Z	100.0000	100.0000	1	5a0d277a6811	0x278c20	100.0000	
+Entropy_audio_voice_mgr	?SetVoiceUserDiffuse@audio_voice_mgr@@QAEHPAUvoice@@MM@Z	100.0000	100.0000	1	ce3e32678bd5	0x2790d0	100.0000	
 Entropy_audio_voice_mgr	?SetVoiceUserEffectSend@audio_voice_mgr@@QAEHPAUvoice@@M@Z	100.0000	100.0000	1	d740ac0b46f0	0x278e70	100.0000	
 Entropy_audio_voice_mgr	?SetVoiceUserFalloff@audio_voice_mgr@@QAEHPAUvoice@@MM@Z	100.0000	100.0000	1	b9742ea128d5	0x279010	100.0000	
 Entropy_audio_voice_mgr	?SetVoiceUserPitch@audio_voice_mgr@@QAEHPAUvoice@@M@Z	100.0000	100.0000	1	c863ae6740e1	0x278d50	100.0000	
@@ -281,12 +290,12 @@ Entropy_audio_voice_mgr	?StartVoice@audio_voice_mgr@@QAEXPAUvoice@@@Z	100.0000	1
 Entropy_audio_voice_mgr	?Unlock@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	13a6c542ab2b	0x279ac0	100.0000	
 Entropy_audio_voice_mgr	?UpdateAllVoiceVolumes@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	0f5849e6d702	0x279a80	100.0000	
 Entropy_audio_voice_mgr	?UpdateCheckQueued@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	2e006460ddcd	0x279510	100.0000	
-Entropy_audio_voice_mgr	?UpdateStartPending@audio_voice_mgr@@AAEXPAUvoice@@@Z	48.0763	48.0763	1	2e3f4cc7f0e2	0x279ad0	48.0763	
-Entropy_audio_voice_mgr	?UpdateStateRunning@audio_voice_mgr@@AAEPAUvoice@@PAU2@M@Z	86.7550	86.7550	1	ef11b2a67389	0x279ec0	86.7550	
+Entropy_audio_voice_mgr	?UpdateStartPending@audio_voice_mgr@@AAEXPAUvoice@@@Z	99.8305	99.8305	1	2e3f4cc7f0e2	0x279ad0	99.8305	
+Entropy_audio_voice_mgr	?UpdateStateRunning@audio_voice_mgr@@AAEPAUvoice@@PAU2@M@Z	99.8490	99.8490	1	ef11b2a67389	0x279ec0	99.8490	
 Entropy_audio_voice_mgr	?UpdateStateStarting@audio_voice_mgr@@AAEPAUvoice@@PAU2@@Z	100.0000	100.0000	1	e6080f1e585d	0x27a600	100.0000	
 Entropy_audio_voice_mgr	?UpdateVoiceEffectSend@audio_voice_mgr@@AAEXPAVaudio_package@@@Z	100.0000	100.0000	1	ed3eb921e752	0x279720	100.0000	
 Entropy_audio_voice_mgr	?UpdateVoicePitch@audio_voice_mgr@@AAEXPAVaudio_package@@@Z	100.0000	100.0000	1	929255af57d2	0x279710	100.0000	
-Entropy_audio_voice_mgr	?UpdateVoiceVolume@audio_voice_mgr@@AAEXPAVaudio_package@@@Z	100.0000	100.0000	1	1a1a0e3f6a5c	0x279700	100.0000	
+Entropy_audio_voice_mgr	?UpdateVoiceVolume@audio_voice_mgr@@AAEXPAVaudio_package@@@Z	100.0000	100.0000	2	f5b48cd22c86	0x279700	100.0000	
 Entropy_d3deng	??0eng_locals@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x2653e0	100.0000	
 Entropy_d3deng	??1?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x265a60	100.0000	
 Entropy_d3deng	??1eng_locals@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x265500	100.0000	
@@ -570,7 +579,7 @@ Parsing_TextOut	??1text_out@@QAE@XZ	100.0000	100.0000	1	bd58ae4f94de	0x242420	10
 Parsing_TextOut	?AddBBox@text_out@@QAEXPBDABUbbox@@@Z	100.0000	100.0000	1	87df9449b2a1	0x2433b0	100.0000	
 Parsing_TextOut	?AddBool@text_out@@QAEXPBDH@Z	100.0000	100.0000	1	197319cbf17b	0x2435b0	100.0000	
 Parsing_TextOut	?AddColor@text_out@@QAEXPBDUxcolor@@@Z	100.0000	100.0000	1	814ecfeefe92	0x2431c0	100.0000	
-Parsing_TextOut	?AddEndLine@text_out@@QAEXXZ	100.0000	100.0000	1	7b868a660dbe	0x242c70	100.0000	
+Parsing_TextOut	?AddEndLine@text_out@@QAEXXZ	100.0000	99.9669	1	7b868a660dbe	0x242c70	100.0000	
 Parsing_TextOut	?AddF32@text_out@@QAEXPBDM@Z	100.0000	100.0000	1	a31d4ff60b6c	0x243250	100.0000	
 Parsing_TextOut	?AddField@text_out@@QAAXPBDZZ	100.0000	100.0000	1	8b754bf0427b	0x242590	100.0000	
 Parsing_TextOut	?AddGuid@text_out@@QAEXPBD_K@Z	100.0000	100.0000	1	9ee582196440	0x243630	100.0000	
@@ -728,7 +737,7 @@ UI_ui_win	?SetPosition@ui_win@@UAEXABUirect@@@Z	100.0000	100.0000	1	ab594f3db327
 aux_Bitmap_DefaultBMP	?auxbmp_SetupDefault@@YAXAAVxbitmap@@@Z	100.0000	100.0000	1	0af30375b3ed	0x147120	100.0000	
 aux_Bitmap_Load_BMP	?ReadHeader@@YAHPAIPAUbmp_header@@@Z	100.0000	100.0000	2	e56e5a77dd7e	0x147af0	100.0000	
 aux_Bitmap_Load_BMP	?bmp_Load@@YAHAAVxbitmap@@PBD@Z	100.0000	100.0000	2	01f05b78f19c	0x147150	100.0000	
-aux_Bitmap_Load_TGA	?tga_Load@@YAHAAVxbitmap@@PBD@Z	99.6174	99.6174	2	1b7dc7afaace	0x147e60	100.0000	
+aux_Bitmap_Load_TGA	?tga_Load@@YAHAAVxbitmap@@PBD@Z	100.0000	100.0000	2	1b7dc7afaace	0x147e60	100.0000	
 aux_Bitmap_Load_TGA	?tga_ReadEncodedData@@YAHPAEPAIHH@Z	100.0000	100.0000	2	baa6d643fe59	0x1480a0	100.0000	
 aux_Bitmap_aux_Bitmap	?GetAlphaFormat@@YA?AW4format@xbitmap@@W412@@Z	100.0000	100.0000	2	1d2218bc2a38	0x1461c0	100.0000	
 aux_Bitmap_aux_Bitmap	?GetAvgSurroundingOpaqueColor@@YA?AUxcolor@@ABVxbitmap@@HHHH@Z	100.0000	100.0000	2	0f53afc830e4	0x146fb0	100.0000	
