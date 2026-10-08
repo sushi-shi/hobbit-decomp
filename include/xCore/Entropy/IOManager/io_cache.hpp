@@ -8,6 +8,7 @@
 struct io_open_file;
 // PC cache arrays use a 336-byte stride, including the 256-byte filename.
 class io_cache {
+    friend class io_fs;
 public:
     io_cache();
     ~io_cache();

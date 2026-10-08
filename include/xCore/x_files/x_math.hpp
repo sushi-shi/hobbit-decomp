@@ -152,6 +152,7 @@ struct vector4 {
  float GetX()const{return X;}float GetY()const{return Y;}float GetZ()const{return Z;}float GetW()const{return W;}
  void Zero(){X=Y=Z=W=0.0f;}
  const vector4& operator=(const vector4& V){X=V.X;Y=V.Y;Z=V.Z;W=V.W;return *this;}
+ int Normalize();
 };
 struct irect {
  int l,t,r,b;
@@ -1248,5 +1249,28 @@ inline void bbox::operator()(const vector3& P1,const vector3& P2)
 }
 
 #include <xCore/x_files/Implementation/x_math_scalar_closure.hpp>
+
+
+RVA(0x0025b6f0, 0x88)
+inline int vector4::Normalize()
+{
+    float N = x_1sqrt(X*X + Y*Y + Z*Z + W*W);
+    if( x_isvalid(N) )
+    {
+        X *= N;
+        Y *= N;
+        Z *= N;
+        W *= N;
+        return TRUE;
+    }
+    else
+    {
+        X = 0;
+        Y = 0;
+        Z = 0;
+        W = 0;
+        return FALSE;
+    }
+}
 
 #endif

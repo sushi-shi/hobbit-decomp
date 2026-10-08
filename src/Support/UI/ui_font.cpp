@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <xCore/Auxiliary/Bitmap/aux_Bitmap.hpp>
 #include <Support/UI/ui_font.hpp>
@@ -190,6 +192,7 @@ void ui_font::TextSize( irect& Rect, const char* pString, s32 Count ) const
 
 //=========================================================================
 
+RVA(0x2a7dc0, 0x1dc)
 void ui_font::TextSize( irect& Rect, const xwchar* pString, s32 Count ) const
 {
     s32 Height    = m_Height;

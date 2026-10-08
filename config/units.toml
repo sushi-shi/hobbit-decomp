@@ -31,6 +31,10 @@ c-pcre-import = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/G
 # Genuine PCRE project defines; remaining compiler options are provisional.
 cpp-pcre-import = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC", "/DPCRE_STATIC", "/DPOSIX_MALLOC_THRESHOLD=10"]
 
+
+# Authentic Microsoft2001 ADPCM donor Release/O2/NDEBUG; Hobbit unit-local native replay.
+codec-msvc-release = ["/nologo", "/c", "/Gs", "/Gy", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC", "/O2", "/DNDEBUG"]
+
 [[unit]]
 unit = "Animation_AnimKeyData"
 source = "src/Support/Animation/AnimKeyData.cpp"
@@ -1464,3 +1468,8 @@ flags = "cpp-unpooled"
 unit = "Sound_EventSoundEmitter"
 source = "src/Support/Sound/EventSoundEmitter.cpp"
 flags = "cpp-unpooled"
+
+[[unit]]
+unit = "Entropy_imaadpcm"
+source = "src/xCore/Entropy/Audio/Codecs/imaadpcm.cpp"
+flags = "codec-msvc-release"

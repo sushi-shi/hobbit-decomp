@@ -1872,6 +1872,51 @@ void audio_mgr::Calculate3dVolume( f32 NearClip, f32 FarClip, s32 VolumeRolloff,
 
 //------------------------------------------------------------------------------
 
+RVA(0x00259300, 0x2f4)
+void audio_mgr::Calculate3dVolumeAndPan( f32 NearClip, f32 FarClip, s32 VolumeRolloff,
+                                         f32 NearDiffuse, f32 FarDiffuse,
+                                         const vector3& WorldPosition, f32& Volume, vector4& Pan )
+{
+    vector3 Position = g_AudioMgr.m_W2V * WorldPosition;
+    f32 Distance2 = Position.LengthSquared();
+    FarClip *= g_AudioMgr.m_FarClip;
+    if( Distance2 >= FarClip * FarClip )
+    {
+        Volume = 0.0f;
+        return;
+    }
+    NearClip *= g_AudioMgr.m_NearClip;
+    if( (Distance2 <= NearClip * NearClip) || (NearClip + 1.0f >= FarClip) )
+        Volume = 1.0f;
+    else
+    {
+        f32 Distance = x_sqrt( Distance2 );
+        f32 Percent = (Distance - NearClip) / (FarClip - NearClip);
+        Volume = ComputeFalloff( Percent, VolumeRolloff );
+    }
+    Distance2 = Position.GetX()*Position.GetX() + Position.GetZ()*Position.GetZ();
+    NearDiffuse *= g_AudioMgr.m_NearClip;
+    FarDiffuse *= g_AudioMgr.m_FarClip;
+    if( (Distance2 <= NearDiffuse * NearDiffuse) || (NearDiffuse + 1.0f >= FarDiffuse) )
+        Pan = m_Diffuse;
+    else
+    {
+        f32 Distance = x_sqrt( Distance2 );
+        f32 Angle = RAD_TO_DEG( x_atan2( -Position.GetX(), Position.GetZ() ) );
+        while( Angle < 0.0f )
+            Angle += 360.0f;
+        s32 i = (s32)Angle;
+        if( Distance >= FarDiffuse )
+            Pan = m_Pan[i];
+        else
+        {
+            f32 Percent = 1.0f - (Distance - NearDiffuse)/(FarDiffuse - NearDiffuse);
+            Pan = m_Pan[i] + Percent * (m_Diffuse - m_Pan[i]);
+            Pan.Normalize();
+        }
+    }
+}
+
 RVA(0x002592a0, 0x51)
 void audio_mgr::Calculate2dPan( f32      Pan2d,
                                 vector4& Pan3d )
@@ -3298,7 +3343,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
 
     // Default the stereo pan.
     DeltaTheta = 180.0f;
-    for( i=0 ; i<180 ; i++ )
+    for( i=0 ; i<=180 ; i++ )
     {
         Angle = (f32)(i);
         Q = Angle / DeltaTheta;
@@ -3306,17 +3351,16 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
         P1 = x_sqrt( Q );
         m_StereoPan[i].Set( P0, P1, 0.0f, 0.0f );
     }
-    m_StereoPan[180].Set( 0.0f, 1.0f, 0.0f, 0.0f );
 
     switch( nSpeakers )
     {
         case 1:
             // Set the diffuse vector for 1 speaker.
-            m_Diffuse.Set( 1.0f, 1.0f, 0.0f, 0.0f );
+            m_Diffuse.Set( 1.0f, 0.0f, 0.0f, 0.0f );
 
             for( i=0 ; i<PAN_TABLE_ENTRIES ; i++ )
             {
-                m_Pan[i].Set( 1.0f, 1.0f, 0.0f, 0.0f );
+                m_Pan[i].Set( 1.0f, 0.0f, 0.0f, 0.0f );
             }
         
             for( i=0 ; i<=180 ; i++ )
@@ -3339,7 +3383,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             m_Diffuse.Set( P0, P0, 0.0f, 0.0f );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
-            for( i=FrontLeft ; (i<=FrontRight)  && (i<360) ; i++ )
+            for( i=FrontLeft ; i<=FrontRight ; i++ )
             {
                 j = i;
                 if( j<0 )
@@ -3357,13 +3401,13 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             }
             
             DeltaTheta = (f32)x_abs( FrontLeft+360 - FrontRight );
-            for( i=FrontRight ; (i<= FrontLeft+360) && (i<360) ; i++ )
+            for( i=FrontRight ; i<= FrontLeft+360 ; i++ )
             {
                 Angle = (f32)(i-FrontRight);
                 Q = Angle / DeltaTheta;
                 P0 = x_sqrt( 1.0f - Q );
                 P1 = x_sqrt( Q );
-                m_Pan[i].Set( P1, P0, 0.0f, 0.0f );
+                m_Pan[i].Set( P0, P1, 0.0f, 0.0f );
                 /*
                 LOG_MESSAGE( "audio_mgr::SetSpeakerAngles",
                             "%d: [%f,%f]",
@@ -3458,7 +3502,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             m_Diffuse.Set( P0, P0, P0, P0 );
 
             DeltaTheta = (f32)x_abs( FrontRight - FrontLeft );
-            for( i=FrontLeft ; i<FrontRight ; i++ )
+            for( i=FrontLeft ; i<=FrontRight ; i++ )
             {
                 j = i;
                 if( j<0 )
@@ -3471,7 +3515,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             }
 
             DeltaTheta = (f32)x_abs( BackRight - FrontRight );
-            for( i=FrontRight ; i<BackRight ; i++ )
+            for( i=FrontRight ; i<=BackRight ; i++ )
             {
                 Angle = (f32)(i-FrontRight);
                 Q = Angle / DeltaTheta;
@@ -3481,7 +3525,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             }
 
             DeltaTheta = (f32)x_abs( BackLeft - BackRight );
-            for( i=BackRight ; i<BackLeft ; i++ )
+            for( i=BackRight ; i<=BackLeft ; i++ )
             {
                 Angle = (f32)(i-BackRight);
                 Q = Angle / DeltaTheta;
@@ -3491,7 +3535,7 @@ void audio_mgr::SetSpeakerAngles( s32 FrontLeft, s32 FrontRight, s32 BackRight, 
             }
 
             DeltaTheta = (f32)x_abs( FrontLeft+360 - BackLeft );
-            for( i=BackLeft ; i< FrontLeft+360 ; i++ )
+            for( i=BackLeft ; i<= FrontLeft+360 ; i++ )
             {
                 Angle = (f32)(i-BackLeft);
                 Q = Angle / DeltaTheta;

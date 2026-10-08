@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/UI/ui_frame.hpp>
 #include <Support/UI/ui_manager.hpp>
@@ -76,6 +78,7 @@ xbool ui_frame::Create( s32 UserID, ui_manager* pManager, const irect& Position,
 
 //=========================================================================
 
+RVA(0x2a37d0, 0x257)
 void ui_frame::Render( s32 ox, s32 oy )
 {
     // Only render is visible

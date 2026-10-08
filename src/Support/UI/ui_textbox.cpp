@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/AudioMgr/tribes-aa/audio.hpp>
 #include <Support/LabelSets/reference/tribes-aa/Tribes2Types.hpp>
@@ -115,6 +117,7 @@ void ui_textbox::SetLabel( const xwstring& Text )
 
 //=========================================================================
 
+RVA(0x2a6840, 0x4db)
 void ui_textbox::Render( s32 ox, s32 oy )
 {
     // Only render is visible

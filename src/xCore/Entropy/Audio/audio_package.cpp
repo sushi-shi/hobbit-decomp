@@ -25,6 +25,7 @@ s32 N_ARAM_USED = 0; // 512*1024;
 
 //------------------------------------------------------------------------------
 
+RVA(0x27c520, 0x59)
 audio_package::audio_package( void )
 {
     m_IsLoaded      = FALSE;
@@ -47,6 +48,7 @@ audio_package::~audio_package( void )
 
 //------------------------------------------------------------------------------
 
+RVA(0x27c590, 0xac)
 u32 audio_package::LoadHotSample( X_FILE* f, hot_sample* pHotSample, u32 Aram )
 {
     CONTEXT("audio_package::LoadHotSample");

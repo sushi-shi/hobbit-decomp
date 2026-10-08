@@ -26,8 +26,9 @@ struct io_open_file {
 // Genuine complete later sibling io_fs declaration: public APIs/private fields
 // remain provisional. The natural io_fs class/storage extent is 5168 bytes,
 // corroborated by PC construction/lifetime offsets and the next hook pointer.
-// io_dfs_data remains the later 88-byte entry versus PC 80; its revision and
-// remaining filesystem method implementations are not established PC bodies.
+// Earlier PC io_dfs_data uses PathName, SearchPriority, pHeader and DeviceFiles.
+// Natural80-byte extent and member offsets corroborated by complete PC lifetime
+// and assignment methods; later RAM/cache-index fields retained in reference.
 class io_fs
 {
 
@@ -47,9 +48,7 @@ private:
 struct io_dfs_data
 {
     xstring                 PathName;           // dfs pathname.
-    char*                   RamAddress;
     s32                     SearchPriority;
-    s32                     FindIndex;
     dfs_header*             pHeader;
     xarray<io_device_file*> DeviceFiles;
 };
@@ -78,9 +77,9 @@ io_open_file*       AcquireFile         ( void );
 void                ReleaseFile         ( io_open_file* pFile );
 io_cache*           AcquireCache        ( io_open_file* pFile );
 void                ReleaseCache        ( io_cache* pChache );
-xbool               FindFile            ( const char* pPathName, io_device_file* &DeviceFile, u32 &Offset, u32 &Length, void* &pRAM );
-xbool               SearchDFS           ( const char* pPathName, io_device_file* &DeviceFile, u32 &Offset, u32 &Length, s32 SubFile, s32 StartIndex, void* &pRAM );
-xbool               CompareFile         ( const char* pPathName, io_device_file* &DeviceFile, u32 &Offset, u32 &Length, s32 SubFile, s32 Index, void* &pRAM );
+xbool               FindFile            ( const char* pPathName, io_device_file* &DeviceFile, u32 &Offset, u32 &Length );
+xbool               SearchDFS           ( const char* pPathName, io_device_file* &DeviceFile, u32 &Offset, u32 &Length, s32 SubFile, s32 StartIndex );
+xbool               CompareFile         ( const char* pPathName, io_device_file* &DeviceFile, u32 &Offset, u32 &Length, s32 SubFile, s32 Index );
      
 //------------------------------------------------------------------------------
 //  Public functions

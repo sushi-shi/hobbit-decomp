@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/AudioMgr/tribes-aa/audio.hpp>
 #include <Support/LabelSets/reference/tribes-aa/Tribes2Types.hpp>
@@ -134,6 +136,7 @@ xbool ui_dlg_list::Create( s32                        UserID,
 
 //=========================================================================
 
+RVA(0x2a6360, 0x115)
 void ui_dlg_list::Render( s32 ox, s32 oy )
 {
     // Only render is visible

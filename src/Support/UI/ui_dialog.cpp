@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/UI/ui_dialog.hpp>
 #include <Support/UI/ui_manager.hpp>
@@ -155,6 +157,7 @@ xbool ui_dialog::Create( s32                        UserID,
 
 //=========================================================================
 
+RVA(0x2a2880, 0xcc)
 void ui_dialog::Render( s32 ox, s32 oy )
 {
 #ifdef TARGET_PC
@@ -219,6 +222,7 @@ void ui_dialog::Render( s32 ox, s32 oy )
 
 //=========================================================================
 
+RVA(0x2a2950, 0x4)
 const irect& ui_dialog::GetCreatePosition( void ) const
 {
     return m_CreatePosition;

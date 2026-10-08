@@ -2403,6 +2403,7 @@ inline voice* audio_voice_mgr::UpdateStateStarting( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x00279d70, 0x145)
 inline voice* audio_voice_mgr::UpdateStateResuming( voice* pVoice )
 {
     CONTEXT( "audio_voice_mgr::UpdateStateResuming" );
@@ -2804,6 +2805,7 @@ inline voice* audio_voice_mgr::UpdateStateRunning( voice* pVoice, f32 DeltaTime 
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027a540, 0xba)
 inline void audio_voice_mgr::UpdateStatePausing( voice* pVoice, f32 Time )
 {
     CONTEXT( "audio_voice_mgr::UpdateStatePausing" );

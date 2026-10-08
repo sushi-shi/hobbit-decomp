@@ -2,6 +2,7 @@
 // Provisional Hobbit correspondence; no PC address or layout claim.
 // Provenance: docs/imports/entropy-audio-io.json.
 #include <xCore/x_files/x_target.hpp>
+#include <rva.h>
 
 #if !defined(TARGET_PC)
 #error This is for a PC target build. Please exclude from build rules.
@@ -13,8 +14,14 @@
 
 //------------------------------------------------------------------------------
 
+RVA(0x27a7b0, 0x14)
 void audio_stream_read_callback( io_request* pRequest, audio_stream* pStream, s32 ReadBufferIndex )
 {
+#if !defined(HOBBIT_AUDIO_LATER_STREAMS)
+    (void)pRequest;
+    (void)ReadBufferIndex;
+    pStream->ReadState = pStream->ARAMWriteBuffer + 2;
+#else
     ASSERT( pRequest->GetStatus() == io_request::COMPLETED );
     (void) pRequest; // SKS: Prevent compiler from complaining that variable is not used (release builds)
 
@@ -79,6 +86,7 @@ void audio_stream_read_callback( io_request* pRequest, audio_stream* pStream, s3
     }
     // New write buffer.
     pStream->ARAMWriteBuffer ^= 1;
+#endif
 }
 
 //------------------------------------------------------------------------------

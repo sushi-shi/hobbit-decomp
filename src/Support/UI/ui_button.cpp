@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/UI/ui_button.hpp>
 #include <Support/UI/ui_manager.hpp>
@@ -67,6 +69,7 @@ xbool ui_button::Create( s32 UserID, ui_manager* pManager, const irect& Position
 
 //=========================================================================
 
+RVA(0x2a79c0, 0x245)
 void ui_button::Render( s32 ox, s32 oy )
 {
     s32     State = ui_manager::CS_NORMAL;

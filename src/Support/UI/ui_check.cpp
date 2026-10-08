@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/AudioMgr/tribes-aa/audio.hpp>
 #include <Support/LabelSets/reference/tribes-aa/Tribes2Types.hpp>
@@ -70,6 +72,7 @@ xbool ui_check::Create( s32 UserID, ui_manager* pManager, const irect& Position,
 
 //=========================================================================
 
+RVA(0x2a55b0, 0x2c5)
 void ui_check::Render( s32 ox, s32 oy )
 {
     s32     State = ui_manager::CS_NORMAL;
@@ -139,6 +142,7 @@ void ui_check::Render( s32 ox, s32 oy )
 
 //=========================================================================
 
+RVA(0x2a5880, 0x43)
 void ui_check::OnPadSelect( ui_win* pWin )
 {
     if( pWin == (ui_win*)this )
@@ -154,6 +158,7 @@ void ui_check::OnPadSelect( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x2a58d0, 0x21)
 void ui_check::SetSelected( xbool State )
 {
     if( State )
@@ -164,6 +169,7 @@ void ui_check::SetSelected( xbool State )
 
 //=========================================================================
 
+RVA(0x2a5900, 0xa)
 xbool ui_check::GetSelected( void ) const
 {
     return m_Flags & WF_SELECTED;

@@ -75,6 +75,7 @@ audio_stream_mgr g_AudioStreamMgr;
 //------------------------------------------------------------------------------
 // Helper functions.
 
+RVA(0x2773a0, 0x15)
 static void read_callback_0_0( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[0], 0 );
@@ -82,6 +83,7 @@ static void read_callback_0_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2773c0, 0x15)
 static void read_callback_1_0( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[1], 0 );
@@ -89,6 +91,7 @@ static void read_callback_1_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2773e0, 0x15)
 static void read_callback_2_0( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[2], 0 );
@@ -96,6 +99,7 @@ static void read_callback_2_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277400, 0x15)
 static void read_callback_3_0( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[3], 0 );
@@ -103,6 +107,7 @@ static void read_callback_3_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277480, 0x15)
 static void read_callback_0_1( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[0], 1 );
@@ -110,6 +115,7 @@ static void read_callback_0_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2774a0, 0x15)
 static void read_callback_1_1( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[1], 1 );
@@ -117,6 +123,7 @@ static void read_callback_1_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2774c0, 0x15)
 static void read_callback_2_1( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[2], 1 );
@@ -124,6 +131,7 @@ static void read_callback_2_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2774e0, 0x15)
 static void read_callback_3_1( io_request* pRequest )
 {
     audio_stream_read_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[3], 1 );
@@ -131,6 +139,7 @@ static void read_callback_3_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277560, 0x15)
 static void warm_callback_0_0( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[0], 0 );
@@ -138,6 +147,7 @@ static void warm_callback_0_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277580, 0x15)
 static void warm_callback_1_0( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[1], 0 );
@@ -145,6 +155,7 @@ static void warm_callback_1_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2775a0, 0x15)
 static void warm_callback_2_0( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[2], 0 );
@@ -152,6 +163,7 @@ static void warm_callback_2_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2775c0, 0x15)
 static void warm_callback_3_0( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[3], 0 );
@@ -159,6 +171,7 @@ static void warm_callback_3_0( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277640, 0x15)
 static void warm_callback_0_1( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[0], 1 );
@@ -166,6 +179,7 @@ static void warm_callback_0_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277660, 0x15)
 static void warm_callback_1_1( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[1], 1 );
@@ -173,6 +187,7 @@ static void warm_callback_1_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277680, 0x15)
 static void warm_callback_2_1( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[2], 1 );
@@ -180,6 +195,7 @@ static void warm_callback_2_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x2776a0, 0x15)
 static void warm_callback_3_1( io_request* pRequest )
 {
     audio_stream_warm_callback( pRequest, &g_AudioStreamMgr.m_AudioStreams[3], 1 );
@@ -187,6 +203,7 @@ static void warm_callback_3_1( io_request* pRequest )
 
 //------------------------------------------------------------------------------
 
+RVA(0x277720, 0x24)
 static void audio_stream_warm_callback( io_request* pRequest, audio_stream* pStream, s32 ReadBufferIndex )
 {
     // Normal read callback.

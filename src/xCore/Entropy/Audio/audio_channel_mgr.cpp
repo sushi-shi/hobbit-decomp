@@ -378,6 +378,7 @@ xbool audio_channel_mgr::Acquire( element* pElement )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ac40, 0x2b)
 void audio_channel_mgr::Release( channel* pChannel )
 {
     // Error check.
@@ -407,6 +408,7 @@ void audio_channel_mgr::Start( channel* pChannel )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ad20, 0xe)
 void audio_channel_mgr::Pause( channel* pChannel )
 {
     // Error check.
@@ -419,6 +421,7 @@ void audio_channel_mgr::Pause( channel* pChannel )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ad30, 0xe)
 void audio_channel_mgr::Resume( channel* pChannel )
 {
     // Error check.
@@ -442,6 +445,7 @@ xbool audio_channel_mgr::IsPlaying( channel* pChannel )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ad50, 0xa)
 s32 audio_channel_mgr::GetPriority( channel* pChannel )
 {
     // Error check.
@@ -453,6 +457,7 @@ s32 audio_channel_mgr::GetPriority( channel* pChannel )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ad60, 0x30)
 void audio_channel_mgr::SetPriority( channel* pChannel, s32 Priority ) 
 {
     // Error check.
@@ -473,6 +478,7 @@ void audio_channel_mgr::SetPriority( channel* pChannel, s32 Priority )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ad90, 0xa)
 f32 audio_channel_mgr::GetVolume( channel* pChannel )
 {
     // Error check.
@@ -522,6 +528,7 @@ void audio_channel_mgr::SetVolume( channel* pChannel, f32 Volume )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ae10, 0x22)
 void audio_channel_mgr::GetPan( channel* pChannel, vector4& Pan )
 {
     // Error check.
@@ -549,6 +556,7 @@ void audio_channel_mgr::SetPan( channel* pChannel, vector4& Pan )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027ae70, 0xa)
 f32 audio_channel_mgr::GetPitch( channel* pChannel )
 {
     // Error check.
@@ -587,6 +595,7 @@ void audio_channel_mgr::SetPitch( channel* pChannel, f32 Pitch )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027aee0, 0xa)
 f32 audio_channel_mgr::GetEffectSend( channel* pChannel )
 {
     // Error check.

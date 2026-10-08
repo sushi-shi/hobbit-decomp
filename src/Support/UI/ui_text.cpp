@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/UI/ui_text.hpp>
 #include <Support/UI/ui_manager.hpp>
@@ -66,6 +68,7 @@ xbool ui_text::Create( s32 UserID, ui_manager* pManager, const irect& Position, 
 
 //=========================================================================
 
+RVA(0x2a72a0, 0x298)
 void ui_text::Render( s32 ox, s32 oy )
 {
     s32     State = ui_manager::CS_NORMAL;

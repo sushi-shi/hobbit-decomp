@@ -9,6 +9,10 @@ Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
+The score below is the last verified cohort19 bank. Cohort20 source is integrated;
+its strict target generation currently needs the UI counter at PC RVA `0x413040`.
+See the [integration checkpoint](config/evidence/cohort20-integration-checkpoint.json).
+
 <!-- match-score:start -->
 ## Match status
 
@@ -29,13 +33,15 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-Engine import checkpoint (8 October 2026): **281 translation units enrolled**,
-up from 46. The frozen broad build verifies **254 objects** and records
-**27 compilation failures**. Cohort19 restores genuine UI/math, Audio and IO
-source providers and adds qualified Occluder identities. The normal checkpoint
-compares all 83 claimed source owners with full reference checking. Source
-presence, compilation and banked matches are measured separately; the whole-game
-target count does not yet distinguish engine from game code.
+Engine import checkpoint (8 October 2026): **282 translation units enrolled**,
+up from 46. The frozen broad build verifies **255 objects** and records
+**27 compilation failures**. Cohort20 adds the complete 19-method ADPCM codec,
+restores earlier DirectSound, IO filesystem, speaker and pan source, and admits
+more Audio and UI identities. Complete donor and predecessor versions are retained.
+The score block currently records the last verified cohort19 bank; cohort20's
+normal full-reference comparison is pending. Source presence, compilation and
+banked matches are measured separately; the whole-game target count does not yet
+distinguish engine from game code.
 See [engine-source-imports.md](docs/engine-source-imports.md) for scope and
 [the contributor worklist](docs/matching-worklist.md) for what to match next.
 

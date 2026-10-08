@@ -9,7 +9,7 @@
 //==============================================================================
 
 #define DFS_MAGIC   'XDFS'
-#define DFS_VERSION 3
+#define DFS_VERSION 1
 
 struct dfs_file
 {
@@ -24,14 +24,12 @@ struct dfs_file
 struct dfs_subfile
 {
     u32         Offset;
-    u32         ChecksumIndex;
 };
 
 struct dfs_header
 {
     u32             Magic;              // Magic number to identify file
     s32             Version;            // Version number of file
-    u32             Checksum;           // .DFS file checksum
     s32             SectorSize;         // Sector size in bytes
     u32             SplitSize;          // Split size in bytes (maximum)
     s32             nFiles;             // Total number of files in the filesystem
@@ -39,12 +37,11 @@ struct dfs_header
     s32             StringsLength;      // Length of string table in bytes
     dfs_subfile*    pSubFileTable;      // Pointer to the sub file table
     dfs_file*       pFiles;             // Pointer to file entries
-    u16*            pChecksums;         // Pointer to checksums
     char*           pStrings;           // Pointer to string table
 
 };
 
-dfs_header* dfs_InitHeaderFromRawPtr    ( void* pRawHeaderData, s32 Length  );
+dfs_header* dfs_InitHeaderFromRawPtr    ( void* pRawHeaderData );
 void        dfs_DumpFileListing         ( const dfs_header* pHeader, const char* pFileName );
 void        dfs_BuildFileName           ( const dfs_header* pHeader, s32 iFile, char* pFileName );
 

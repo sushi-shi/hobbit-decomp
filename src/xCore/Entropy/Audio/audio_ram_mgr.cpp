@@ -2,6 +2,7 @@
 // Provisional Hobbit correspondence; no PC address or layout claim.
 // Provenance: docs/imports/entropy-audio-io.json.
 #include <xCore/x_files/x_files.hpp>
+#include <rva.h>
 #include <xCore/Entropy/Audio/audio_ram_mgr.hpp>
 #include <xCore/x_files/x_threads.hpp>
 
@@ -73,8 +74,11 @@ static xbool             s_Initialized      = FALSE;
 static xbool             s_DispatcherActive = FALSE;
 static xthread*          s_pThread          = 0;
 static s32               s_Sequence         = 0;
+DATA(0x408eb0)
 static s32               s_RequestCount     = 0;
+DATA(0x408eb4)
 static audio_io_request* s_CurrentRequest   = NULL;
+DATA(0x408db0)
 static audio_io_request  s_RequestQueue;
 static xmesgq            s_DispatcherMQ(1);
 static xmesgq            s_QueueSemaphore(1);
@@ -144,6 +148,7 @@ void AudioRequestDispatcher( void )
 
 //------------------------------------------------------------------------------
 
+RVA(0x27c240, 0x43)
 void AudioServiceCurrentRequest( void )
 {
     audio_io_request* pRequest;
@@ -190,6 +195,7 @@ void AudioServiceCurrentRequest( void )
 
 //------------------------------------------------------------------------------
 
+RVA(0x27c290, 0x1f)
 void AudioServiceQueue( void )
 {
     audio_io_request* pRequest;

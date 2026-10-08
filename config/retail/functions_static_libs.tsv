@@ -1,6 +1,7 @@
 # PC CRT identities independently matched to hash-pinned VC6 LIBCMT members.
 # COFF contribution size can include embedded EH funclets; census retains their boundaries.
 rva	name	lib	confidence	source
+0x281400	_DirectSoundCreate8@12	DSOUND	HIGH	Genuine pinned DirectX8 dsound.lib full6B thunk and DLLordinal11 import member; sdk-provider-proof.json
 0x2bf840	??3@YAXPAX@Z	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
 0x2bfe55	_atexit	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked
 0x2bff27	___CxxFrameHandler	LIBCMT	HIGH	config/evidence/crt_identities.json; actual archive member code and independently known callee relocations checked

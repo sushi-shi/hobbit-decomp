@@ -229,6 +229,7 @@ s32 ui_win::GetFlags( s32 Flag )
 
 //=========================================================================
 
+RVA(0x2a3280, 0x8)
 void ui_win::SetLabel( const xwstring& Text )
 {
     m_Label = Text;
@@ -236,6 +237,7 @@ void ui_win::SetLabel( const xwstring& Text )
 
 //=========================================================================
 
+RVA(0x2a3290, 0x8)
 void ui_win::SetLabel( const xwchar* Text )
 {
     m_Label = Text;

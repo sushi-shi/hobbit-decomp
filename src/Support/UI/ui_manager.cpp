@@ -628,6 +628,7 @@ s32 ui_manager::LoadFont( const char* pName, const char* pPathName )
 
 //=========================================================================
 
+RVA(0x29fa60, 0x54)
 s32 ui_manager::FindFont( const char* pName ) const
 {
     s32 iFound = -1;
@@ -702,6 +703,7 @@ void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, s32 Al
 
 //=========================================================================
 
+RVA(0x29fc80, 0x27)
 void ui_manager::TextSize( s32 iFont, irect& Rect, const xwchar* pString, s32 Count ) const
 {
     ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
@@ -738,6 +740,7 @@ void ui_manager::RenderGouraudRect( const irect& r, const xcolor& c1, const xcol
 
 //=========================================================================
 
+RVA(0x29fdd0, 0x6e)
 xbool ui_manager::RegisterWinClass ( const char* ClassName, ui_pfn_winfact pFactory )
 {
     xbool   Success = FALSE;
@@ -768,6 +771,7 @@ xbool ui_manager::RegisterWinClass ( const char* ClassName, ui_pfn_winfact pFact
 
 //=========================================================================
 
+RVA(0x29fe40, 0x6b)
 ui_win* ui_manager::CreateWin( s32 UserID, const char* ClassName, const irect& Position, ui_win* pParent, s32 Flags )
 {
     ui_win*         pWin        = NULL;
@@ -936,6 +940,7 @@ xbool ui_manager::GetCursorVisible( s32 UserID ) const
 
 //=========================================================================
 
+RVA(0x2a03c0, 0x43)
 void ui_manager::SetCursorPos( s32 UserID, s32 x, s32 y )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1043,6 +1048,7 @@ xbool ui_manager::IsUserEnabled( s32 UserID ) const
 
 //=========================================================================
 
+RVA(0x2a0430, 0x5f)
 void ui_manager::AddHighlight( s32 UserID, irect& r, xbool Flash )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1058,6 +1064,7 @@ void ui_manager::AddHighlight( s32 UserID, irect& r, xbool Flash )
 
 //=========================================================================
 
+RVA(0x2a0490, 0x3f)
 xbool ui_manager::ProcessInput( f32 DeltaTime )
 {
     s32     i;
@@ -1386,6 +1393,7 @@ void ui_manager::EnableUserInput( void )
 
 //=========================================================================
 
+RVA(0x2a0f10, 0x13b)
 void ui_manager::DisableUserInput( void )
 {
     m_EnableUserInput = FALSE;
@@ -1549,6 +1557,7 @@ void ui_manager::Render( void )
 
 //=========================================================================
 
+RVA(0x2a13b0, 0x75)
 xbool ui_manager::RegisterDialogClass( const char* ClassName, dialog_tem* pDialogTem, ui_pfn_dlgfact pFactory )
 {
     xbool   Success = FALSE;
@@ -1664,6 +1673,7 @@ ui_dialog* ui_manager::OpenDialog( s32 UserID, const char* ClassName, irect Posi
 
 //=========================================================================
 
+RVA(0x002a16c0, 0x9c)
 void ui_manager::EndDialog( s32 UserID, xbool ResetCursor )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1704,6 +1714,7 @@ void ui_manager::EndDialog( s32 UserID, xbool ResetCursor )
 
 //=========================================================================
 
+RVA(0x2a1760, 0x2d)
 void ui_manager::EndUsersDialogs( s32 UserID )
 {
     // Loop until all dialogs gone
@@ -1716,6 +1727,7 @@ void ui_manager::EndUsersDialogs( s32 UserID )
 
 //=========================================================================
 
+RVA(0x2a1790, 0xd)
 s32 ui_manager::GetNumUserDialogs( s32 UserID )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1727,6 +1739,7 @@ s32 ui_manager::GetNumUserDialogs( s32 UserID )
 
 //=========================================================================
 
+RVA(0x2a17a0, 0x20)
 ui_dialog* ui_manager::GetTopmostDialog( s32 UserID )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1740,6 +1753,7 @@ ui_dialog* ui_manager::GetTopmostDialog( s32 UserID )
 
 //=========================================================================
 
+RVA(0x2a17c0, 0x1cb)
 void ui_manager::PushClipWindow( const irect &r )
 {
     s32 X0,Y0,X1,Y1;
@@ -1774,6 +1788,7 @@ void ui_manager::PushClipWindow( const irect &r )
 
 //=========================================================================
 
+RVA(0x2a1990, 0xf6)
 void ui_manager::PopClipWindow( void )
 {
     ASSERT( m_ClipStack.GetCount() > 0 );

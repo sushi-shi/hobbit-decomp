@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/UI/ui_radio.hpp>
 #include <Support/UI/ui_manager.hpp>
@@ -67,6 +69,7 @@ xbool ui_radio::Create( s32 UserID, ui_manager* pManager, const irect& Position,
 
 //=========================================================================
 
+RVA(0x2a7650, 0x215)
 void ui_radio::Render( s32 ox, s32 oy )
 {
     s32     State = ui_manager::CS_NORMAL;

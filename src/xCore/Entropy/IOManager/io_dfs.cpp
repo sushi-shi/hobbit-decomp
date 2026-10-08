@@ -9,6 +9,7 @@
 //==============================================================================
 //==============================================================================
 
+#include <rva.h>
 #include <xCore/x_files/x_files.hpp>
 #include <xCore/Entropy/IOManager/io_dfs.hpp>
 
@@ -19,31 +20,12 @@ extern u16 crc16Table[];
 
 //==============================================================================
 
-dfs_header* dfs_InitHeaderFromRawPtr( void* pRawHeaderData, s32 Length )
+RVA(0x002804b0, 0x57)
+dfs_header* dfs_InitHeaderFromRawPtr( void* pRawHeaderData )
 {
-    (void)Length;
     dfs_header* pHeader = (dfs_header*)pRawHeaderData;
 
-#if defined(TARGET_XBOX)
-    extern void OnIOErrorCallback( void );
 
-    // Test the checksum.
-    u8* pData        = (u8*)pRawHeaderData;
-    s32 Checksum     = 0;
-    s32 OrigChecksum = pHeader->Checksum;
-    pHeader->Checksum = 0;
-    while( Length-- )
-    {
-        Checksum = crc16ApplyByte( *pData, Checksum );
-        pData++;
-    }
-    //ASSERT( Checksum == OrigChecksum );
-    if( Checksum != OrigChecksum )
-    {
-        OnIOErrorCallback();
-    }
-
-#endif
 
     // Endian swap the header...
     pHeader->Magic          = LITTLE_ENDIAN_32( pHeader->Magic          );
@@ -55,7 +37,6 @@ dfs_header* dfs_InitHeaderFromRawPtr( void* pRawHeaderData, s32 Length )
     pHeader->StringsLength  = LITTLE_ENDIAN_32( pHeader->StringsLength  );
     pHeader->pSubFileTable  = (dfs_subfile*)LITTLE_ENDIAN_32( pHeader->pSubFileTable  );
     pHeader->pFiles         = (dfs_file*)   LITTLE_ENDIAN_32( pHeader->pFiles         );     
-    pHeader->pChecksums     = (u16*)        LITTLE_ENDIAN_32( pHeader->pChecksums     );     
     pHeader->pStrings       = (char*)       LITTLE_ENDIAN_32( pHeader->pStrings       );
 
     // Make sure its valid!
@@ -68,10 +49,6 @@ dfs_header* dfs_InitHeaderFromRawPtr( void* pRawHeaderData, s32 Length )
         u32 BaseAddr = (u32)pHeader;
         pHeader->pSubFileTable  = (dfs_subfile*)(BaseAddr + (u32)pHeader->pSubFileTable  );
         pHeader->pFiles         = (dfs_file*)   (BaseAddr + (u32)pHeader->pFiles         );
-        if( pHeader->pChecksums )
-        {
-            pHeader->pChecksums = (u16*)        (BaseAddr + (u32)pHeader->pChecksums     );
-        }
         pHeader->pStrings       = (char*)       (BaseAddr + (u32)pHeader->pStrings       );
 
         // Byte swap the filesize / checksum index table.
@@ -79,7 +56,6 @@ dfs_header* dfs_InitHeaderFromRawPtr( void* pRawHeaderData, s32 Length )
         for( i=0 ; i<pHeader->nSubFiles ; i++ )
         {
             pTable[i].Offset        = LITTLE_ENDIAN_32( pTable[i].Offset );
-            pTable[i].ChecksumIndex = LITTLE_ENDIAN_32( pTable[i].ChecksumIndex );
         }
 
         // Byte swap the file entries.
@@ -105,6 +81,7 @@ dfs_header* dfs_InitHeaderFromRawPtr( void* pRawHeaderData, s32 Length )
 
 //==============================================================================
 
+RVA(0x00280510, 0x7a)
 void dfs_DumpFileListing( const dfs_header* pHeader, const char* pFileName )
 {
     X_FILE* f;

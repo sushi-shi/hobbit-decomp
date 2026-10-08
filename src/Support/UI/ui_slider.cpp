@@ -6,6 +6,8 @@
 //
 //=========================================================================
 
+#include <rva.h>
+
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/AudioMgr/tribes-aa/audio.hpp>
 #include <Support/LabelSets/reference/tribes-aa/Tribes2Types.hpp>
@@ -84,6 +86,7 @@ xbool ui_slider::Create( s32 UserID, ui_manager* pManager, const irect& Position
 
 //=========================================================================
 
+RVA(0x2a5ac0, 0x1ff)
 void ui_slider::Render( s32 ox, s32 oy )
 {
     s32     State = ui_manager::CS_NORMAL;

@@ -11,6 +11,7 @@
 
 #include <xCore/Entropy/Audio/audio_hardware.hpp>
 #include <xCore/Entropy/Audio/audio_stream_mgr.hpp>
+#include <xCore/Entropy/D3DEngine/d3deng_private.hpp>
 
 #if defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
 #include <xCore/Entropy/Audio/audio_channel_mgr.hpp>
@@ -886,6 +887,113 @@ void audio_hardware::InitChannel(channel* pChannel)
     pdsb->SetCurrentPosition(0);
     pChannel->Hardware.pdsBuffer=pdsb;
 }
+
+// Earlier DirectSound lifetime globals, names inferred unless marked original source.
+DATA(0x00406a60)
+static s32 s_HardwareChannelCount;
+DATA(0x00406a64)
+static LPDIRECTSOUNDBUFFER s_PrimaryBuffer;
+DATA(0x00406b40)
+static DSCAPS s_DirectSoundCaps;
+DATA(0x00406adc)
+static xthread* s_AudioUpdateThread; // Original Xbox spelling; PC identity independently decoded.
+DATA(0x00408dac)
+static xbool s_BackendActive;       // DWORD1/0 stores; original spelling unrecovered.
+// Original source capacity64; actual PC cap clamp64 and stride136 consumers corroborate.
+static channel s_Channels[64];
+
+// Original private PC helper spelling unavailable. SDK-only complete primary-buffer role.
+RVA(0x0027b580, 153)
+static LPDIRECTSOUNDBUFFER CreatePrimaryBuffer()
+{
+    LPDIRECTSOUNDBUFFER pBuffer=NULL;
+    WAVEFORMATEX wfx={0};
+    DSBUFFERDESC desc={0};
+    wfx.wFormatTag=WAVE_FORMAT_PCM;
+    wfx.nChannels=2;
+    wfx.nSamplesPerSec=44100;
+    wfx.nAvgBytesPerSec=44100*4;
+    wfx.nBlockAlign=4;
+    wfx.wBitsPerSample=16;
+    desc.dwSize=sizeof(desc);
+    desc.dwFlags=DSBCAPS_PRIMARYBUFFER;
+    s_pDirectSound->CreateSoundBuffer(&desc,&pBuffer,NULL);
+    pBuffer->SetFormat(&wfx);
+    return pBuffer;
+}
+
+RVA(0x0027b470, 269)
+void audio_hardware::Init(s32 MemSize)
+{
+    (void)MemSize;
+    InitializeCriticalSection(&s_ListCrit);
+    HRESULT hr=DirectSoundCreate8(NULL,&s_pDirectSound,NULL);
+    if(hr)
+    {
+        x_DebugMsg("Failed to create DirectSound, %08x\n",hr);
+        return;
+    }
+    hr=s_pDirectSound->SetCooperativeLevel(d3deng_GetWindowHandle(),DSSCL_EXCLUSIVE);
+    if(hr)
+    {
+        x_DebugMsg("Failed to set cooperative level, %08x\n",hr);
+        s_pDirectSound->Release();
+        s_pDirectSound=NULL;
+        return;
+    }
+    s_PrimaryBuffer=CreatePrimaryBuffer();
+    s_DirectSoundCaps.dwSize=sizeof(s_DirectSoundCaps);
+    s_pDirectSound->GetCaps(&s_DirectSoundCaps);
+    s32 NumChannels=(s32)s_DirectSoundCaps.dwMaxHwMixingAllBuffers;
+    if(NumChannels<16) NumChannels=16;
+    if(NumChannels>64) NumChannels=64;
+    s_HardwareChannelCount=NumChannels;
+    m_FirstChannel=s_Channels;
+    m_LastChannel=s_Channels+s_HardwareChannelCount-1;
+    s_BackendActive=TRUE;
+    for(channel* p=m_FirstChannel;p<m_LastChannel;++p)
+    {
+        p->Hardware.pdsBuffer=NULL;
+        p->Hardware.IsStarted=FALSE;
+        p->Hardware.InUse=FALSE;
+    }
+}
+
+RVA(0x0027b620, 126)
+void audio_hardware::Kill()
+{
+    delete s_AudioUpdateThread;
+    s_BackendActive=FALSE;
+    for(channel* p=m_FirstChannel;p<m_LastChannel;++p)
+    {
+        if(p->Hardware.pdsBuffer)
+        {
+            p->Hardware.pdsBuffer->Release();
+            s_ChannelsInUse--;
+        }
+        p->Hardware.pdsBuffer=NULL;
+        p->Hardware.InUse=FALSE;
+    }
+    s_PrimaryBuffer->Release();
+    s_pDirectSound->Release();
+    DeleteCriticalSection(&s_ListCrit);
+}
+
+RVA(0x0027b6a0, 18)
+s32 audio_hardware::NumChannels()
+{
+    return s_pDirectSound?s_HardwareChannelCount:0;
+}
+RVA(0x0027b6c0, 6)
+channel* audio_hardware::GetChannelBuffer()
+{
+    return s_Channels;
+}
+RVA(0x0027b7a0,13)
+xbool audio_hardware::IsChannelActive(channel* pChannel)
+{
+    return pChannel->Hardware.InUse;
+}
 #endif
 
 #if defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
@@ -1747,3 +1855,73 @@ void audio_hardware::Update( void )
 //------------------------------------------------------------------------------
 
 #endif // HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION
+
+#if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+
+#include <string.h>
+// Inferred descriptive name; original spelling and return type unrecovered.
+// Complete PC27ba30 behavior reconstructed against the actual SDK COM interface.
+RVA(0x0027ba30, 160)
+void audio_hardware::CopyPCMBuffer(LPDIRECTSOUNDBUFFER pBuffer, void* pSource, s32 Length, s32 Offset)
+{
+    DSBCAPS Caps;
+    DWORD Status;
+    DWORD PlayPosition, WritePosition;
+    void* pData1;
+    void* pData2;
+    DWORD Bytes1, Bytes2;
+    Caps.dwSize=sizeof(Caps);
+    pBuffer->GetCaps(&Caps);
+    pBuffer->GetStatus(&Status);
+    if(Status & DSBSTATUS_PLAYING)
+        pBuffer->GetCurrentPosition(&PlayPosition,&WritePosition);
+    pBuffer->Lock(Offset,Length,&pData1,&Bytes1,&pData2,&Bytes2,0);
+    memcpy(pData1,pSource,Length);
+    pBuffer->Unlock(pData1,Bytes1,pData2,Bytes2);
+}
+
+#endif
+
+#if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+#include <xCore/Entropy/Audio/Codecs/imaadpcm.h>
+// Inferred method spelling and provisional void return; true codec type from untouched Microsoft donor.
+RVA(0x0027b860, 459)
+void audio_hardware::DecodeADPCMBuffer(LPDIRECTSOUNDBUFFER pBuffer,void* pSource,s32 Length,s32 Offset,s32 RequestedLength)
+{
+    pBuffer->AddRef();
+    s32 DecodedBytes=(Length*128)/36;
+    s32 LockBytes=DecodedBytes;
+    if(RequestedLength)
+    {
+        LockBytes=(RequestedLength*128)/36;
+        if(Length>RequestedLength)
+        { DecodedBytes=LockBytes; Length=RequestedLength; }
+    }
+    s32 LockOffset=(Offset*128)/36;
+    DSBCAPS Caps;
+    DWORD Status;
+    void* pData1;
+    void* pData2;
+    DWORD Bytes1,Bytes2;
+    Caps.dwSize=sizeof(Caps);
+    pBuffer->GetCaps(&Caps);
+    pBuffer->GetStatus(&Status);
+    if(Status & DSBSTATUS_PLAYING)
+        pBuffer->GetCurrentPosition((DWORD*)&Offset,(DWORD*)&RequestedLength);
+    pBuffer->Lock(LockOffset,LockBytes,&pData1,&Bytes1,&pData2,&Bytes2,0);
+    CImaAdpcmCodec Codec;
+    IMAADPCMWAVEFORMAT Format;
+    CImaAdpcmCodec::CreateImaAdpcmFormat(1,0,64,&Format);
+    Codec.Initialize(&Format,CODEC_MODE_DECODE);
+    if(!Codec.Convert(pSource,pData1,Length/36))
+    {
+        OutputDebugStringA("Malformed input data\n");
+        DecodedBytes=0;
+    }
+    if(LockBytes>DecodedBytes)
+        // PC passes remaining bytes as character and zero as count (retained behavior).
+        x_memset((u8*)pData1+DecodedBytes,LockBytes-DecodedBytes,0);
+    pBuffer->Unlock(pData1,Bytes1,pData2,Bytes2);
+    pBuffer->Release();
+}
+#endif
