@@ -10,6 +10,7 @@ public:
     bitstream();
     ~bitstream();
     void Kill();
+    void SetOwnsData(int OwnsData);
     void Init(int bytes);
     void Init(const unsigned char* data, int bytes);
     void Grow();

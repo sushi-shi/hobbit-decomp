@@ -10,7 +10,7 @@ media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
 The score below is the **historical cohort19 match bank**. Source integration
-has reached cohort26 and current verification is cohort27. Strict target
+has reached cohort28 and current verification is cohort28. Strict target
 generation now stops at `ui_font::TextSize` (PC RVA `0x355ee4`), so a fresh
 comparison and score bank remain pending.
 Current source and build progress appear immediately below the score.
@@ -35,45 +35,39 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-**Current integration: cohort26 (8 October 2026).**
-The complete earlier text Render body now restores the PC font lookups and
-white-label shadow geometry. The checkbox's sound call now uses the genuine
-`g_AudioMgr.Play("OptionSelect")` behavior, supplying the missing 13-byte name at
-PC RVA `0x323150`. Both current native objects agree with the independently
-reviewed proposals across complete runtime sections and typed references.
-They remain **NONEXACT**: font and virtual-method revisions still differ.
+**Current integration: cohort28 (9 October 2026).**
+Seven complete sibling-engine headers and the genuine `bitstream::SetOwnsData`
+method close the dependencies of PainMgr, TemplateMgr and TweakMgr. Full
+originals and predecessors retain their provenance and notices. The imported
+network layouts remain provisional; these changes admit no new PC addresses.
 
-The current broad build verifies **255 of 282 units** (two fresh objects,
-253 cached objects), with the same 27 failures: 18 missing-header dependencies
-and nine source/API differences. Fourteen explicit UI string providers remain;
-two others now use independently corroborated automatic pairing. Four
-checkbox and three text-renderer copies of `"large"` remain unbound. Fresh
-claims, census and model checks pass; all **99 claimed source owners** build
-and the model has **zero violations**. The changed sources were freshly scanned
-against independently verified unchanged headers, profiles and prior whole-scan
-provenance. The known failed, unclaimed LLVM owner contributes no active claims.
-Source and headers are unchanged in cohort27.
-
-**Current verification: cohort27 (9 October 2026).**
-Retiring the redundant explicit OptionSelect and dialog-list context records
-under the existing provider contract resolves both duplicate enrollments.
-The same physical strings, extents and qualified callers remain proved; all
-fourteen other explicit providers are retained. Strict generation passes
-`0x323150` and `0x355e08`, with zero manifest overlaps, and now fails at
-`0x355ee4`, the 18-byte `ui_font::TextSize` scope string. This is a genuine
-source revision gap: the complete PC method uses a virtual token-based font
-backend, while current imported source scans glyphs directly. The
-[font frontier diagnosis](config/evidence/cohort27-font-frontier.json) records
-the unresolved backend declarations and behavior.
-A fresh comparison and bank remain pending.
-See the [source integration proof](config/evidence/cohort26-source-providers.json)
+The current broad build verifies **258 of 282 units**, up from 255:
+36 fresh objects and 222 cached objects. The **24 remaining failures** comprise
+14 missing-header dependencies and ten source/API differences. No previously
+compiling unit newly fails. All **99 claimed source owners** build; a fresh
+whole-source extraction, census and model check confirm **zero model violations**.
+The known failed, unclaimed LLVM owner contributes no active claims.
+See the [source integration proof](config/evidence/cohort28-source-providers.json)
 and [build receipt](config/evidence/engine-source-import-build.json).
 
-Current cohort27 normal verification records five open gates: 13 TU-order findings,
-220 dead-code annotation findings, 112 undefined-closure findings, one
-data-access finding and one data-coverage finding. No exemptions or gate
-baselines were added. The [current checkpoint](config/evidence/cohort27-integration-checkpoint.json)
-records those results separately from the historical score.
+**Current verification: cohort28 (9 October 2026).**
+All fourteen explicit UI string providers pass native renewal, with unchanged
+compiler identities. The two automatic providers at `0x323150` and `0x355e08`
+remain uniquely enrolled; the complete manifest has zero overlaps. Four
+checkbox and three text-renderer copies of `"large"` remain unbound.
+Strict target generation still stops at `0x355ee4`, the 18-byte
+`ui_font::TextSize` scope string. The PC method uses a virtual token-based font
+backend, while imported source scans glyphs directly. Recovering that complete
+backend remains an open source task, documented in the
+[font frontier diagnosis](config/evidence/cohort27-font-frontier.json).
+A fresh comparison and bank remain pending; the score above is historical.
+
+Current normal verification records five open gates: 13 TU-order findings,
+220 dead-code annotation findings, **122 undefined-closure findings** (up from
+112 as imported dependencies expose missing definitions), one data-access
+finding and one data-coverage finding. No exemptions or gate baselines were
+added. The [current checkpoint](config/evidence/cohort28-integration-checkpoint.json)
+records these results separately from the historical score.
 
 The latest published census contains **8,526 admitted function targets**,
 including **1,366 with reconstructed source identities**. These are whole-game
@@ -126,8 +120,8 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current source integration](config/evidence/cohort26-source-providers.json): restored UI behavior, reviewed native objects and pending matching renewal.
-- [Current verification checkpoint](config/evidence/cohort27-integration-checkpoint.json): resolved enrollments, current model and strict/normal findings.
+- [Current source integration](config/evidence/cohort28-source-providers.json): shared dependencies, native build renewal and pending matching.
+- [Current verification checkpoint](config/evidence/cohort28-integration-checkpoint.json): native build, current model and strict/normal findings.
 - [Provider retirement](config/evidence/cohort27-ui-provider-retirement.json): automatic pairing supersedes two redundant explicit identities; fourteen remain required.
 - [Font source frontier](config/evidence/cohort27-font-frontier.json): original token-based backend differs from imported glyph scanning.
 - [Review milestone](config/evidence/cohort25-review-progress.json): evidence retained from before integration.

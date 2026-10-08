@@ -580,3 +580,9 @@ unsigned int bitstream::ReadRaw32(int bits) const
     }
     return static_cast<unsigned int>((accumulated & mask) >> right);
 }
+
+// Genuine complete original Area51 method, unmapped; original body retained.
+void bitstream::SetOwnsData(int OwnsData)
+{
+    m_bOwnsData = OwnsData;
+}
