@@ -24,7 +24,10 @@ struct io_open_file {
     char Filename[256];
 };
 // Genuine complete later sibling io_fs declaration: public APIs/private fields
-// remain provisional; no PC class size or global storage claim.
+// remain provisional. The natural io_fs class/storage extent is 5168 bytes,
+// corroborated by PC construction/lifetime offsets and the next hook pointer.
+// io_dfs_data remains the later 88-byte entry versus PC 80; its revision and
+// remaining filesystem method implementations are not established PC bodies.
 class io_fs
 {
 

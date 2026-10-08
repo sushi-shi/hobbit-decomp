@@ -770,6 +770,19 @@ static channel      s_Channels[ MAX_HARDWARE_CHANNELS ];    // Channel buffer
 DATA(0x00406af8)
 audio_hardware g_AudioHardware;
 
+// Original spelling unrecovered; PC initializes this real COM pointer through DirectSoundCreate8.
+// Descriptive names are inferred, not surviving original names or aliases.
+// Original PC Init/Kill COM lifetime is not yet reconstructed; retained later IAL
+// backend does not initialize this pointer. No full backend/lifetime closure claim.
+DATA(0x00406ba0)
+static LPDIRECTSOUND8 s_pDirectSound;
+RVA(0x0027b220, 0x06)
+LPDIRECTSOUND8 audio_hardware::GetDirectSound( void )
+{
+    return s_pDirectSound;
+}
+
+
 #if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
 // Genuine sibling Hardware owner name; SDK24B lifetime checked separately.
 DATA(0x00406ae0)
@@ -798,6 +811,80 @@ void audio_hardware::ReleaseChannel(channel* pChannel)
         pChannel->Hardware.InUse=FALSE;
     }
     LeaveCriticalSection(&s_ListCrit);
+}
+// Actual earlier PC bodies. Existing genuine shared declarations/layouts unchanged.
+RVA(0x0027b6d0, 44)
+xbool audio_hardware::AcquireChannel(channel* pChannel)
+{
+    EnterCriticalSection(&s_ListCrit);
+    ASSERT(!pChannel->Hardware.InUse);
+    pChannel->Hardware.InUse=TRUE;
+    LeaveCriticalSection(&s_ListCrit);
+    return TRUE;
+}
+RVA(0x0027b780, 17)
+void audio_hardware::DuplicatePriority(channel* pDest, channel* pSrc)
+{
+    pDest->Hardware.Priority=pSrc->Hardware.Priority;
+}
+// Earlier PC DirectSound version reconstructed from complete decoded body.
+// Conversion helper identifiers are inferred; original spellings unrecovered.
+RVA(0x0027bad0, 492)
+void audio_hardware::InitChannel(channel* pChannel)
+{
+    hot_sample* pSample=pChannel->Sample.pHotSample;
+    pChannel->Hardware.IsLooped=TRUE;
+    if(pSample->LoopEnd==0 || pSample->LoopEnd==-1)
+        pChannel->Hardware.IsLooped=FALSE;
+    pChannel->StreamData.pStream=NULL;
+    pChannel->StreamData.StreamControl=FALSE;
+    pChannel->Hardware.IsStarted=FALSE;
+    pChannel->EndPosition=0;
+    pChannel->CurrBufferPosition=0;
+    pChannel->PrevBufferPosition=0;
+    pChannel->StartPosition=(u32)-1;
+    pChannel->MidPoint=0;
+    pChannel->ReleasePosition=0;
+    LPDIRECTSOUNDBUFFER pdsb=pChannel->Hardware.pdsBuffer;
+    if(pSample->nSamples*2==pSample->WaveformLength)
+        pSample->CompressionType=PCM;
+    DWORD BufferBytes=0;
+    switch(pSample->CompressionType)
+    {
+    case ADPCM: BufferBytes=((pSample->WaveformLength+35)/36)*128; break;
+    case PCM:
+    case MP3: BufferBytes=pSample->WaveformLength; break;
+    }
+    WAVEFORMATEX wfx;
+    ZeroMemory(&wfx,sizeof(wfx));
+    wfx.wFormatTag=WAVE_FORMAT_PCM;
+    wfx.nChannels=1;
+    wfx.nSamplesPerSec=pSample->SampleRate;
+    wfx.nAvgBytesPerSec=pSample->SampleRate*2;
+    wfx.nBlockAlign=2;
+    wfx.wBitsPerSample=16;
+    DSBUFFERDESC desc;
+    ZeroMemory(&desc,sizeof(desc));
+    DWORD ExtraBytes=pChannel->Hardware.IsLooped?0:8820;
+    desc.dwBufferBytes=BufferBytes+ExtraBytes;
+    desc.lpwfxFormat=&wfx;
+    desc.guid3DAlgorithm=DS3DALG_DEFAULT;
+    desc.dwSize=sizeof(desc);
+    desc.dwFlags=DSBCAPS_CTRLPAN|DSBCAPS_CTRLVOLUME|DSBCAPS_GETCURRENTPOSITION2|DSBCAPS_LOCDEFER;
+    s_pDirectSound->CreateSoundBuffer(&desc,&pdsb,NULL);
+    s_ChannelsInUse++;
+    if(pSample->CompressionType==ADPCM)
+        DecodeADPCMBuffer(pdsb,(void*)pSample->AudioRam,pSample->WaveformLength,0,0);
+    else
+        CopyPCMBuffer(pdsb,(void*)pSample->AudioRam,pSample->WaveformLength,0);
+    if(!pChannel->Hardware.IsLooped)
+    {
+        void* pData1;void* pData2;DWORD Bytes1;DWORD Bytes2;
+        pdsb->Lock(BufferBytes,ExtraBytes,&pData1,&Bytes1,&pData2,&Bytes2,0);
+        pdsb->Unlock(pData1,Bytes1,pData2,Bytes2);
+    }
+    pdsb->SetCurrentPosition(0);
+    pChannel->Hardware.pdsBuffer=pdsb;
 }
 #endif
 

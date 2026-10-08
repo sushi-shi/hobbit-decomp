@@ -928,6 +928,7 @@ void audio_mgr::SetEar( const matrix4& W2V, f32 NearClip, f32 FarClip )
 
 //------------------------------------------------------------------------------
 
+RVA(0x002584D0, 0x181)
 s32 audio_mgr::AppendHot( u32 Index, f32 DeltaTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     element* pElements[2];
@@ -1024,6 +1025,7 @@ s32 audio_mgr::AppendHot( u32 Index, f32 DeltaTime, u16* pDescriptor, voice* pVo
 
 //------------------------------------------------------------------------------
 
+RVA(0x00258660, 0x5)
 s32 audio_mgr::AppendWarm( u32 Index, f32 DeltaTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     (void)Index;
@@ -1037,6 +1039,7 @@ s32 audio_mgr::AppendWarm( u32 Index, f32 DeltaTime, u16* pDescriptor, voice* pV
 //------------------------------------------------------------------------------
 
 
+RVA(0x00258670, 0x18D)
 s32 audio_mgr::AppendCold( u32 Index, f32 DeltaTime, u16* pDescriptor, voice* pVoice, audio_package* pPackage )
 {
     element* pElements[2];
@@ -3048,6 +3051,7 @@ void audio_mgr::GetVoiceParameters( uncompressed_parameters* pParams, u16* pDesc
 
 //------------------------------------------------------------------------------
 
+RVA(0x0025AEE0, 0x55)
 void audio_mgr::GetElementParameters( uncompressed_parameters* pParams, u16* pDescriptor, voice* pVoice )
 {
     // Inherit some parameters from parent.

@@ -102,6 +102,7 @@ void audio_channel_mgr::Kill( void )
 xbool DEBUG_ACQUIRE_CHANNEL_FAIL = 0;
 
 RVA(0x0027aa90, 0x1af)
+#if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_CHANNEL_ACQUIRE)
 xbool audio_channel_mgr::Acquire( element* pElement )
 {
     CONTEXT( "audio_channel_mgr::Acquire" );
@@ -239,6 +240,141 @@ xbool audio_channel_mgr::Acquire( element* pElement )
     // Tell the world.
     return( pResult != NULL );
 }
+#else
+xbool audio_channel_mgr::Acquire( element* pElement )
+{
+    CONTEXT( "audio_channel_mgr::Acquire" );
+
+    channel* pResult;
+    channel* pHead;
+    channel* pChannel;
+
+    // Error check.
+    ASSERT( s_IsInitialized );
+    ASSERT( VALID_ELEMENT(pElement) );
+
+    // Actual earlier PC rejects acquisition while the DirectSound COM pointer is null.
+    if( g_AudioHardware.GetDirectSound() == NULL )
+        return FALSE;
+
+    g_AudioHardware.Lock();
+
+    // Get head/tail of free list and first free channel.
+    pHead    = FreeList();
+    pChannel = pHead->Link.pNext;
+
+    // Is free list empty?
+    if( pChannel == pHead )
+    {
+        // Get oldest, lowest priority channel.
+        pChannel = UsedList()->Link.pPrev;
+
+        // Which channel is more important?
+        if( (pChannel->Priority < pElement->Params.Priority) )
+//        || ((pChannel->Priority == pElement->Params.Priority) && (pChannel->Volume <= pElement->Params.Volume)) )
+        {
+#if defined(rbrannon)
+            extern channel* g_DebugChannel;
+            if( pChannel == g_DebugChannel )
+            {
+                LOG_WARNING( "AudioDebug(audio_channel_mgr::Acquire)",
+                             "Freed g_DebugChannel!" );
+                LOG_FLUSH();
+            }
+#endif // defined(rbrannon)
+
+            // Free the channel, don't put it in the free list, nuke the element.
+            Free( pChannel, FALSE, TRUE );
+
+            // Get outta my way!  I'm more important!
+            pResult = pChannel;
+        }
+        else
+        {
+            // Cannot aquire a channel...
+            pResult = NULL;
+        }
+    }
+    else
+    {
+        // Take it out of the free list.
+        RemoveChannelFromList( pChannel );
+
+        // Use this one!
+        pResult = pChannel;
+    }
+
+    // Was a channel aquired?
+    if( pResult )
+    {
+        // Init state and dirty bits.
+        pResult->State = STATE_NOT_STARTED;
+        pResult->Dirty = 0;
+
+        // Init the stream.
+        pResult->StreamData.pStream = NULL;
+
+        // Set pointer to parent voice element.
+        pResult->pElement           = pElement;
+
+        // Earlier PC leaves ReleasePosition unchanged on acquisition.
+
+        // Inherit data from the voice element.
+        pResult->Priority   = pElement->Params.Priority;
+        pResult->Type       = pElement->Type;
+        pResult->Sample     = pElement->Sample;
+        pResult->Volume     = pElement->Volume;
+        pResult->Pitch      = pElement->Pitch;
+        pResult->EffectSend = pElement->EffectSend;
+        pResult->Pan2d      = pElement->Params.Pan2d;
+        pResult->Pan3d      = pElement->Params.Pan3d;
+
+        // Clear the read stream flag.
+        pResult->StreamData.bReadStream= FALSE;
+
+        // Insert it into the used list based on the priority/volume.
+        UpdatePriorityList( pResult, FALSE );
+
+        // Fake the hardware priority (until callback runs, GCN only).
+        // Do this by using the priority of the next channel.
+        g_AudioHardware.DuplicatePriority( pResult, pResult->Link.pNext );
+
+        // Aquire the hardware channel, if we can...
+        if( g_AudioHardware.AcquireChannel( pResult ) )
+        {
+            // Can initialize hot samples...
+            if( pElement->Type == HOT_SAMPLE )
+            {
+                // Now initilize the hardware channel.
+                g_AudioHardware.InitChannel( pResult );
+            }
+
+            // Set elements channel.
+            pElement->pChannel = pResult;
+        }
+        // DOH! Could not aquire a hardware channel...
+        else
+        {
+            // Take it out of the used list.
+            RemoveChannelFromList( pResult );
+
+             // Put channel back in free list.
+            InsertChannelIntoList( pResult, FreeList() );
+
+            // Too bad...so sad...
+            pResult = NULL;
+        }
+    }
+
+    g_AudioHardware.Unlock();
+
+    // The complete earlier PC body has no later debug-failure logging path.
+
+
+    // Tell the world.
+    return( pResult != NULL );
+}
+#endif
 
 //------------------------------------------------------------------------------
 
@@ -584,6 +720,7 @@ void audio_channel_mgr::Update( void )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027b090, 0x7b)
 void audio_channel_mgr::Free( channel* pChannel, xbool PutInFreeList, xbool FreeParent )
 {
     element* pElement;

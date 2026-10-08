@@ -5,6 +5,8 @@
 #include <xCore/Entropy/IOManager/io_device.hpp>
 #include <xCore/Entropy/IOManager/io_filesystem.hpp>
 #include <xCore/x_files/x_time.hpp>
+#include <xCore/Entropy/IOManager/Device_DVD/io_device_dvd.hpp>
+#include <xCore/x_files/x_files.hpp>
 
 DATA(0x003f8790)
 static int s_Initialized = 0;
@@ -67,6 +69,75 @@ RVA_DYNINIT(0x00276f20, 0xa, g_IoMgr)
 RVA_DYNINIT(0x00276f30, 0xa, g_IoMgr)
 RVA_DYNINIT(0x00276f40, 0xc, g_IoMgr)
 RVA_DYNINIT(0x00276f50, 0xa, g_IoMgr)
+
+RVA(0x00277060, 0xac)
+s32 io_mgr::Init( void )
+{
+    // Error check.
+    ASSERT( s_Initialized == FALSE );
+
+    // Initialise some important xbox stuff
+    //   (a hook is needed before DeviceCDROMOpen to launch a thread)
+    // Set up the dvd
+#if defined(ENABLE_NETFS)
+    m_Devices[ IO_DEVICE_DVD ] = &g_IODeviceNET;
+#else
+    m_Devices[ IO_DEVICE_DVD ] = &g_IODeviceDVD;
+#endif
+    m_Devices[ IO_DEVICE_DVD ]->Init();
+
+    // It's inited.
+    s_Initialized = TRUE;
+
+    // Create the io_mgr thread.
+    m_pThread = new xthread( io_dispatcher, "io_mgr dispatcher", 8192, 2 );
+
+    // Initialize file system
+    g_IOFSMgr.Init();
+    g_IOFSMgr.MountFileSystem( "Files", 1 );
+#if defined(ENABLE_NETFS) && defined(TARGET_XBOX) && defined(X_LOGGING)
+    g_LogControl.Enable = TRUE;
+#endif
+
+    // It's all good!
+    return TRUE;
+}
+
+//==============================================================================
+
+RVA(0x00277110, 0x3e)
+s32 io_mgr::Kill( void )
+{
+    s32 i;
+
+    // Error check.
+    ASSERT( s_Initialized );
+
+    // Destroy the io_mgr thread.
+    delete m_pThread;
+
+    // Shut down the file system
+    g_IOFSMgr.Kill();
+
+    // For each device...
+    for( i=0 ; i<NUM_IO_DEVICES ; i++ )
+    {
+        // Kill each device.
+        m_Devices[ i ]->Kill();
+    }
+
+    // Clear flag
+    s_Initialized = FALSE;
+
+
+    // ok its all good.
+    // Destroy some xbox stuff
+    //   (a hook is needed before DeviceCDROMClose to kill a thread)
+    return 1;
+}
+
+//==============================================================================
+
 
 RVA(0x00277150, 0x2d)
 int io_mgr::QueueRequest(io_request* request) {

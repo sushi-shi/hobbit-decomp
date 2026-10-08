@@ -155,7 +155,7 @@ struct vector4 {
 };
 struct irect {
  int l,t,r,b;
- irect(){} irect(int L,int T,int R,int B):l(L),t(T),r(R),b(B){}
+ irect(){} irect(const irect& Rect){l=Rect.l;t=Rect.t;r=Rect.r;b=Rect.b;} irect(int L,int T,int R,int B):l(L),t(T),r(R),b(B){}
  void Set(int L,int T,int R,int B){l=L;t=T;r=R;b=B;}
  void Clear(){l=t=S32_MAX;r=b=-S32_MAX;}
  void SetWidth(int W);void SetHeight(int H);void SetSize(int W,int H);

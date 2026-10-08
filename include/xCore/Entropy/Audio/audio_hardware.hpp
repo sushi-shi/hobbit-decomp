@@ -5,6 +5,9 @@
 #define AUDIO_HARDWARE_HPP
 
 #include <xCore/Entropy/Audio/audio_private.hpp>
+#if defined(TARGET_PC)
+#include <dsound.h> // Genuine DX8 SDK owns LPDIRECTSOUND8.
+#endif
 
 class audio_hardware
 {
@@ -17,6 +20,10 @@ public:
                             audio_hardware      ( void );
                            ~audio_hardware      ( void );
             
+#if defined(TARGET_PC)
+            // Inferred descriptive API name; actual PC member-ABI pointer getter.
+            LPDIRECTSOUND8  GetDirectSound       ( void );
+#endif
             void            Init                ( s32 MemSize );
             void            Kill                ( void );
             void            ResizeMemory        ( s32 MemSize );
@@ -42,6 +49,12 @@ public:
             void            PauseChannel        ( channel*      pChannel );
             void            ResumeChannel       ( channel*      pChannel );
             void            InitChannel         ( channel*      pChannel );
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+            // Earlier PC helper signatures decoded from real bodies; identifiers inferred.
+            // ADPCM signed byte arithmetic and ret20, PCM ret16 independently decoded; names inferred.
+            void DecodeADPCMBuffer(LPDIRECTSOUNDBUFFER,void*,s32,s32,s32);
+            void CopyPCMBuffer(LPDIRECTSOUNDBUFFER,void*,s32,s32);
+#endif
             void            InitChannelStreamed ( channel*      pChannel );
             u32             GetSamplesPlayed    ( channel*      pChannel );
             void            Lock                ( void );

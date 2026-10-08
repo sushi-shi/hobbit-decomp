@@ -163,6 +163,7 @@ s32 ui_win::GetHeight( void ) const
 
 //=========================================================================
 
+RVA(0x2a31a0, 0x80)
 ui_win* ui_win::GetWindowAtXY( s32 x, s32 y ) const
 {
     ui_win* pFound = NULL;

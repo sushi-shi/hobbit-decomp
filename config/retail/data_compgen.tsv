@@ -1,4 +1,3 @@
-# One root-reviewed native compiler-private datum; see cohort18-context-provider.json.
-# Original retail private spelling is unknown. Recheck the current owner object after source/profile changes.
+# No manual data_compgen rows; the reviewed Audio context datum now pairs automatically.
+# See cohort19-context-provider-retirement.json; preserve actual native members in proof, never as aliases.
 rva	size	name	owner	class
-0x352d68	0x1b	$SG51057	Entropy_audio_channel_mgr	string

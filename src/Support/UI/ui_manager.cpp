@@ -886,6 +886,7 @@ void ui_manager::DeleteUser( s32 UserID )
 
 //=========================================================================
 
+RVA(0x2a0380, 0x7)
 ui_manager::user* ui_manager::GetUser( s32 UserID ) const
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1000,6 +1001,7 @@ void ui_manager::ReleaseCapture( s32 UserID )
 
 //=========================================================================
 
+RVA(0x2a0410, 0xe)
 void ui_manager::SetUserBackground( s32 UserID, s32 iBackground )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1020,6 +1022,7 @@ const irect& ui_manager::GetUserBounds( s32 UserID ) const
 
 //=========================================================================
 
+RVA(0x2a0420, 0xd)
 void ui_manager::EnableUser( s32 UserID, xbool State )
 {
     ASSERT( (m_Users.Find( (user*)UserID )) != -1 );
@@ -1078,6 +1081,7 @@ xbool ui_manager::ProcessInput( f32 DeltaTime )
 
 //=========================================================================
 
+RVA(0x2a04d0, 0x83)
 ui_win* ui_manager::GetWindowAtXY( user* pUser, s32 x, s32 y )
 {
     ui_win* pWindow = NULL;

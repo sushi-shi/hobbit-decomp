@@ -3456,6 +3456,7 @@ void audio_voice_mgr::InitSingleVoice( voice* pVoice, audio_package* pPackage )
 
 //------------------------------------------------------------------------------
 
+RVA(0x00279870, 0x10C)
 void audio_voice_mgr::InitSingleElement( element* pElement )
 {
     s32 n;

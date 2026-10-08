@@ -6,6 +6,7 @@
 //
 //=========================================================================
 
+#include <rva.h>
 #include <xCore/Entropy/Entropy.hpp>
 #include <Support/OccluderMgr/OccluderMgr.hpp>
 #include <Support/Obj_mgr/obj_mgr.hpp>
@@ -77,6 +78,7 @@ void occluder_mgr::Clear(void) {
 
 //=========================================================================
 
+RVA(0x001a7e40, 0xd)
 void occluder_mgr::UseOccluders(xbool OnOff) {
     m_UseOccluders = OnOff;
 }
@@ -131,6 +133,7 @@ void occluder_mgr::AddOccluder(const vector3* pPoint, s32 nPoints) {
 
 //=========================================================================
 
+RVA(0x001a8170, 0x15b)
 void occluder_mgr::RenderAllOccluders(void) {
 #if !defined(X_RETAIL)
     s32 i;
@@ -173,6 +176,7 @@ void occluder_mgr::RenderAllOccluders(void) {
 
 //=========================================================================
 
+RVA(0x001a82d0, 0x175)
 void occluder_mgr::RenderUsableOccluders(void) {
 #if !defined(X_RETAIL)
     s32 i;
