@@ -91,22 +91,23 @@ def _warn_stale(stale: set) -> None:
               f"`python3 -m hobbit.verify fingerprints`.", file=sys.stderr)
 
 
-def _warn_stale_report(report=None) -> None:
-    """A report older than the objects it scores measures the PAST.
-
-    Nothing downstream can tell a stale report from a current one, so every
-    verdict here (and every banked row) would describe a build that no longer
-    exists. Loud, never a verdict change: the operator rebuilds.
-    """
+def _report_object_age(report=None):
+    """Observed report age relative to native objects; shared warning contract."""
     try:
-        path = report or scores.report_path()
+        path = Path(report) if report else scores.report_path()
         newest = max((p.stat().st_mtime
                       for p in (REPO / "build/objdiff/base").glob("*.obj")),
                      default=0.0)
-        age = newest - path.stat().st_mtime
+        return path, newest - path.stat().st_mtime
     except (OSError, SystemExit):
-        return
-    if age > 1.0:
+        return None
+
+
+def _warn_stale_report(report=None) -> None:
+    """Warn when a report predates an observed native object by over a second."""
+    observed = _report_object_age(report)
+    if observed is not None and observed[1] > 1.0:
+        path, age = observed
         print(f"WARNING: {path.name} is STALE - a base obj is {age:.0f}s "
               f"newer, so these scores describe the PREVIOUS build. Re-run "
               f"`hobbit build` before reading (or banking) them.",
@@ -259,19 +260,26 @@ def cmd_status(argv) -> int:
 
 
 def refresh_readme_block(report=None) -> bool:
-    """Re-render README's score block from the CURRENT report + banked ledger.
+    """Refresh derived scores only when the report's source evidence is current.
 
-    The block is a pure function of those two, so it has no reason to be
-    stale - yet it used to move only at `bank`, a deliberate manual act,
-    so every build silently left it describing an older tree and readers
-    (humans and agents) quoted numbers that were no longer true. The
-    ledger stays manual; only this derived block refreshes. README.md is
-    deliberately outside BANK_INPUT_PATHS, so writing it can never block
-    banking.
+    The ledger remains manual; rendering must never bank stale measurements
+    against changed source or mutate the baseline.
     """
     from hobbit.model import resolve
     from hobbit.verify.universe import engine_universe
-    doc, cur, base, fp, _stale, rvas = load_state(report)
+    doc, cur, base, fp, stale, rvas = load_state(report)
+    observed = _report_object_age(report)
+    if observed is not None and observed[1] > 1.0:
+        print("README score refresh refused: report predates native objects; "
+              "run `hobbit build` before refreshing measured scores.", file=sys.stderr)
+        return False
+    # fingerprinter discovers stale units lazily when a function is queried.
+    for unit, name in cur:
+        fp(unit, name)
+    if stale:
+        print("README score refresh refused: source fingerprints are stale; "
+              "run `hobbit build` before refreshing measured scores.", file=sys.stderr)
+        return False
     model = resolve()
     target_doc, target_cur, sizes, other = rm.target_rollup(doc, model, rvas)
     umeas = scores.unit_measures(target_doc)
