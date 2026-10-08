@@ -1,6 +1,8 @@
 # Reviewed actual native compiler data; source literals and private ordinals are not retail spellings.
 # Reprove defining source/header/profile/object and retire a row if genuine automatic pairing supersedes it.
 rva	size	name	owner	class
+0x355bd0	0x1e	$SG60317	UI_ui_manager	string
+0x355bf0	0xf	$SG60305	UI_ui_manager	string
 0x355c00	0x13	$SG60294	UI_ui_manager	string
 0x355c64	0x12	$SG58381	UI_ui_dialog	string
 0x355cbc	0x11	$SG58100	UI_ui_frame	string

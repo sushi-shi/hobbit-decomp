@@ -1872,6 +1872,36 @@ void audio_mgr::Calculate3dVolume( f32 NearClip, f32 FarClip, s32 VolumeRolloff,
 
 //------------------------------------------------------------------------------
 
+RVA(0x002592a0, 0x51)
+void audio_mgr::Calculate2dPan( f32      Pan2d,
+                                vector4& Pan3d )
+{
+    s32     i;
+
+    // Convert to [-90..90]
+    Pan2d *= 90;
+
+    i = (s32)Pan2d;
+    if( i < -90 )
+        i = -90;
+    if( i > 90 )
+        i = 90;
+
+    // Get the stereo pan.
+    Pan3d = m_StereoPan[ i+90 ];
+}
+
+f32 s_EarVolume       = 0.0f;
+f32 s_ZoneVolume      = 0.0f;
+s32 s_ZoneID          = 0;
+f32 s_ZoneFinalVolume = 0.0f;
+
+//------------------------------------------------------------------------------
+
+// Incompatible later-revision implementation retained in reference/area51-audio-later/audio_mgr.cpp.inc; PC provider unresolved.
+
+//------------------------------------------------------------------------------
+
 RVA(0x00259300, 0x2f4)
 void audio_mgr::Calculate3dVolumeAndPan( f32 NearClip, f32 FarClip, s32 VolumeRolloff,
                                          f32 NearDiffuse, f32 FarDiffuse,
@@ -1916,36 +1946,6 @@ void audio_mgr::Calculate3dVolumeAndPan( f32 NearClip, f32 FarClip, s32 VolumeRo
         }
     }
 }
-
-RVA(0x002592a0, 0x51)
-void audio_mgr::Calculate2dPan( f32      Pan2d,
-                                vector4& Pan3d )
-{
-    s32     i;
-
-    // Convert to [-90..90]
-    Pan2d *= 90;
-
-    i = (s32)Pan2d;
-    if( i < -90 )
-        i = -90;
-    if( i > 90 )
-        i = 90;
-
-    // Get the stereo pan.
-    Pan3d = m_StereoPan[ i+90 ];
-}
-
-f32 s_EarVolume       = 0.0f;
-f32 s_ZoneVolume      = 0.0f;
-s32 s_ZoneID          = 0;
-f32 s_ZoneFinalVolume = 0.0f;
-
-//------------------------------------------------------------------------------
-
-// Incompatible later-revision implementation retained in reference/area51-audio-later/audio_mgr.cpp.inc; PC provider unresolved.
-
-//------------------------------------------------------------------------------
 
 RVA(0x00259600, 0x21)
 voice_id audio_mgr::Play( const char* pIdentifier, xbool AutoStart )

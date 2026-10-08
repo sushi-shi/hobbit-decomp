@@ -10,7 +10,8 @@
 #include <Support/UI/ui_manager.hpp>
 
 // Genuine sibling provider; Xbox UI:ui_manager.obj confirms qualified owner.
-// PC global address remains unclaimed.
+// PC four-byte singleton receiver independently qualified; see cohort24 proof.
+DATA(0x0041303c)
 ui_manager* g_UiMgr = NULL;
 #include <Support/UI/ui_win.hpp>
 #include <Support/UI/ui_font.hpp>
@@ -1475,6 +1476,7 @@ void ui_manager::Render( void )
         // Only render enabled users
         if( pUser->Enabled )
         {
+            x_mem_owner __owner__("pUser->Enabled");
 #ifdef TARGET_PC
             // If there are visible dialogs, render the stack
             if (pUser->DialogStack.GetCount())
@@ -1497,6 +1499,7 @@ void ui_manager::Render( void )
             // Render all Dialogs from the Render Modal one
             for( ; j<pUser->DialogStack.GetCount() ; j++ )
             {
+                x_mem_owner __owner__("pUser->DialogStack[j]->Render");
                 pUser->DialogStack[j]->Render( pUser->Bounds.l, pUser->Bounds.t );
             }
 

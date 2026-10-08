@@ -10,7 +10,7 @@ media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
 The score below is the **last verified match bank (cohort19)**. Source imports
-have advanced to cohort23; a fresh comparison is pending the issue described below.
+have advanced to cohort24; a fresh comparison is pending the issue described below.
 
 <!-- match-score:start -->
 ## Match status
@@ -32,28 +32,26 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-**Current checkpoint: cohort23 (8 October 2026).**
-Eleven complete UI source successors restore
-verified outer memory-owner scopes and native string providers, including the
-former frontier at PC RVA `0x355cbc`. The build verifies **255 of 282 units**
-(11 fresh UI objects, 244 cached objects), with 27 known failures. Canonical
-native payloads and typed references agree with the independently reviewed
-proposals. Claims and census are refreshed; all **99 claimed source owners**
-build and the model has **zero violations**. A reviewed compiler-local string
-qualification resolves the repeated `$SG58046` names without changing native
-payloads or references. Strict target generation passes the former UI gap and
-now stops at an unidentified writable-data provider, PC RVA `0x41303c`.
-A fresh comparison and match bank remain pending.
-Normal verification also retains open TU-order, dead-code, undefined-closure
-and data-evidence findings; the checkpoint records them without exemptions.
+**Current checkpoint: cohort24 (8 October 2026).**
+The manager now has all three verified memory-owner scopes and its genuine
+four-byte `g_UiMgr` singleton identity. A reviewed audio method reorder clears
+one unit's ordering finding. The build verifies **255 of 282 units**
+(2 fresh objects, 253 cached objects), with the same 27 failures. Both current
+objects agree with the reviewed proposals across complete runtime sections
+and typed references. Fresh claims and census pass; all **99 claimed source
+owners** build and the model has **zero violations**. Strict target generation
+passes the previous singleton gap at `0x41303c` and now stops at the unprovided
+`"large"` font-lookup string, PC RVA `0x31ceac`. The PC renderer uses a lookup
+missing from the imported later body. A fresh comparison and match bank
+remain pending. Normal verification records 13 TU-order findings, down from
+14, plus open dead-code, undefined-closure and data-evidence findings.
 
 The refreshed census contains **8,526 admitted function targets**, including
 **1,366 with reconstructed source identities**. These are whole-game counts;
 the engine/game split remains unresolved. The historical bank above used
 8,493 targets, so its percentage does not describe the current census.
 
-Complete later Render bodies remain NONEXACT; the manager's two additional
-nested lifetimes remain open. Source import, compilation and exact matching
+Complete later Render bodies remain NONEXACT. Source import, compilation and exact matching
 are separate measurements. See [engine-source-imports.md](docs/engine-source-imports.md)
 and [the matching worklist](docs/matching-worklist.md) for current scope and tasks.
 
@@ -99,7 +97,7 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current integration checkpoint](config/evidence/cohort23-integration-checkpoint.json): source/build/model verification and the remaining strict provider gap.
+- [Current integration checkpoint](config/evidence/cohort24-integration-checkpoint.json): current source/build/model checks and remaining strict/normal findings.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.
