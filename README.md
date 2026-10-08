@@ -9,9 +9,10 @@ Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
-The score below is the **historical cohort19 match bank**. The latest integrated
-checkpoint is cohort25; strict target generation has advanced to the next
-missing provider, so a fresh comparison remains pending. Current build and review progress appear immediately below the score.
+The score below is the **historical cohort19 match bank**. Current integration
+has reached cohort26. Strict target generation still stops at `OptionSelect`
+(PC RVA `0x323150`), so a fresh comparison and score bank remain pending.
+Current source and build progress appear immediately below the score.
 
 <!-- match-score:start -->
 ## Match status
@@ -33,31 +34,37 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-**Current integration: cohort25 (8 October 2026).**
-The missing **44-byte `xstring` font-name member**, its constructor's genuine
-six-byte `"large\0"` provider at PC RVA `0x31ceac`, and the complete earlier
-checkbox Render body are now integrated. Independent review supports their
-PC lifetimes, control flow and UTF-16 call semantics. Both fresh native UI
-objects agree with the reviewed proposals across complete runtime sections
-and typed references. They remain **NONEXACT**, with font-version gaps visible.
+**Current integration: cohort26 (8 October 2026).**
+The complete earlier text Render body now restores the PC font lookups and
+white-label shadow geometry. The checkbox's sound call now uses the genuine
+`g_AudioMgr.Play("OptionSelect")` behavior, supplying the missing 13-byte name at
+PC RVA `0x323150`. Both current native objects agree with the independently
+reviewed proposals across complete runtime sections and typed references.
+They remain **NONEXACT**: font and virtual-method revisions still differ.
 
-The current broad build verifies **255 of 282 units** (15 fresh objects,
-240 cached objects), with the same 27 failures: 18 missing-header dependencies
-and nine source/API differences. Shared-header dependents have been rebuilt,
-and all 15 UI string providers are renewed. Fresh claims and census pass; all
-**99 claimed source owners** build and the model has **zero violations**. The
-full scan retains one failed, unclaimed LLVM owner with no active claims. Strict
-target generation passes `"large"` and now stops at the missing `"OptionSelect"`
-provider, PC RVA `0x323150`. A fresh all-reference comparison and bank remain
-pending. See the
-[source integration proof](config/evidence/cohort25-source-providers.json)
+The current broad build verifies **255 of 282 units** (two fresh objects,
+253 cached objects), with the same 27 failures: 18 missing-header dependencies
+and nine source/API differences. All 16 UI string providers are renewed; four
+checkbox and three text-renderer copies of `"large"` remain unbound. Fresh
+claims, census and model checks pass; all **99 claimed source owners** build
+and the model has **zero violations**. The changed sources were freshly scanned
+against independently verified unchanged headers, profiles and prior whole-scan
+provenance. The known failed, unclaimed LLVM owner contributes no active claims.
+Strict target generation fails at `OptionSelect` (PC RVA `0x323150`). Its
+reviewed source provider is present in the current model but absent from the
+generated data manifest: explicit and automatically inferred records name the
+same 13-byte datum differently, causing both to be rejected as overlaps.
+The [enrollment diagnosis](config/evidence/cohort26-optionselect-enrollment.json)
+records this tooling failure.
+A fresh comparison and bank remain pending.
+See the [source integration proof](config/evidence/cohort26-source-providers.json)
 and [build receipt](config/evidence/engine-source-import-build.json).
 
-Current normal verification retains five open gates: 13 TU-order findings,
+Current cohort26 normal verification records five open gates: 13 TU-order findings,
 220 dead-code annotation findings, 112 undefined-closure findings, one
 data-access finding and one data-coverage finding. No exemptions or gate
-baselines were added. The [current checkpoint](config/evidence/cohort25-integration-checkpoint.json)
-records these results separately from the historical score.
+baselines were added. The [current checkpoint](config/evidence/cohort26-integration-checkpoint.json)
+records those results separately from the historical score.
 
 The latest published census contains **8,526 admitted function targets**,
 including **1,366 with reconstructed source identities**. These are whole-game
@@ -110,9 +117,11 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current source integration](config/evidence/cohort25-source-providers.json): restored UI source/layout, reviewed native objects and pending matching renewal.
+- [Current source integration](config/evidence/cohort26-source-providers.json): restored UI behavior, reviewed native objects and pending matching renewal.
+- [Current verification checkpoint](config/evidence/cohort26-integration-checkpoint.json): build, claims/model and strict/normal findings.
+- [OptionSelect enrollment diagnosis](config/evidence/cohort26-optionselect-enrollment.json): duplicate identity records block strict target generation.
 - [Review milestone](config/evidence/cohort25-review-progress.json): evidence retained from before integration.
-- [Current integration checkpoint](config/evidence/cohort25-integration-checkpoint.json): current build, claims/model and remaining strict/normal findings.
+- [Previous verification checkpoint](config/evidence/cohort25-integration-checkpoint.json): prior build, claims/model and strict/normal findings.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.

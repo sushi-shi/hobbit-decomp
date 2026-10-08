@@ -9,6 +9,7 @@
 #include <rva.h>
 
 #include <xCore/Entropy/Entropy.hpp>
+#include <xCore/Entropy/e_Audio.hpp>
 #include <Support/AudioMgr/tribes-aa/audio.hpp>
 #include <Support/LabelSets/reference/tribes-aa/Tribes2Types.hpp>
 
@@ -125,7 +126,7 @@ void ui_check::OnPadSelect( ui_win* pWin )
         // Notify Parent
         if( m_pParent )
             m_pParent->OnNotify( m_pParent, this, WN_CHECK_CHANGE, (void*)(m_Flags & WF_SELECTED) );
-        audio_Play( SFX_FRONTEND_CURSOR_MOVE_02,AUDFLAG_CHANNELSAVER );
+        g_AudioMgr.Play("OptionSelect");
     }
 }
 

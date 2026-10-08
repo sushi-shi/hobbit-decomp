@@ -116,11 +116,19 @@ void ui_text::Render( s32 ox, s32 oy )
             TextColor2 = XCOLOR_BLACK;
         }
 
-        // Render Text
-        r.Translate( 1, -1 );
-        m_pManager->RenderText( m_Font, r, m_LabelFlags, TextColor2, m_Label );
-        r.Translate( -1, -1 );
-        m_pManager->RenderText( m_Font, r, m_LabelFlags, TextColor1, m_Label );
+        if( TextColor1.R == 255 && TextColor1.G == 255 && TextColor1.B == 255 )
+        {
+            r.Translate( 2, -2 );
+            m_pManager->RenderText( g_UiMgr->FindFont( "large" ), r, m_LabelFlags, TextColor2, m_Label );
+            r.Translate( -2, -2 );
+        }
+        else
+        {
+            r.Translate( 1, -1 );
+            m_pManager->RenderText( g_UiMgr->FindFont( "large" ), r, m_LabelFlags, TextColor2, m_Label );
+            r.Translate( -1, -1 );
+        }
+        m_pManager->RenderText( g_UiMgr->FindFont( "large" ), r, m_LabelFlags, TextColor1, m_Label );
 
         // Render children
         for( s32 i=0 ; i<m_Children.GetCount() ; i++ )
