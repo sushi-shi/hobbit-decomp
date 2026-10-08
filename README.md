@@ -10,8 +10,8 @@ media payloads and their download links are excluded from this repository.
 See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
 The score below is the **historical cohort19 match bank**. The latest integrated
-checkpoint is cohort24; reviewed cohort25 UI changes await integration and a
-fresh comparison. Current build and review progress appear immediately below the score.
+checkpoint is cohort25; strict target generation has advanced to the next
+missing provider, so a fresh comparison remains pending. Current build and review progress appear immediately below the score.
 
 <!-- match-score:start -->
 ## Match status
@@ -33,35 +33,36 @@ _Other compared code spans (excluded from the function denominator): 8 spans / 2
 _CUR / MAX / HIST: 1,239 / 1,241 / 1,243 exact &middot; 6.43% / 6.43% / 6.43% fuzzy (defined in AGENTS.md). Totals cover every in-`.text` reconstruction target, including source-owned compiler-generated functions. Separate lifecycle/EH helpers, unclaimed runtime/library code, thunks and padding are excluded._
 <!-- match-score:end -->
 
-**Current checkpoint: cohort24 (8 October 2026).**
-The manager now has all three verified memory-owner scopes and its genuine
-four-byte `g_UiMgr` singleton identity. A reviewed audio method reorder clears
-one unit's ordering finding. The build verifies **255 of 282 units**
-(2 fresh objects, 253 cached objects), with the same 27 failures. Both current
+**Current integration: cohort25 (8 October 2026).**
+The missing **44-byte `xstring` font-name member**, its constructor's genuine
+six-byte `"large\0"` provider at PC RVA `0x31ceac`, and the complete earlier
+checkbox Render body are now integrated. Independent review supports their
+PC lifetimes, control flow and UTF-16 call semantics. Both fresh native UI
 objects agree with the reviewed proposals across complete runtime sections
-and typed references. Fresh claims and census pass; all **99 claimed source
-owners** build and the model has **zero violations**. Strict target generation
-passes the previous singleton gap at `0x41303c` and now stops at the unprovided
-`"large"` font-lookup string, PC RVA `0x31ceac`. The PC renderer uses a lookup
-missing from the imported later body. A fresh comparison and match bank
-remain pending. Normal verification records 13 TU-order findings, down from
-14, plus open dead-code, undefined-closure and data-evidence findings.
+and typed references. They remain **NONEXACT**, with font-version gaps visible.
 
-The refreshed census contains **8,526 admitted function targets**, including
-**1,366 with reconstructed source identities**. These are whole-game counts;
-the engine/game split remains unresolved. The historical bank above used
-8,493 targets, so its percentage does not describe the current census.
+The current broad build verifies **255 of 282 units** (15 fresh objects,
+240 cached objects), with the same 27 failures: 18 missing-header dependencies
+and nine source/API differences. Shared-header dependents have been rebuilt,
+and all 15 UI string providers are renewed. Fresh claims and census pass; all
+**99 claimed source owners** build and the model has **zero violations**. The
+full scan retains one failed, unclaimed LLVM owner with no active claims. Strict
+target generation passes `"large"` and now stops at the missing `"OptionSelect"`
+provider, PC RVA `0x323150`. A fresh all-reference comparison and bank remain
+pending. See the
+[source integration proof](config/evidence/cohort25-source-providers.json)
+and [build receipt](config/evidence/engine-source-import-build.json).
 
-**Work in progress: cohort25 UI recovery (8 October 2026).**
-Independent review confirms a missing **44-byte `xstring` font-name member**
-in `ui_win` and the constructor's genuine six-byte `"large\0"` provider for
-`0x31ceac`. A complete earlier checkbox Render body also passed native and
-control-flow review; downstream PC reads establish its UTF-16 text arguments.
-These proposals remain **NONEXACT and are not yet integrated**. Next come the
-shared-header rebuild, native string-symbol renewal, fresh claims/model and
-strict target generation, followed by a new all-reference comparison and bank.
-The current build counts and historical score above therefore remain unchanged.
-See the [review progress receipt](config/evidence/cohort25-review-progress.json).
+Current normal verification retains five open gates: 13 TU-order findings,
+220 dead-code annotation findings, 112 undefined-closure findings, one
+data-access finding and one data-coverage finding. No exemptions or gate
+baselines were added. The [current checkpoint](config/evidence/cohort25-integration-checkpoint.json)
+records these results separately from the historical score.
+
+The latest published census contains **8,526 admitted function targets**,
+including **1,366 with reconstructed source identities**. These are whole-game
+counts; the engine/game split remains unresolved. The historical bank above
+used 8,493 targets, so its percentage does not describe the current census.
 
 Complete later Render bodies remain NONEXACT. Source import, compilation and exact matching
 are separate measurements. See [engine-source-imports.md](docs/engine-source-imports.md)
@@ -109,8 +110,9 @@ visible in the verification results.
 
 ## Documentation
 
-- [Current review progress](config/evidence/cohort25-review-progress.json): independently reviewed UI proposals and remaining integration checks.
-- [Current integration checkpoint](config/evidence/cohort24-integration-checkpoint.json): current source/build/model checks and remaining strict/normal findings.
+- [Current source integration](config/evidence/cohort25-source-providers.json): restored UI source/layout, reviewed native objects and pending matching renewal.
+- [Review milestone](config/evidence/cohort25-review-progress.json): evidence retained from before integration.
+- [Current integration checkpoint](config/evidence/cohort25-integration-checkpoint.json): current build, claims/model and remaining strict/normal findings.
 - [Last completed match bank](config/evidence/cohort19-strict.json): historical strict scores and open verification gates.
 - [Matching worklist](docs/matching-worklist.md): concrete engine tasks and contributor workflow.
 - [Source mapping](docs/source-mapping.md): ownership, annotations and admission.

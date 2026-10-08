@@ -169,6 +169,9 @@ protected:
     u32                 m_LabelFlags;       // Window Label Flags
     xcolor              m_LabelColor;       // Window label color
     s32                 m_Font;             // Window Font
+    // Reconstructed descriptive name; original spelling unknown. PC +0xac,
+    // genuine xstring lifetime and contained narrow name passed to FindFont.
+    xstring             m_FontName;
 };
 
 //==============================================================================

@@ -41,6 +41,7 @@ ui_win::ui_win( void )
     m_Flags = 0;
     m_Font  = 0;
     m_LabelColor = XCOLOR_WHITE;
+    m_FontName = "large";
 }
 
 //=========================================================================
