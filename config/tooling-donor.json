@@ -125,7 +125,7 @@
       "scope": "support",
       "donor_sha256": "a3b2a9c8257305e1904fca321508264fc60b2ca647489c4db05ebd9cd7e2dfca",
       "destination": "AGENTS.md",
-      "local_sha256": "336d18ef5d86edae265764ea1ce67bc88c3aed3daf8b0ae02e170b01d2e4e6c4",
+      "local_sha256": "f2ac0bf6417a02586abf38635caf154907262fedb7a98278948bc93eb71ed5aa",
       "status": "adapted_review_required"
     },
     {
@@ -133,7 +133,7 @@
       "scope": "support",
       "donor_sha256": "d92aff0d3b5bba1a929f4135c50c3e09f2d5c3a915e4b897b481ffa59879474c",
       "destination": "config/units.toml",
-      "local_sha256": "177e3ac4fd59938b449b3c7cae597361d05dbc58b4a77f03793f3a540b432c79",
+      "local_sha256": "22f82619962eb7ae70d53be9a6c02baa273b05bada895d5de670adc22141035f",
       "status": "adapted_review_required"
     },
     {
@@ -413,7 +413,7 @@
       "scope": "package",
       "donor_sha256": "d507b11b900a4458de3beba7b2747bfce97fef700023419a12e0595acc97ff62",
       "destination": "scripts/hobbit/compare/canonicalize.py",
-      "local_sha256": "194c472c07280c827fbbcc42ddd311d1f6f0cfef502899c7df28c18c1d430d34",
+      "local_sha256": "cc9b9921ad0b079dc68b46142462bb3a71eddba162753a966ccd35a0c8de846a",
       "status": "adapted_review_required"
     },
     {
@@ -597,7 +597,7 @@
       "scope": "package",
       "donor_sha256": "bbdea500a9180a8c1c714d3d6462bc4c15c7db01d39366e4526b88c573a4937a",
       "destination": "scripts/hobbit/delink/pdb_synth.py",
-      "local_sha256": "0ee845ea81f4768c134ba40885f3eb76c38369446d600769ad827749d8ae0640",
+      "local_sha256": "2ff3f3c20213e14a83dd52bc715f4e4408abbcadc69a3531dba58c3a3c2ce3b2",
       "status": "adapted_review_required"
     },
     {
@@ -605,7 +605,7 @@
       "scope": "package",
       "donor_sha256": "4788e8bc11710d7e07806afc686e58544704f67919a069b1c558d54581204272",
       "destination": "scripts/hobbit/delink/run.py",
-      "local_sha256": "2ebb46b3a09d91ec33117d3e9fbcde77caff13fc15f3144a1bb8bfcdb8ee639e",
+      "local_sha256": "ec896b81e4702341cd8e2ddb0d221d014b91da2e8ca38a057ef1071bfe8b80a0",
       "status": "adapted_review_required"
     },
     {
@@ -861,7 +861,7 @@
       "scope": "package",
       "donor_sha256": "942e7465e9c7c48f35d656d3c1fd61436cb656da0975e0bd65ddc6d4a60d7f4a",
       "destination": "scripts/hobbit/model.py",
-      "local_sha256": "dc9e6f121b1a9b6275a8c9e1099ff5d7f3c268930060dcdfa9573982ba7f273d",
+      "local_sha256": "ae3e4029f2f636a2bd26b0eb3f27ecfdbd84941fa226f5c00e7bb961ed493a22",
       "status": "adapted_review_required"
     },
     {
@@ -1509,7 +1509,7 @@
       "scope": "package",
       "donor_sha256": "1899bb01e99b99f35458e09ccb543a0e389d7f2a5f105ab0d6365d06d79cdb88",
       "destination": "scripts/hobbit/verify/readme.py",
-      "local_sha256": "a5a26c295b67028d2007130f940624d8bf3356a877fa389fea95251a124b81c5",
+      "local_sha256": "be629f9fab5035875b9b1b7f7998a06492b94dd5a53fef37e5d97031e2b7227b",
       "status": "adapted_review_required"
     },
     {
@@ -1525,7 +1525,7 @@
       "scope": "package",
       "donor_sha256": "e7ee63726348875adfe200ab0e3e7fc3f54da24e673aa006c81ec95538390c42",
       "destination": "scripts/hobbit/verify/selftest.py",
-      "local_sha256": "01cfc19b6d241a327d6cfec21f35c22047d141b997cba42d54a86a0d65694b51",
+      "local_sha256": "98d5099827d234c8f3f7420550fee424b2ccc4067bca856b5111f23579f6e7ca",
       "status": "adapted_review_required"
     },
     {
@@ -1605,7 +1605,7 @@
       "scope": "package",
       "donor_sha256": "196bfe2bea855d67ff5de4c3bc38f636691b93cb2d853099dea5283a6caef2c3",
       "destination": "scripts/hobbit/verify/verbs.py",
-      "local_sha256": "d900450dda69193f801c2f75a542bde82b9165a600a7341b50a2bc969f3ba56e",
+      "local_sha256": "53a6645c7b2801caeeee7cb160b17fe1bb4fdab04e412801b55192e5711020b1",
       "status": "adapted_review_required"
     },
     {

@@ -4304,6 +4304,59 @@ class AnonymousNamespaceControls(unittest.TestCase):
                 _common_owner(td)
 
 
+class AnonymousDataReferentControls(unittest.TestCase):
+    """Gruntz fe04e5f6be26e4c7b8445c3e62c9a41a8271dca7 DAT_<VA> labels."""
+
+    def test_exact_addresses_and_distinct_names_survive(self):
+        from hobbit.delink import pdb_synth as synth
+        readonly = [(0x1000, "UNPROVISIONED_00401000"),
+                    (0x1001, "UNPROVISIONED_00401001")]
+        writable = [(0x2000, "UNPROVISIONED_00402000")]
+        self.assertEqual(synth.anonymous_data_symbols(readonly, writable), 3)
+        self.assertEqual(readonly, [(0x1000, "DAT_00401000"),
+                                   (0x1001, "DAT_00401001")])
+        self.assertEqual(writable, [(0x2000, "DAT_00402000")])
+        self.assertEqual(synth.anonymous_data_symbols(readonly, writable), 0)
+
+    def test_reviewed_names_are_not_overwritten(self):
+        from hobbit.delink import pdb_synth as synth
+        readonly = [(0x1000, "?named@@3HA"), (0x1010, "??_C@literal"),
+                    (0x1020, "$SG123"), (0x1030, "DAT_00401030")]
+        before = list(readonly)
+        self.assertEqual(synth.anonymous_data_symbols(readonly, []), 0)
+        self.assertEqual(readonly, before)
+
+    def test_unresolved_worklist_is_recorded_before_comparison_names(self):
+        from types import SimpleNamespace
+        from copy import deepcopy
+        from hobbit.delink import pdb_synth as synth
+        from hobbit.retail_labels import censuses
+        readonly = [(0x1000, "UNPROVISIONED_00401000")]
+        writable = [(0x2000, "UNPROVISIONED_00402000")]
+        original = deepcopy((readonly, writable))
+        model = SimpleNamespace(functions=[SimpleNamespace(
+            rva=0x3000, size=0x20, unit="actual_owner", channel="src")])
+        census = [{"rva": 0x1000, "size": 8, "kind": "string", "region": "rdata"},
+                  {"rva": 0x2000, "size": 8, "kind": "string", "region": "data"}]
+        with mock.patch.object(synth, "_oracle_extents", return_value=[]), \
+                mock.patch.object(synth, "reloc_target_refs", return_value={
+                    0x1000: [0x3001], 0x2000: [0x3005]}), \
+                mock.patch.object(synth, "band_lookup", return_value=lambda site: "game"), \
+                mock.patch.object(synth, "game_site_test", return_value=lambda site: True), \
+                mock.patch.object(synth, "_alias_covered", return_value=lambda target, site: False), \
+                mock.patch.object(censuses, "data", return_value=census):
+            debt = synth.unprovisioned_rows(readonly, writable, model)
+            before = deepcopy(debt)
+            self.assertEqual([row["rva"] for row in debt], [0x1000, 0x2000])
+            self.assertEqual([row["sites"] for row in debt], [[0x3001], [0x3005]])
+            self.assertTrue(all(row["units"] == ["actual_owner"] for row in debt))
+            self.assertEqual(synth.anonymous_data_symbols(readonly, writable), 2)
+            self.assertEqual(debt, before)
+            # Comparison copies do not replace the evidence pipeline inputs.
+            self.assertEqual(synth.unprovisioned_rows(*original, model), before)
+            self.assertEqual(len(synth.format_unprovisioned(debt)), 2)
+
+
 class ReadmeFreshnessControls(unittest.TestCase):
     """README's derived block must not be able to go stale.
 

@@ -13,11 +13,10 @@ for vostok-delinker to slice the hash-pinned Meridian.exe into per-unit COFF obj
   2. Data records for every relocation-target address (S_LDATA32), renamed to
      the claimed source names and cl's own `??_C@` string-pool spellings (the
      base objs are the oracle), plus the proven `__imp_` IAT decorations.
-     Every identity is PROVIDED, never invented: a target no name reaches
-     keeps a fence whose spelling states the verdict of the referencing-band
-     split - `DAT_<va>` when only library bands reference it (a deliberate
-     synthetic), `UNPROVISIONED_<va>` when any game band does (a defect the
-     delinker refuses to emit).
+     A target without a reconstructed identity keeps Gruntz's exact-address
+     `DAT_<va>` reference. Unresolved game references are recorded separately
+     before emitting these labels; they remain scored in the comparison and
+     establish no source declaration or data ownership.
   3. `llvm-pdbutil yaml2pdb`, then the DBI-header byte-patch: yaml2pdb cannot
      emit a GSI symbol-records stream and pdb2's `global_symbols()` errors on a
      nil index, so the header is repointed at an existing empty stream.
@@ -296,8 +295,9 @@ def reloc_data_symbols(model: Model) -> tuple[list, list]:
     when only library code references it (library-internal data we
     deliberately do not model - made explicit and total), `UNPROVISIONED_<va>`
     when any game site references it. The fence must EXIST either way so
-    nearest-symbol recovery can never silently misattribute the address; the
-    delinker emits `DAT_` but hard-fails on `UNPROVISIONED_`.
+    nearest-symbol recovery can never silently misattribute the address.
+    Record the unresolved game references before converting their fences to
+    Gruntz's `DAT_<va>` spelling for comparison.
     """
     img = retail()
     rd_lo, rd_hi = sections_of()[".rdata"]
@@ -337,7 +337,8 @@ def drop_interior_placeholders(rdata_syms, data_syms, model) -> int:
     identity - the containing claim + addend is, and keeping the fence would
     shadow that claim in nearest-symbol selection. Drop them (both fence
     spellings). An `UNPROVISIONED_` that survives this marks a genuinely
-    unprovided game-referenced address, which the delinker refuses to emit.
+    unprovided game-referenced address, retained in the unresolved worklist
+    and emitted as an anonymous comparison reference.
     Mutates; returns count."""
     claims = sorted((b.rva, b.size) for b in model.data
                     if b.channel and b.name and b.size)
@@ -511,6 +512,23 @@ def format_unprovisioned(rows) -> list[str]:
                      f"units={','.join(r['units']) or '-'}  "
                      f"sites={sites}{more}")
     return lines
+
+
+def anonymous_data_symbols(rdata_syms, data_syms) -> int:
+    """Keep unknown addresses as Gruntz's DAT_<VA> comparison referents.
+
+    Ported from Gruntz fe04e5f6b's reloc_data_symbols. These are address
+    labels, not reconstructed declarations or native symbol aliases. Compute
+    the unresolved worklist before this spelling change; every relocation
+    remains in the target object and is compared with functionRelocDiffs=all.
+    """
+    count = 0
+    for symbols in (rdata_syms, data_syms):
+        for index, (rva, name) in enumerate(symbols):
+            if name.startswith("UNPROVISIONED_"):
+                symbols[index] = (rva, "DAT_" + name[len("UNPROVISIONED_"):])
+                count += 1
+    return count
 
 
 def worklist(model: Model) -> list[dict]:
@@ -818,9 +836,18 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     unprov = unprovisioned_rows(rdata_syms, data_syms, model)
     if unprov:
         log(f"UNPROVISIONED: {len(unprov)} game-referenced data target(s) "
-            "lack a provided identity (the delinker refuses to emit these):")
+            "lack a reconstructed identity; anonymous references stay in comparison:")
         for line in format_unprovisioned(unprov[:20]):
             log("  " + line)
+    from hobbit.core.tsv import write as write_tsv
+    write_tsv(BUILD / "gen/delink_unresolved_data.tsv", [
+        "# Derived unresolved target addresses; no source/data ownership claims.",
+        "# Gruntz fe04e5f6b DAT_<VA> references remain scored, never masked."],
+        ["rva", "symbol", "units", "sites"],
+        [[f"0x{row['rva']:08x}", f"DAT_{retail().image_base + row['rva']:08x}",
+          ",".join(row["units"]), ",".join(f"0x{site:08x}" for site in row["sites"])]
+         for row in unprov])
+    anonymous_data_symbols(rdata_syms, data_syms)
     log(f"functions: {len(funcs)}  rdata: {len(rdata_syms)}  "
         f"data: {len(data_syms)}  idata: {len(iat_syms)}  "
         f"named: {len(names_map)}")

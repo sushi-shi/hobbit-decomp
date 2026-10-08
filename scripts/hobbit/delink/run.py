@@ -50,11 +50,15 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
     if img.directory(5) == (0, 0):
         from hobbit.delink import scope
         absolute_manifest = scope.generate(img, synth, enrolled, data_sections=sections)
+    # Gruntz fe04e5f6be26e4c7b8445c3e62c9a41a8271dca7 keeps exact-address
+    # DAT_<VA> PDB fences for unresolved data. Recover those typed references
+    # into the target objects; missing native counterparts still score lower.
     out = delinker.delink(
         synth["pdb"], pdb_synth.retail().pe.path, delink_dir,
         data_manifest=data_manifest.OUTPUT,
         data_section_manifest=data_manifest.SECTION_OUTPUT,
-        reloc_alias_manifest=RELOC_ALIASES, reloc_manifest=absolute_manifest)
+        reloc_alias_manifest=RELOC_ALIASES, reloc_manifest=absolute_manifest,
+        recover_data_relocs_from_pdb=True)
     if out.strip():
         print(out.strip().splitlines()[-1])
 
