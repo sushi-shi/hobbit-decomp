@@ -44,10 +44,10 @@ public:
     vector3 GetViewX() const;
     vector3 GetViewY() const;
     vector3 GetViewZ() const;
-    void GetViewPlanes(plane& Top,plane& Bottom,plane& Left,plane& Right,system System)const;
-    void GetViewPlanes(plane& Top,plane& Bottom,plane& Left,plane& Right,plane& Near,plane& Far,system System)const;
-    void GetViewPlanes(float X0,float Y0,float X1,float Y1,plane& Top,plane& Bottom,plane& Left,plane& Right,plane& Near,plane& Far,system System) const;
-    const plane* GetViewPlanes(system which) const;
+    void GetViewPlanes(plane& Top,plane& Bottom,plane& Left,plane& Right,system System = WORLD)const;
+    void GetViewPlanes(plane& Top,plane& Bottom,plane& Left,plane& Right,plane& Near,plane& Far,system System = WORLD)const;
+    void GetViewPlanes(float X0,float Y0,float X1,float Y1,plane& Top,plane& Bottom,plane& Left,plane& Right,plane& Near,plane& Far,system System = WORLD) const;
+    const plane* GetViewPlanes(system which = WORLD) const;
     const int* GetViewPlaneMinBBoxIndices(system which) const;
     const int* GetViewPlaneMaxBBoxIndices(system which) const;
     void GetMinMaxZ(const bbox& box, float& minZ, float& maxZ) const;

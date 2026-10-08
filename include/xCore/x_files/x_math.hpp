@@ -86,6 +86,7 @@ struct vector3
     float GetSqrtDistToLineSeg(const vector3& Start,const vector3& End)const;
     int operator==(const vector3& V)const{return X==V.X&&Y==V.Y&&Z==V.Z;}
     int operator!=(const vector3& V)const{return X!=V.X||Y!=V.Y||Z!=V.Z;}
+    float ClosestPointToRectangle(const vector3& P0,const vector3& E0,const vector3& E1,vector3& OutClosestPoint)const;
     float LengthSquared()const;
     vector3 Cross(const vector3& V)const{return vector3(Y*V.Z-Z*V.Y,Z*V.X-X*V.Z,X*V.Y-Y*V.X);}
     float Dot(const vector3& value)const;
@@ -1272,5 +1273,58 @@ inline int vector4::Normalize()
         return FALSE;
     }
 }
+
+inline
+f32 vector3::ClosestPointToRectangle( 
+    const vector3& P0,                      // Origin from the edges. 
+    const vector3& E0, 
+    const vector3& E1, 
+    vector3&       OutClosestPoint ) const
+{
+    vector3 kDiff    = P0 - *this;
+    f32     fA00     = E0.LengthSquared();
+    f32     fA11     = E1.LengthSquared();
+    f32     fB0      = kDiff.Dot( E0 );
+    f32     fB1      = kDiff.Dot( E1 );
+    f32     fS       = -fB0;
+    f32     fT       = -fB1;
+    f32     fSqrDist = kDiff.LengthSquared();
+
+    if( fS < 0.0f )
+    {
+        fS = 0.0f;
+    }
+    else if( fS <= fA00 )
+    {
+        fS /= fA00;
+        fSqrDist += fB0*fS;
+    }
+    else
+    {
+        fS = 1.0f;
+        fSqrDist += fA00 + 2.0f*fB0;
+    }
+
+    if( fT < 0.0f )
+    {
+        fT = 0.0f;
+    }
+    else if( fT <= fA11 )
+    {
+        fT /= fA11;
+        fSqrDist += fB1*fT;
+    }
+    else
+    {
+        fT = 1.0f;
+        fSqrDist += fA11 + 2.0f*fB1;
+    }
+
+    // Set the closest point
+    OutClosestPoint = P0 + (E0 * fS) + (E1 * fT);
+
+    return x_abs(fSqrDist);
+}
+
 
 #endif

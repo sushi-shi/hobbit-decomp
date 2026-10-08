@@ -1473,3 +1473,10 @@ flags = "cpp-unpooled"
 unit = "Entropy_imaadpcm"
 source = "src/xCore/Entropy/Audio/Codecs/imaadpcm.cpp"
 flags = "codec-msvc-release"
+
+# Complete genuine Music manager source; Xbox application object lead.
+# Existing import profile is provisional; no original PC compiler settings claimed.
+[[unit]]
+unit = "Music_mgr_music_mgr"
+source = "src/Support/Music_mgr/music_mgr.cpp"
+flags = "cpp-unpooled"

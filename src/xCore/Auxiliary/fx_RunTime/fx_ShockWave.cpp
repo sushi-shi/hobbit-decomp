@@ -23,7 +23,6 @@ DATA(0x415ce8) s32 fx_ShockWave;
 //==============================================================================
 
 RVA(0x2bb520, 0x56)
-RVA(0x2bb520, 0x56)
 void ShockWaveVertAndIndexCount( const fx_edef_shockwave& ShockWaveDef,
                                  s32& Verts, s32& Indexes )
 {
