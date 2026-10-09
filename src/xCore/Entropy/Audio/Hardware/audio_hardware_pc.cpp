@@ -1931,3 +1931,155 @@ void audio_hardware::DecodeADPCMBuffer(LPDIRECTSOUNDBUFFER pBuffer,void* pSource
     pBuffer->Release();
 }
 #endif
+
+#if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+#include <xCore/Entropy/Audio/audio_channel_mgr.hpp>
+// Earlier PC DirectSound version; helper spelling inherited from surviving sibling,
+// actual earlier behavior independently decoded. No later IAL implementation enabled.
+RVA(0x0027c050, 0x6a)
+static xbool UpdatePosition(channel* pChannel)
+{
+    if(!pChannel->Hardware.pdsBuffer)
+        return FALSE;
+    if(!pChannel->StreamData.pStream)
+    {
+        pChannel->Hardware.pdsBuffer->GetCurrentPosition((DWORD*)&pChannel->EndPosition,NULL);
+        u32 Position=g_AudioHardware.GetSamplesPlayed(pChannel);
+        pChannel->PrevBufferPosition=Position;
+        if(pChannel->MidPoint!=(u32)-1 && Position<pChannel->MidPoint)
+            return FALSE;
+        pChannel->MidPoint=Position;
+    }
+    if(pChannel->ReleasePosition && pChannel->PrevBufferPosition>=pChannel->ReleasePosition)
+        return FALSE;
+    DWORD Status;
+    pChannel->Hardware.pdsBuffer->GetStatus(&Status);
+    return (Status & DSBSTATUS_PLAYING)!=0;
+}
+
+RVA(0x0027be50, 0x1ec)
+void audio_hardware::Update(void)
+{
+    if(!s_pDirectSound)
+        return;
+    xbool bQueueStart=FALSE;
+    xbool bCanStart=g_AudioHardware.GetDoHardwareUpdate();
+    g_AudioHardware.ClearDoHardwareUpdate();
+    channel* pHead=g_AudioChannelMgr.UsedList();
+    channel* pChannel=pHead->Link.pPrev;
+    while(pChannel!=pHead)
+    {
+        channel* pPrevChannel=pChannel->Link.pPrev;
+        u32 Dirty=pChannel->Dirty;
+        LPDIRECTSOUNDBUFFER pBuffer=pChannel->Hardware.pdsBuffer;
+        if(Dirty && pBuffer)
+        {
+            LONG Volume=DSBVOLUME_MIN;
+            if(Dirty & CHANNEL_DB_VOLUME)
+            {
+                if(pChannel->Volume!=0.0f)
+                    Volume=(LONG)(2000.0f*x_log10(pChannel->Volume));
+                pBuffer->SetVolume(Volume);
+                Dirty &= ~CHANNEL_DB_VOLUME;
+            }
+            if(Dirty & CHANNEL_DB_PAN)
+                Dirty &= ~CHANNEL_DB_PAN;
+            if(Dirty & CHANNEL_DB_PITCH)
+            {
+                if(pChannel->State==STATE_RUNNING)
+                {
+                    s32 Frequency=(s32)(pChannel->Sample.pHotSample->SampleRate*pChannel->Pitch);
+                    Frequency=MAX(DSBFREQUENCY_MIN,Frequency);
+                    Frequency=MIN(200000,Frequency);
+                    pBuffer->SetFrequency(Frequency);
+                }
+                Dirty &= ~CHANNEL_DB_PITCH;
+            }
+            if(Dirty & CHANNEL_DB_EFFECTSEND)
+                Dirty &= ~CHANNEL_DB_EFFECTSEND;
+            pChannel->Dirty=Dirty;
+        }
+        switch(pChannel->State)
+        {
+        case STATE_STARTING:
+        {
+            xbool bStart=bCanStart;
+            if(pChannel->pElement && pChannel->pElement->pVoice && pChannel->pElement->pVoice->StartQ==2)
+            {
+                bStart=TRUE;
+                bQueueStart=TRUE;
+            }
+            if(pChannel->StreamData.pStream)
+            {
+                bStart=pChannel->StreamData.pStream->CompletedCopies;
+                bQueueStart=FALSE;
+            }
+            if(bStart)
+            {
+                StartChannel(pChannel);
+                pChannel->State=STATE_RUNNING;
+            }
+            break;
+        }
+        case STATE_RUNNING:
+            if(!UpdatePosition(pChannel))
+            {
+                g_AudioHardware.ReleaseChannel(pChannel);
+                pChannel->State=STATE_STOPPED;
+            }
+            break;
+        case STATE_PAUSING:
+            if(bCanStart)
+            {
+                g_AudioHardware.PauseChannel(pChannel);
+                pChannel->State=STATE_PAUSED;
+            }
+            break;
+        case STATE_RESUMING:
+            if(bCanStart)
+            {
+                g_AudioHardware.ResumeChannel(pChannel);
+                pChannel->State=STATE_RUNNING;
+            }
+            break;
+        }
+        pChannel=pPrevChannel;
+    }
+    if(bQueueStart)
+    {
+        pHead=g_AudioChannelMgr.UsedList();
+        pChannel=pHead->Link.pPrev;
+        while(pChannel!=pHead)
+        {
+            if(pChannel->pElement && pChannel->pElement->pVoice && pChannel->pElement->pVoice->StartQ==2)
+                pChannel->pElement->pVoice->StartQ=0;
+            pChannel=pChannel->Link.pPrev;
+        }
+    }
+}
+#endif
+
+#if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+RVA(0x0027b7b0, 0x40)
+void audio_hardware::StartChannel(channel* pChannel)
+{
+    LPDIRECTSOUNDBUFFER pBuffer=pChannel->Hardware.pdsBuffer;
+    if(!pChannel->Hardware.IsLooped)
+        pBuffer->Play(0,0,0);
+    else
+        pBuffer->Play(0,0,DSBPLAY_LOOPING);
+    pChannel->Hardware.IsStarted=TRUE;
+}
+RVA(0x0027b820, 0x19)
+void audio_hardware::PauseChannel(channel* pChannel)
+{
+    pChannel->Hardware.pdsBuffer->Stop();
+    pChannel->Hardware.IsStarted=FALSE;
+}
+RVA(0x0027b840, 0x1f)
+void audio_hardware::ResumeChannel(channel* pChannel)
+{
+    pChannel->Hardware.pdsBuffer->Play(0,0,0);
+    pChannel->Hardware.IsStarted=TRUE;
+}
+#endif

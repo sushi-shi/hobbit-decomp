@@ -9,7 +9,7 @@
 #include <Support/Ragdoll/Ragdoll.hpp>
 #include <Support/Objects/Render/SkinInst.hpp>
 #include <Support/Characters/FloorProperties.hpp>
-#include "Objects\Actor\Actor.hpp"
+#include <Support/Objects/Actor/Actor.hpp>
 
 //=========================================================================
 // FORWARD DECLARATIONS

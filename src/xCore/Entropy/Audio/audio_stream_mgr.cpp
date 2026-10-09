@@ -521,6 +521,7 @@ xbool audio_stream_mgr::ReadStream( audio_stream* pStream, io_request::callback_
 
 //------------------------------------------------------------------------------
 
+RVA(0x00277bb0, 0x138)
 void audio_stream_mgr::Update( void )
 {
     audio_stream* pStream  = g_AudioStreamMgr.m_AudioStreams;

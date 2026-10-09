@@ -3029,6 +3029,7 @@ inline voice* audio_voice_mgr::UpdateCheckStreams( voice* pVoice )
 
 //------------------------------------------------------------------------------
 
+RVA(0x00279140, 0x3b6)
 void audio_voice_mgr::Update( f32 DeltaTime )
 {
     CONTEXT( "audio_voice_mgr::Update" );

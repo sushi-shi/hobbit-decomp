@@ -868,6 +868,7 @@ xbool audio_mgr::LoadPackageStrings( const char* pFilename, xarray<xstring>& Str
 
 //------------------------------------------------------------------------------
 
+RVA(0x258330, 0xb0)
 void audio_mgr::Update( f32 DeltaTime )
 {
     CONTEXT("audio_mgr::Update");
@@ -880,6 +881,18 @@ void audio_mgr::Update( f32 DeltaTime )
     ASSERT( s_Initialized );
 #endif
 
+#ifdef TARGET_PC
+    if( g_AudioHardware.GetDirectSound() )
+    {
+        g_AudioHardware.Lock();
+        m_Time += DeltaTime;
+        g_AudioChannelMgr.Update();
+        g_AudioVoiceMgr.Update( DeltaTime );
+        g_AudioHardware.SetDoHardwareUpdate();
+        PeriodicUpdate();
+        g_AudioHardware.Unlock();
+    }
+#else
     // Update the time.
     m_Time += DeltaTime;
 
@@ -896,16 +909,25 @@ void audio_mgr::Update( f32 DeltaTime )
 
     // Ok to do the audio update in hardware now.
     g_AudioHardware.SetDoHardwareUpdate();
+#endif
 }
 
 //------------------------------------------------------------------------------
+RVA(0x2583e0, 0x28)
 void audio_mgr::PeriodicUpdate( void )
 {
+#ifdef TARGET_PC
+    g_AudioHardware.Lock();
+    g_AudioStreamMgr.Update();
+    g_AudioHardware.Update();
+    g_AudioHardware.Unlock();
+#else
     // Update the streams.
     g_AudioStreamMgr.Update();
 
     // Update the hardware.
     //Now done in it's own thread: g_AudioHardware.Update();
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -2266,6 +2288,7 @@ void audio_mgr::Pause( voice_id VoiceID )
 
 //------------------------------------------------------------------------------
 
+RVA(0x259b70, 0x3b)
 void audio_mgr::PauseAll( void )
 {
     // Error check.
@@ -2300,6 +2323,7 @@ void audio_mgr::Resume( voice_id VoiceID )
 
 //------------------------------------------------------------------------------
 
+RVA(0x259c10, 0x65)
 void audio_mgr::ResumeAll( void )
 {
     // Error check.
@@ -2355,6 +2379,7 @@ void audio_mgr::Release( voice_id VoiceID, f32 Time )
 
 //------------------------------------------------------------------------------
 
+RVA(0x259ce0, 0x3b)
 void audio_mgr::ReleaseAll( void )
 {
     // Error check.

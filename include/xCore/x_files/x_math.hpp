@@ -3,6 +3,7 @@
 
 #include <rva.h>
 #include <xCore/x_files/x_types.hpp>
+#include <xCore/x_files/x_target.hpp>
 #include <xCore/x_files/x_math_defs.hpp>
 #include <xCore/x_files/x_debug.hpp>
 
@@ -1355,4 +1356,47 @@ f32 x_clamp( f32 V, f32 VMin, f32 VMax )
     if( V > VMax ) V = VMax;
     return V;
 }
+#if defined(TARGET_PS2)
+    #define USE_VU0                1
+    #define FORCE_ALIGNED_16( x )  
+    #define FORCE_ALIGNED_64( x )
+    //extern s32 x_GetThreadID        (void);
+    //extern s32 x_GetMainThreadID    (void);
+    //#define FORCE_ALIGNED_16( x )  { ASSERT( (((u32)(x))&0x0f)==0 ); ASSERT( x_GetThreadID() == x_GetMainThreadID() ); }
+    //#define FORCE_ALIGNED_64( x )  { ASSERT( (((u32)(x))&0x3f)==0 ); ASSERT( x_GetThreadID() == x_GetMainThreadID() ); }
+#else
+    #define USE_VU0                0
+    #define FORCE_ALIGNED_16( x )  
+    #define FORCE_ALIGNED_64( x )
+#endif
+
+
+PC_ALIGNMENT(16)
+struct sphere
+{
+    vector3 Pos;
+    f32     R;
+
+                    sphere          ( void );
+                    sphere          ( const vector3& Pos, f32 R );
+                    sphere          ( const bbox& BBox );
+
+        void        Clear           ( void );
+
+        void        Set             ( const vector3& Pos, f32 R );
+        bbox        GetBBox         ( void ) const;
+
+        xbool       TestIntersect   ( const vector3& P0, const vector3& P1 ) const;
+        s32         TestIntersection( const plane& Plane ) const;
+
+        s32         Intersect       ( f32& t0, f32& t1, const vector3& P0, const vector3& P1 ) const;
+        xbool       Intersect       ( f32& t0, const vector3& P0, const vector3& P1 ) const;
+//        xbool       Intersert       ( f32& t, vector3& S0, vector3& E0, sphere& Sphere1, vector3& S1, vector3& E1 );
+        //xbool       Intersect       ( sphere& Sphere ) const;
+        //xbool       Intersect       ( vector3& P0, vector3& P1, vector3& P3 ) const;
+} PS2_ALIGNMENT(16);
+
+
+
+#include <xCore/x_files/Implementation/x_math_sph_inline.hpp>
 #endif

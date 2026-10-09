@@ -15,7 +15,7 @@
 #include <xCore/Auxiliary/Parsing/TextIn.hpp>
 #include <Support/AudioMgr/AudioMgr.hpp>
 #include <Support/Objects/Render/SkinInst.hpp>
-#include <Support/Objects/actor/actor.hpp>
+#include <Support/Objects/Actor/Actor.hpp>
 
 //==============================================================================
 // EXTERNS

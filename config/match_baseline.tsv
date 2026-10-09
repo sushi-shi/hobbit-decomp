@@ -39,15 +39,15 @@ CollisionMgr_CollisionMgr	6	6
 CollisionMgr_CollisionPrimatives	1	1
 CollisionMgr_PolyCache	1	1
 Decals_DecalMgr_StaticDecals	1	1
-Entropy_audio_channel_mgr	17	17
-Entropy_audio_hardware_pc	16	13
+Entropy_audio_channel_mgr	18	18
+Entropy_audio_hardware_pc	21	17
 Entropy_audio_io_request	2	2
-Entropy_audio_mgr	41	41
+Entropy_audio_mgr	46	46
 Entropy_audio_package	18	18
 Entropy_audio_ram_mgr	2	2
-Entropy_audio_stream_mgr	20	20
+Entropy_audio_stream_mgr	21	20
 Entropy_audio_stream_pc	1	1
-Entropy_audio_voice_mgr	70	70
+Entropy_audio_voice_mgr	71	70
 Entropy_d3deng	29	28
 Entropy_d3deng_draw	3	3
 Entropy_d3deng_vram	1	0
@@ -234,6 +234,7 @@ Entropy_audio_channel_mgr	?SetPitch@audio_channel_mgr@@QAEXPAUchannel@@M@Z	100.0
 Entropy_audio_channel_mgr	?SetPriority@audio_channel_mgr@@QAEXPAUchannel@@H@Z	100.0000	100.0000	1	609997b9f3ee	0x27ad60	100.0000	
 Entropy_audio_channel_mgr	?SetVolume@audio_channel_mgr@@QAEXPAUchannel@@M@Z	100.0000	100.0000	1	f437288664ee	0x27ada0	100.0000	
 Entropy_audio_channel_mgr	?Start@audio_channel_mgr@@QAEXPAUchannel@@@Z	100.0000	100.0000	1	0c310e8feb9d	0x27ad10	100.0000	
+Entropy_audio_channel_mgr	?Update@audio_channel_mgr@@QAEXXZ	100.0000	100.0000	1	aefd63e8dc01	0x27af50	100.0000	
 Entropy_audio_channel_mgr	?UpdatePriorityList@audio_channel_mgr@@AAEXPAUchannel@@H@Z	100.0000	100.0000	1	c674023ad79d	0x27b110	100.0000	
 Entropy_audio_hardware_pc	?AcquireChannel@audio_hardware@@QAEHPAUchannel@@@Z	100.0000	100.0000	1	b7d4bb850698	0x27b6d0	100.0000	
 Entropy_audio_hardware_pc	?CopyPCMBuffer@audio_hardware@@QAEXPAUIDirectSoundBuffer@@PAXHH@Z	100.0000	100.0000	1	3c31cb4a212f	0x27ba30	100.0000	
@@ -249,8 +250,13 @@ Entropy_audio_hardware_pc	?IsChannelActive@audio_hardware@@QAEHPAUchannel@@@Z	10
 Entropy_audio_hardware_pc	?Kill@audio_hardware@@QAEXXZ	100.0000	100.0000	1	94aed61ce914	0x27b620	100.0000	
 Entropy_audio_hardware_pc	?Lock@audio_hardware@@QAEXXZ	100.0000	100.0000	1	c5429401000b	0x27be00	100.0000	
 Entropy_audio_hardware_pc	?NumChannels@audio_hardware@@QAEHXZ	100.0000	100.0000	1	6cf267501216	0x27b6a0	100.0000	
+Entropy_audio_hardware_pc	?PauseChannel@audio_hardware@@QAEXPAUchannel@@@Z	100.0000	100.0000	1	74e6eff35a46	0x27b820	100.0000	
 Entropy_audio_hardware_pc	?ReleaseChannel@audio_hardware@@QAEXPAUchannel@@@Z	100.0000	100.0000	1	0404735eda22	0x27b700	100.0000	
+Entropy_audio_hardware_pc	?ResumeChannel@audio_hardware@@QAEXPAUchannel@@@Z	100.0000	100.0000	1	0a8ac08e175a	0x27b840	100.0000	
+Entropy_audio_hardware_pc	?StartChannel@audio_hardware@@QAEXPAUchannel@@@Z	100.0000	100.0000	1	8e43001a1476	0x27b7b0	100.0000	
 Entropy_audio_hardware_pc	?Unlock@audio_hardware@@QAEXXZ	100.0000	100.0000	1	9d9860b148e0	0x27be20	100.0000	
+Entropy_audio_hardware_pc	?Update@audio_hardware@@QAEXXZ	100.0000	100.0000	1	0ab5b33dab7d	0x27be50	100.0000	
+Entropy_audio_hardware_pc	?UpdatePosition@@YAHPAUchannel@@@Z	98.7234	98.7234	1	62ad76d275e1	0x27c050	98.7234	
 Entropy_audio_io_request	??0audio_io_request@@QAE@XZ	100.0000	100.0000	1	0bbf3ae65b5b	0x282380	100.0000	
 Entropy_audio_io_request	?SetRequest@audio_io_request@@QAEXW4transfer_type@1@PAX1HW4request_priority@1@P6AXPAV1@@Z@Z	100.0000	100.0000	1	ae5c685fd88a	0x2823b0	100.0000	
 Entropy_audio_mgr	??0audio_mgr@@QAE@XZ	100.0000	100.0000	2	29095bfb2617	0x257d90	100.0000	
@@ -283,17 +289,22 @@ Entropy_audio_mgr	?GetUserData@audio_mgr@@QAEIPBD@Z	100.0000	100.0000	1	42e11948
 Entropy_audio_mgr	?GetVoiceParameters@audio_mgr@@AAEXPAUuncompressed_parameters@@PAGPAVaudio_package@@@Z	100.0000	100.0000	1	6c3488d033cd	0x25abf0	100.0000	
 Entropy_audio_mgr	?IsValidVoiceId@audio_mgr@@QAEHH@Z	100.0000	100.0000	1	75762e67db30	0x259f30	100.0000	
 Entropy_audio_mgr	?Normalize@vector4@@QAEHXZ	100.0000	100.0000	1	cpp:e8e6601d7e8e	0x25b6f0	100.0000	
+Entropy_audio_mgr	?PauseAll@audio_mgr@@QAEXXZ	100.0000	100.0000	1	5e523bf559bb	0x259b70	100.0000	
+Entropy_audio_mgr	?PeriodicUpdate@audio_mgr@@QAEXXZ	100.0000	100.0000	1	6977781730ad	0x2583e0	100.0000	
 Entropy_audio_mgr	?Play@audio_mgr@@AAEHPBDHABUvector3@@HH@Z	100.0000	100.0000	1	b2ccd6658b79	0x259670	100.0000	
 Entropy_audio_mgr	?Play@audio_mgr@@QAEHPBDABUvector3@@H@Z	100.0000	100.0000	1	b2ccd6658b79	0x259630	100.0000	
 Entropy_audio_mgr	?Play@audio_mgr@@QAEHPBDH@Z	100.0000	100.0000	1	b2ccd6658b79	0x259600	100.0000	
 Entropy_audio_mgr	?PlayVolumeClipped@audio_mgr@@QAEHPBDABUvector3@@H@Z	100.0000	100.0000	1	6a380d769607	0x259650	100.0000	
 Entropy_audio_mgr	?Release@audio_mgr@@QAEXHM@Z	100.0000	100.0000	1	a4460bb5e578	0x259c80	100.0000	
+Entropy_audio_mgr	?ReleaseAll@audio_mgr@@QAEXXZ	100.0000	100.0000	1	2dd20dd92535	0x259ce0	100.0000	
+Entropy_audio_mgr	?ResumeAll@audio_mgr@@QAEXXZ	100.0000	100.0000	1	abcd7e192f05	0x259c10	100.0000	
 Entropy_audio_mgr	?Segue@audio_mgr@@QAEHHH@Z	100.0000	100.0000	1	c1fef791e36e	0x259a10	100.0000	
 Entropy_audio_mgr	?SetEar@audio_mgr@@QAEXABVmatrix4@@MM@Z	100.0000	100.0000	1	7ff54b43263c	0x258470	100.0000	
 Entropy_audio_mgr	?SetFalloff@audio_mgr@@QAEHHMM@Z	100.0000	100.0000	1	cdbf380d66e1	0x25a2f0	100.0000	
 Entropy_audio_mgr	?SetReleaseTime@audio_mgr@@QAEHHM@Z	100.0000	100.0000	1	9d714591e870	0x259ab0	100.0000	
 Entropy_audio_mgr	?SetSpeakerConfig@audio_mgr@@QAEXHHHHH@Z	100.0000	100.0000	2	7b518c64fbbc	0x25b180	100.0000	
 Entropy_audio_mgr	?Start@audio_mgr@@QAEHH@Z	100.0000	100.0000	1	ee3cdd943d20	0x259db0	100.0000	
+Entropy_audio_mgr	?Update@audio_mgr@@QAEXM@Z	100.0000	100.0000	1	d5e0d724ac84	0x258330	100.0000	
 Entropy_audio_package	??0audio_package@@QAE@XZ	100.0000	100.0000	1	97fbf1e229fc	0x27c520	100.0000	
 Entropy_audio_package	?ComputeEffectSend@audio_package@@QAEXXZ	100.0000	100.0000	1	af1ff28fc326	0x27cee0	100.0000	
 Entropy_audio_package	?ComputeFarDiffuse@audio_package@@QAEXXZ	100.0000	100.0000	1	34d21f87ee59	0x27cfa0	100.0000	
@@ -317,6 +328,7 @@ Entropy_audio_ram_mgr	?AudioServiceQueue@@YAXXZ	100.0000	100.0000	1	d64b4985a4c9
 Entropy_audio_stream_mgr	??0audio_stream_mgr@@QAE@XZ	100.0000	100.0000	1	70f1438b8c44	0x277750	100.0000	
 Entropy_audio_stream_mgr	??1audio_stream_mgr@@QAE@XZ	100.0000	100.0000	1	054ac53a6e1e	0x2777b0	100.0000	
 Entropy_audio_stream_mgr	?ReleaseStream@audio_stream_mgr@@QAEXPAUaudio_stream@@@Z	100.0000	100.0000	1	e2e982256c32	0x277970	100.0000	
+Entropy_audio_stream_mgr	?Update@audio_stream_mgr@@QAEXXZ	0.0000	0.0000	1	eac0a2710b1a	0x277bb0	0.0000	
 Entropy_audio_stream_mgr	?audio_stream_warm_callback@@YAXPAVio_request@@PAUaudio_stream@@H@Z	100.0000	100.0000	1	9551e1007b29	0x277720	100.0000	
 Entropy_audio_stream_mgr	?read_callback_0_0@@YAXPAVio_request@@@Z	100.0000	100.0000	1	71c35bbb7314	0x2773a0	100.0000	
 Entropy_audio_stream_mgr	?read_callback_0_1@@YAXPAVio_request@@@Z	100.0000	100.0000	1	d849c97cb16a	0x277480	100.0000	
@@ -391,6 +403,7 @@ Entropy_audio_voice_mgr	?SetVoiceUserPitch@audio_voice_mgr@@QAEHPAUvoice@@M@Z	10
 Entropy_audio_voice_mgr	?SetVoiceUserVolume@audio_voice_mgr@@QAEHPAUvoice@@M@Z	100.0000	100.0000	1	c6987f7d024a	0x278b90	100.0000	
 Entropy_audio_voice_mgr	?StartVoice@audio_voice_mgr@@QAEXPAUvoice@@@Z	100.0000	100.0000	1	919de7f435ba	0x278850	100.0000	
 Entropy_audio_voice_mgr	?Unlock@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	13a6c542ab2b	0x279ac0	100.0000	
+Entropy_audio_voice_mgr	?Update@audio_voice_mgr@@QAEXM@Z	71.6641	71.6641	1	585ffedaf1d8	0x279140	71.6641	
 Entropy_audio_voice_mgr	?UpdateAllVoiceVolumes@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	0f5849e6d702	0x279a80	100.0000	
 Entropy_audio_voice_mgr	?UpdateCheckElements@audio_voice_mgr@@AAEPAUvoice@@PAU2@@Z	100.0000	100.0000	1	348881a25cba	0x279c80	100.0000	
 Entropy_audio_voice_mgr	?UpdateCheckQueued@audio_voice_mgr@@QAEXXZ	100.0000	100.0000	1	2e006460ddcd	0x279510	100.0000	

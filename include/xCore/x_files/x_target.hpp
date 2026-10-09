@@ -19,4 +19,10 @@ enum platform {
 #endif
 #endif
 
+#if defined( TARGET_PC ) || defined( TARGET_XBOX ) 
+#define PC_ALIGNMENT(a) __declspec(align(a))
+#else
+#define PC_ALIGNMENT(a)
+#endif
+
 #endif

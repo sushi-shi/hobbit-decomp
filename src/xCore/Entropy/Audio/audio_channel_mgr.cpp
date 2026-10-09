@@ -638,6 +638,7 @@ void audio_channel_mgr::SetEffectSend( channel* pChannel, f32 EffectSend )
 
 //------------------------------------------------------------------------------
 
+RVA(0x0027af50, 0x133)
 void audio_channel_mgr::Update( void )
 {
     CONTEXT( "audio_channel_mgr::Update" );
