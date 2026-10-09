@@ -205,7 +205,9 @@ vector3 view::GetViewZ() const {
     return vector3(m_WorldOrient(2, 0), m_WorldOrient(2, 1), m_WorldOrient(2, 2));
 }
 
+RVA(0x00272710, 0x88)
 vector3 view::ConvertW2V(const vector3& Point)const {UpdateW2V();return(m_W2V*Point);}
+RVA(0x002727a0, 0x88)
 vector3 view::ConvertV2W(const vector3& Point)const {UpdateV2W();return(m_V2W*Point);}
 RVA(0x00272830, 0x2b)
 const plane* view::GetViewPlanes(system s) const {
@@ -647,6 +649,7 @@ void view::UpdateProjection() const {
 }
 
 // Provisional sibling-correlated engine source; PC body spans await mapping.
+RVA(0x00271980, 0x9d)
 void view::Translate( const vector3& Translation, system System )
 {   
     switch( System )
@@ -659,6 +662,7 @@ void view::Translate( const vector3& Translation, system System )
     m_Dirty = ~0u;
 }
 
+RVA(0x00271a20, 0x236)
 void view::RotateX( float Angle, system System )
 {
     switch( System )
@@ -671,6 +675,7 @@ void view::RotateX( float Angle, system System )
     m_Dirty = ~0u;
 }
 
+RVA(0x00271c60, 0x236)
 void view::RotateY( float Angle, system System )
 {
     switch( System )
@@ -683,6 +688,7 @@ void view::RotateY( float Angle, system System )
     m_Dirty = ~0u;
 }
 
+RVA(0x00271ea0, 0x236)
 void view::RotateZ( float Angle, system System )
 {
     switch( System )
@@ -695,6 +701,7 @@ void view::RotateZ( float Angle, system System )
     m_Dirty = ~0u;
 }
 
+RVA(0x00272350, 0x7d)
 void view::LookAtPoint( const vector3& FromPoint, 
                         const vector3& ToPoint,
                         system System )
@@ -718,6 +725,7 @@ void view::LookAtPoint( const vector3& FromPoint,
     m_Dirty = ~0u;
 }
 
+RVA(0x002723d0, 0x27b)
 void view::LookAtPoint( const vector3& Point, system System )
 {
     vector3 Target;
@@ -736,12 +744,14 @@ void view::LookAtPoint( const vector3& Point, system System )
     Target -= m_WorldPos;
 
     m_WorldOrient.Identity();
-    m_WorldOrient.RotateX( Target.GetPitch() );
-    m_WorldOrient.RotateY( Target.GetYaw()   );
+    float Pitch = Target.GetPitch();
+    m_WorldOrient.RotateX(Pitch);
+    m_WorldOrient.RotateY(Target.GetYaw());
 
     m_Dirty = ~0u;
 }
 
+RVA(0x00272650, 0xb9)
 void view::OrbitPoint( const vector3& Point, 
                              float      Distance,
                              float   Pitch,

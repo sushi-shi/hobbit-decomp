@@ -31,7 +31,7 @@
 # [units]	unit	n_functions	matched
 Animation_AnimDecompress	18	18
 Animation_AnimEvent	36	35
-Animation_AnimGroup	8	8
+Animation_AnimGroup	9	9
 Animation_AnimInfo	3	3
 Animation_AnimKeyData	7	7
 Animation_CharAnimPlayer	2	2
@@ -54,7 +54,7 @@ Entropy_d3deng_vram	1	0
 Entropy_e_ScratchMem	6	6
 Entropy_e_SimpleAllocator	12	11
 Entropy_e_Text	19	19
-Entropy_e_View	52	51
+Entropy_e_View	61	60
 Entropy_e_Virtual	2	2
 Entropy_imaadpcm	19	17
 Entropy_io_cache	4	4
@@ -71,10 +71,10 @@ MeshUtil_RawMesh	15	15
 MiscUtils_Guid	11	11
 ObjectMgr_Collider	1	1
 OccluderMgr_OccluderMgr	3	0
-Parsing_BinIn	22	22
-Parsing_BinOut	30	29
+Parsing_BinIn	22	20
+Parsing_BinOut	30	28
 Parsing_TextIn	28	28
-Parsing_TextOut	18	17
+Parsing_TextOut	18	18
 Parsing_bitstream	76	76
 Parsing_tokenizer	22	22
 StringMgr_StringMgr	21	21
@@ -180,6 +180,7 @@ Animation_AnimEvent	?StringPadding@@YAHPBD@Z	100.0000	100.0000	1	7ac98eee34a8	0x
 Animation_AnimEvent	?SwitchEndian@event_data@@QAEXXZ	99.4318	99.4318	1	a5921ce9a479	0x13ecc0	99.4318	
 Animation_AnimGroup	??0anim_group@@QAE@XZ	100.0000	100.0000	1	3b9de6c6c03f	0x13ca20	100.0000	
 Animation_AnimGroup	??1anim_group@@QAE@XZ	100.0000	100.0000	1	38b0745e671e	0x13ca50	100.0000	
+Animation_AnimGroup	??4matrix4@@QAEABV0@ABV0@@Z	100.0000	100.0000	1	cpp:234791d2288f	0x6570	100.0000	
 Animation_AnimGroup	?Clear@anim_group@@AAEXXZ	100.0000	100.0000	1	4247eb6557f6	0x13caa0	100.0000	
 Animation_AnimGroup	?GetBoneIndex@anim_group@@QBEHPBDH@Z	100.0000	100.0000	1	e93046f0cf0e	0x13cb40	100.0000	
 Animation_AnimGroup	?GetEventNames@anim_group@@QBEXAAV?$xarray@Vxstring@@@@@Z	100.0000	100.0000	1	6762b3f91b6d	0x13e650	100.0000	
@@ -457,6 +458,8 @@ Entropy_e_View	??0view@@QAE@ABV0@@Z	100.0000	100.0000	1	751d1aeec581	0x2714b0	10
 Entropy_e_View	??0view@@QAE@XZ	100.0000	100.0000	1	751d1aeec581	0x271410	100.0000	
 Entropy_e_View	??1view@@QAE@XZ	100.0000	100.0000	1	c23d065ce656	0x271570	100.0000	
 Entropy_e_View	?BBoxInView@view@@QBEHABUbbox@@W4system@1@@Z	100.0000	100.0000	2	862f84ca32bb	0x273620	100.0000	
+Entropy_e_View	?ConvertV2W@view@@QBE?AUvector3@@ABU2@@Z	100.0000	100.0000	1	18470dffed64	0x2727a0	100.0000	
+Entropy_e_View	?ConvertW2V@view@@QBE?AUvector3@@ABU2@@Z	100.0000	100.0000	1	e5c5218ebb25	0x272710	100.0000	
 Entropy_e_View	?GetC2S@view@@QBEABVmatrix4@@XZ	100.0000	100.0000	1	adea7817b582	0x2722b0	100.0000	
 Entropy_e_View	?GetMinMaxZ@view@@QBEXABUbbox@@AAM1@Z	100.0000	100.0000	1	9ecc1c8478ea	0x2728c0	100.0000	
 Entropy_e_View	?GetPitchYaw@view@@QBEXAAM0@Z	100.0000	100.0000	1	245e4934a0e1	0x2721e0	100.0000	
@@ -472,7 +475,7 @@ Entropy_e_View	?GetViewPlaneMinBBoxIndices@view@@QBEPBHW4system@1@@Z	100.0000	10
 Entropy_e_View	?GetViewPlanes@view@@QBEPBUplane@@W4system@1@@Z	100.0000	100.0000	2	0eea8dd326b6	0x272830	100.0000	
 Entropy_e_View	?GetViewPlanes@view@@QBEXAAUplane@@00000W4system@1@@Z	100.0000	100.0000	1	0eea8dd326b6	0x2729f0	100.0000	
 Entropy_e_View	?GetViewPlanes@view@@QBEXAAUplane@@000W4system@1@@Z	100.0000	100.0000	1	0eea8dd326b6	0x272960	100.0000	
-Entropy_e_View	?GetViewPlanes@view@@QBEXMMMMAAUplane@@00000W4system@1@@Z	99.6252	99.6252	1	0eea8dd326b6	0x272ac0	99.6252	
+Entropy_e_View	?GetViewPlanes@view@@QBEXMMMMAAUplane@@00000W4system@1@@Z	99.6867	99.6867	1	0eea8dd326b6	0x272ac0	99.6867	
 Entropy_e_View	?GetViewX@view@@QBE?AUvector3@@XZ	100.0000	100.0000	1	6bea8fab6b39	0x2722f0	100.0000	
 Entropy_e_View	?GetViewY@view@@QBE?AUvector3@@XZ	100.0000	100.0000	1	5066117cb7f8	0x272310	100.0000	
 Entropy_e_View	?GetViewZ@view@@QBE?AUvector3@@XZ	100.0000	100.0000	1	0a5b4a414c04	0x272330	100.0000	
@@ -483,7 +486,13 @@ Entropy_e_View	?GetW2S@view@@QBEABVmatrix4@@XZ	100.0000	100.0000	1	efb31caf7ee2	
 Entropy_e_View	?GetW2V@view@@QBEABVmatrix4@@XZ	100.0000	100.0000	1	3dcb21c80db7	0x272280	100.0000	
 Entropy_e_View	?GetYFOV@view@@QBEMXZ	100.0000	100.0000	1	62f46450ac11	0x272250	100.0000	
 Entropy_e_View	?GetZLimits@view@@QBEXAAM0@Z	100.0000	100.0000	1	bb84a6100e54	0x2721c0	100.0000	
+Entropy_e_View	?LookAtPoint@view@@QAEXABUvector3@@0W4system@1@@Z	100.0000	100.0000	1	46a897a9acd8	0x272350	100.0000	
+Entropy_e_View	?LookAtPoint@view@@QAEXABUvector3@@W4system@1@@Z	100.0000	100.0000	1	46a897a9acd8	0x2723d0	100.0000	
+Entropy_e_View	?OrbitPoint@view@@QAEXABUvector3@@MMM@Z	100.0000	100.0000	1	c219cc087d0a	0x272650	100.0000	
 Entropy_e_View	?PointInView@view@@QBEHABUvector3@@W4system@1@@Z	100.0000	100.0000	1	30975fd16163	0x273520	100.0000	
+Entropy_e_View	?RotateX@view@@QAEXMW4system@1@@Z	100.0000	100.0000	1	91982078c0ad	0x271a20	100.0000	
+Entropy_e_View	?RotateY@view@@QAEXMW4system@1@@Z	100.0000	100.0000	1	1bda01ff1335	0x271c60	100.0000	
+Entropy_e_View	?RotateZ@view@@QAEXMW4system@1@@Z	100.0000	100.0000	1	2fb0e37b3f15	0x271ea0	100.0000	
 Entropy_e_View	?SetPosition@view@@QAEXABUvector3@@@Z	100.0000	100.0000	1	6a9d99cf25a4	0x271670	100.0000	
 Entropy_e_View	?SetRotation@view@@QAEXABUradian3@@@Z	100.0000	100.0000	1	cc40afbe03c8	0x2716a0	100.0000	
 Entropy_e_View	?SetSubShot@view@@QAEXHHH@Z	100.0000	100.0000	1	4e0c30ecf635	0x273be0	100.0000	
@@ -494,6 +503,7 @@ Entropy_e_View	?SetYFOV@view@@QAEXM@Z	100.0000	100.0000	1	8f4514510753	0x2715e0	
 Entropy_e_View	?SetZLimits@view@@QAEXMM@Z	100.0000	100.0000	1	a9c7c9801fa4	0x271650	100.0000	
 Entropy_e_View	?SetupOrthoScales@view@@QAEXMM@Z	100.0000	100.0000	1	5eb437906e6b	0x271930	100.0000	
 Entropy_e_View	?SphereInView@view@@QBEHABUvector3@@MW4system@1@@Z	100.0000	100.0000	1	bb4e56e294c4	0x273590	100.0000	
+Entropy_e_View	?Translate@view@@QAEXABUvector3@@W4system@1@@Z	100.0000	100.0000	1	676dc44243aa	0x271980	100.0000	
 Entropy_e_View	?UpdateC2S@view@@IBEXXZ	100.0000	100.0000	1	af5f430f2158	0x273ea0	100.0000	
 Entropy_e_View	?UpdatePlanes@view@@IBEXXZ	100.0000	100.0000	1	8276e1552499	0x274180	100.0000	
 Entropy_e_View	?UpdateProjection@view@@IBEXXZ	100.0000	100.0000	1	6605d3b9b0d0	0x2746f0	100.0000	
@@ -639,8 +649,8 @@ Parsing_BinIn	?GetRadian3@bin_in@@QAEHPBDAAUradian3@@@Z	100.0000	100.0000	1	19d9
 Parsing_BinIn	?GetS32@bin_in@@QAEHPBDAAH@Z	100.0000	100.0000	1	c69bc30980cb	0x240450	100.0000	
 Parsing_BinIn	?GetString@bin_in@@QAEHPBDPAD@Z	100.0000	100.0000	1	29993582411f	0x240480	100.0000	
 Parsing_BinIn	?GetVector3@bin_in@@QAEHPBDAAUvector3@@@Z	100.0000	100.0000	1	4e739b1f7d04	0x2403a0	100.0000	
-Parsing_BinIn	?OpenFile@bin_in@@QAEHPBD@Z	100.0000	100.0000	1	806ca126036f	0x23fc50	100.0000	
-Parsing_BinIn	?ReadFields@bin_in@@QAEHXZ	100.0000	100.0000	1	237a94511226	0x23ffc0	100.0000	
+Parsing_BinIn	?OpenFile@bin_in@@QAEHPBD@Z	100.0000	99.7647	1	806ca126036f	0x23fc50	100.0000	
+Parsing_BinIn	?ReadFields@bin_in@@QAEHXZ	100.0000	99.8551	1	237a94511226	0x23ffc0	100.0000	
 Parsing_BinIn	?ReadHeader@bin_in@@QAEHXZ	100.0000	100.0000	1	c1a556c802d9	0x23ff20	100.0000	
 Parsing_BinIn	?SkipToNextHeader@bin_in@@QAEHXZ	100.0000	100.0000	1	7c915be4b5f0	0x240370	100.0000	
 Parsing_BinOut	??0bin_out@@QAE@XZ	100.0000	100.0000	1	8ea916824d34	0x240630	100.0000	
@@ -669,7 +679,7 @@ Parsing_BinOut	?AddS32@bin_out@@QAEXPBDH@Z	100.0000	100.0000	1	b3838a8bc725	0x24
 Parsing_BinOut	?AddString@bin_out@@QAEXPBD0@Z	100.0000	100.0000	1	ebd0a6de9cec	0x2414f0	100.0000	
 Parsing_BinOut	?AddVector3@bin_out@@QAEXPBDABUvector3@@@Z	100.0000	100.0000	1	2252be1ecc2d	0x2412e0	100.0000	
 Parsing_BinOut	?Append@?$xarray@Tfield_types@@@@QAEAATfield_types@@XZ	100.0000	100.0000	1	cpp:3dd4e63aea8d	0x2420d0	100.0000	
-Parsing_BinOut	?Append@?$xarray@Ui_row@bin_out@@@@QAEAAUi_row@bin_out@@XZ	100.0000	100.0000	1	cpp:3dd4e63aea8d	0x241ec0	100.0000	
+Parsing_BinOut	?Append@?$xarray@Ui_row@bin_out@@@@QAEAAUi_row@bin_out@@XZ	100.0000	99.9255	1	cpp:3dd4e63aea8d	0x241ec0	100.0000	
 Parsing_BinOut	?CloseFile@bin_out@@QAEXXZ	100.0000	100.0000	1	3ee065dd5960	0x240710	100.0000	
 Parsing_BinOut	?OpenFile@bin_out@@QAEHPBD0@Z	100.0000	100.0000	1	741817fa6266	0x240850	100.0000	
 Parsing_BinOut	?WriteFile@bin_out@@QAEXHPAI@Z	97.6590	97.6590	2	1a40e0256f9e	0x241860	97.6590	
@@ -706,7 +716,7 @@ Parsing_TextOut	??1text_out@@QAE@XZ	100.0000	100.0000	1	bd58ae4f94de	0x242420	10
 Parsing_TextOut	?AddBBox@text_out@@QAEXPBDABUbbox@@@Z	100.0000	100.0000	1	87df9449b2a1	0x2433b0	100.0000	
 Parsing_TextOut	?AddBool@text_out@@QAEXPBDH@Z	100.0000	100.0000	1	197319cbf17b	0x2435b0	100.0000	
 Parsing_TextOut	?AddColor@text_out@@QAEXPBDUxcolor@@@Z	100.0000	100.0000	1	814ecfeefe92	0x2431c0	100.0000	
-Parsing_TextOut	?AddEndLine@text_out@@QAEXXZ	100.0000	99.9669	1	7b868a660dbe	0x242c70	100.0000	
+Parsing_TextOut	?AddEndLine@text_out@@QAEXXZ	100.0000	100.0000	1	7b868a660dbe	0x242c70	100.0000	
 Parsing_TextOut	?AddF32@text_out@@QAEXPBDM@Z	100.0000	100.0000	1	a31d4ff60b6c	0x243250	100.0000	
 Parsing_TextOut	?AddField@text_out@@QAAXPBDZZ	100.0000	100.0000	1	8b754bf0427b	0x242590	100.0000	
 Parsing_TextOut	?AddGuid@text_out@@QAEXPBD_K@Z	100.0000	100.0000	1	9ee582196440	0x243630	100.0000	

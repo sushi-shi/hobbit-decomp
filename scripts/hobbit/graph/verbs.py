@@ -248,15 +248,16 @@ def match_units(units: list[str], *, jobs: int | None, verbose: bool) -> int:
     """
     import time
 
-    from hobbit.compare import normalize, project
+    from hobbit.compare import run as compare
     from hobbit.delink import run as delink
-    from hobbit.manifest import units as manifest_units
     from hobbit.model import resolve, serialize
-    from hobbit.tool import objdiff
     from hobbit.verify import scores
 
     started = time.monotonic()
-    report_path = REPO / graph.REPORT_JSON
+    # Gruntz compare/run.py accepts an explicit unit census and output path.
+    # Keep a scoped measurement separate from the whole-project report: the
+    # latter may include imports without successful current native objects.
+    compare_dir = REPO / "build/objdiff/match"
 
     targets = [f"{graph.BASE_DIR}/{u}.obj" for u in units]
     targets += [f"{graph.CLAIMS_DIR}/{u}.tsv" for u in units]
@@ -270,12 +271,10 @@ def match_units(units: list[str], *, jobs: int | None, verbose: bool) -> int:
     missing = [u for u in units if not (target_dir / f"{u}.c.obj").exists()]
     if bindings_changed or missing:
         delink.run(model, target_dir=target_dir, only=units)
-        project.project(manifest_units(), target_dir, REPO / graph.COMPARE_DIR)
-    normalize.normalize(REPO / graph.BASE_DIR, target_dir,
-                        REPO / graph.COMPARE_DIR, units)
-    objdiff.report(REPO / graph.COMPARE_DIR, report_path)
+    report = compare.run(REPO / graph.BASE_DIR, target_dir, compare_dir,
+                         units=units, quiet=True)
 
-    after = scores.functions(scores.load(report_path))
+    after = scores.functions(report)
     print_unit_functions(units, after)
     print(f"\n[match] {', '.join(units)} in {time.monotonic() - started:.1f}s"
           + (" (labels changed: delinked)" if bindings_changed else ""))

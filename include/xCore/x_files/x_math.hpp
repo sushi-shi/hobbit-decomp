@@ -225,6 +225,8 @@ class matrix4 {
 public:
     matrix4();
     matrix4(const radian3& R);
+    matrix4(const vector3& Scale,const radian3& Rotation,const vector3& Translation);
+    matrix4(const vector3& Scale,const quaternion& Rotation,const vector3& Translation);
     void Rotate(const radian3& R);
     void Rotate(const quaternion& Q);
     void Scale(float S);
@@ -440,6 +442,7 @@ inline vector3 matrix4::operator*(const vector3& V)const {
                  (m_Cell[0][2]*V.X)+(m_Cell[1][2]*V.Y)+(m_Cell[2][2]*V.Z)+m_Cell[3][2]));
 }
 
+RVA(0x00006570, 0x46)
 inline const matrix4& matrix4::operator=(const matrix4& other) {
     if (this != &other) {
         const float* src = &other.m_Cell[0][0];
@@ -1327,4 +1330,29 @@ f32 vector3::ClosestPointToRectangle(
 }
 
 
+
+// Complete genuine Tribes matrix constructors and Area51 scalar clamp; unmapped.
+inline 
+matrix4::matrix4( const vector3& Scale,
+                  const radian3& Rotation,
+                  const vector3& Translation )
+{
+    Setup( Scale, Rotation, Translation );
+}
+
+inline 
+matrix4::matrix4( const vector3& Scale,
+                  const quaternion& Rotation,
+                  const vector3& Translation )
+{
+    Setup( Scale, Rotation, Translation );
+}
+
+inline
+f32 x_clamp( f32 V, f32 VMin, f32 VMax )
+{
+    if( V < VMin ) V = VMin;
+    if( V > VMax ) V = VMax;
+    return V;
+}
 #endif

@@ -5196,6 +5196,55 @@ class ValueTempLivenessControls(unittest.TestCase):
             "push esi", "mov esi,ecx", "je 0x0")), 0x74)
 
 
+class ScopedMatchControls(unittest.TestCase):
+    """An unrelated import without an object must not break a unit match."""
+
+    def test_only_selected_objects_are_opened_and_global_report_is_preserved(self):
+        import contextlib
+        import io
+        import json
+        from types import SimpleNamespace
+        from hobbit import graph
+        from hobbit.compare import project
+        from hobbit.graph import verbs
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            project.write_dummy(root / graph.BASE_DIR / "selected.obj")
+            project.write_dummy(root / graph.TARGET_DIR / "selected.c.obj")
+            global_report = root / graph.REPORT_JSON
+            global_report.parent.mkdir(parents=True, exist_ok=True)
+            global_report.write_bytes(b"previous whole-project report\n")
+            original = global_report.read_bytes()
+            manifest = {"unit": [{"unit": "selected"}, {"unit": "unbuilt"}]}
+            observed = []
+
+            def report(directory, output):
+                doc = json.loads((directory / "objdiff.json").read_text())
+                self.assertEqual(doc["options"], {"functionRelocDiffs": "all"})
+                for unit in doc["units"]:
+                    # Exercise the actual project and normalization paths;
+                    # opening an unbuilt unit would reproduce the real error.
+                    (directory / unit["base_path"]).read_bytes()
+                    (directory / unit["target_path"]).read_bytes()
+                    observed.append(unit["name"])
+                output.write_text(json.dumps({"units": []}))
+                return output
+
+            with mock.patch.object(verbs, "REPO", root), \
+                    mock.patch.object(verbs, "ninja", return_value=0), \
+                    mock.patch("hobbit.model.resolve", return_value=SimpleNamespace()), \
+                    mock.patch("hobbit.model.serialize", return_value=(False, None)), \
+                    mock.patch("hobbit.manifest.load", return_value=manifest), \
+                    mock.patch("hobbit.tool.objdiff.report", side_effect=report), \
+                    mock.patch.object(verbs, "print_unit_functions"), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(verbs.match_units(["selected"], jobs=None,
+                                                   verbose=False), 0)
+            self.assertEqual(observed, ["selected"])
+            self.assertEqual(global_report.read_bytes(), original)
+
+
 class MatchReferenceControls(unittest.TestCase):
     """`hobbit match --reference <bad path>` raised FileNotFoundError AFTER a
     full build - the work was done and the run ended in a traceback."""

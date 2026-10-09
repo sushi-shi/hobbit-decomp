@@ -781,7 +781,7 @@
       "scope": "package",
       "donor_sha256": "bada7170c826718ed0cc9936873f5f98b9431391d4fc1da4217a224b9614e6b4",
       "destination": "scripts/hobbit/graph/verbs.py",
-      "local_sha256": "ccbb3973bd4342ccd176f49eca7d603afec7ff6fb5d6ea60c129308399e3f3a8",
+      "local_sha256": "d58d098e8d7e1aef74f211793f63164cbf6faf44a4184d2e5b45f4dacae2caac",
       "status": "adapted_review_required"
     },
     {
@@ -1525,7 +1525,7 @@
       "scope": "package",
       "donor_sha256": "e7ee63726348875adfe200ab0e3e7fc3f54da24e673aa006c81ec95538390c42",
       "destination": "scripts/hobbit/verify/selftest.py",
-      "local_sha256": "9af39b965bbc762b33b6a55200d58ec52e18ed5f55b501f9f50bce9180019ba9",
+      "local_sha256": "5d3f57e4c222dbe5d898f9f24fdf46f237558d34f5600b4831f61b1254dd2c90",
       "status": "adapted_review_required"
     },
     {
