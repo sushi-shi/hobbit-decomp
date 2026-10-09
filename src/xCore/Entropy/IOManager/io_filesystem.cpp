@@ -1,4 +1,5 @@
 #include <rva.h>
+#include <windows.h>
 #include <xCore/Entropy/e_Virtual.hpp>
 #include <xCore/Entropy/IOManager/io_device.hpp>
 #include <xCore/Entropy/IOManager/io_mgr.hpp>
@@ -388,6 +389,193 @@ static void io_clean_path( char* pClean, const char* pFilename )
 }
 
 
+RVA(0x275e90, 0x10c)
+static s32 io_read_sync( io_device_file* pFile, void* Buffer, s32 Offset, s32 Length )
+{
+    io_request      Request;
+    io_open_file    OpenFile;
+
+    OpenFile.pDeviceFile       = pFile;
+    OpenFile.Offset            = 0;
+    OpenFile.Length            = pFile->Length;
+    OpenFile.Position          = 0;
+    OpenFile.Mode              = 0; // TODO: Implement file mode.
+    OpenFile.pNext             = NULL;
+
+    // Set the request
+    Request.SetRequest( &OpenFile, Buffer, Offset, Length, io_request::MEDIUM_PRIORITY, FALSE, 0, 0, 0 );   
+
+    // Queue it up
+    g_IoMgr.QueueRequest( &Request );
+
+    // Wait for read to finish.
+    while( Request.GetStatus() < io_request::COMPLETED )
+    {
+#if defined(TARGET_XBOX) || defined(TARGET_PC)
+        Sleep( 1 );
+#endif // TARGET_XBOX
+    }
+
+    // Success?
+    if( Request.GetStatus() == io_request::COMPLETED )
+        return Length;
+    else
+        return 0;
+}
+
+#define USE_VM_ALLOC
+RVA(0x275910, 0x509)
+xbool io_fs::MountFileSystem( const char* pPathName, s32 SearchPriority )
+{
+    io_device_file* pFile;
+    dfs_header*     pHeader = NULL;
+    xbool           bSuccess = FALSE;
+    char            pCleanFilename[X_MAX_PATH];
+
+    CONTEXT( "io_fs::MountFileSystem" );
+    x_mem_owner __owner__( "io_fs::MountFileSystem" );
+
+    // Snag that bad boy!
+    m_Mutex.Enter();
+
+    // Clean the filename.
+    ASSERT( pPathName );
+    io_clean_path( pCleanFilename, pPathName );
+
+    // Open the filesystem header file.
+    pFile = g_IoMgr.OpenDeviceFile( xfs("%s.DFS", pCleanFilename), IO_DEVICE_DVD );
+    
+    // Success?
+    if( pFile )
+    {
+        // Allocate space for the header file.
+#ifdef USE_VM_ALLOC
+        pHeader = (dfs_header*)vm_Alloc( pFile->Length );
+#else
+        pHeader = (dfs_header*)x_malloc( pFile->Length );
+#endif
+        // Read the file system header
+        if( io_read_sync( pFile, pHeader, 0, pFile->Length ) )
+        {
+            pHeader = dfs_InitHeaderFromRawPtr(pHeader);
+            if( pHeader )
+            {
+                bSuccess = TRUE;
+#ifdef bhapgood
+                {
+                    static s32 I=0;
+                    //dfs_DumpFileListing( pHeader, xfs("T:\\DFS_DUMP%03d.txt",I));
+                    I++;
+                }
+#endif
+            }
+        }
+
+        // Did we fail?
+        if( !bSuccess )
+        {
+            // Free ram and nuke the pointer.
+#ifdef USE_VM_ALLOC
+            vm_Free( pHeader );
+#else
+            x_free( pHeader );
+#endif
+            pHeader = NULL;
+        }
+
+        // Close file and nuke it.
+        g_IoMgr.CloseDeviceFile( pFile );
+        pFile = NULL;
+    }
+
+    // Header file loaded successfully?
+    if( bSuccess )
+    {
+        s32 FileIndex;
+        s32 j;
+
+        // Get the index.
+        FileIndex = m_DFS.GetCount();
+
+        // Add one to the list.
+        m_DFS.Append();
+
+        // Set the DFS up.
+        m_DFS[FileIndex].PathName       = pPathName;
+        m_DFS[FileIndex].SearchPriority = SearchPriority;
+        m_DFS[FileIndex].pHeader        = pHeader;
+
+        // Make room for sub-files.
+        m_DFS[FileIndex].DeviceFiles.SetCapacity( pHeader->nSubFiles );
+
+        // Lets open up the sub-files now.
+        for( j=0 ; (j<pHeader->nSubFiles) && bSuccess ; j++ )
+        {
+            // Open the sub-file.
+            pFile = g_IoMgr.OpenDeviceFile( xfs("%s.%03d", pCleanFilename, j), IO_DEVICE_DVD );
+
+            // Only if it was found!
+            if( pFile )
+            {
+                // Mark it as a DFS file.
+                pFile->pHeader      = pHeader;
+
+                // Put it in the list.
+                m_DFS[FileIndex].DeviceFiles.Append() = pFile;
+            }
+            else
+            {
+                // Oops!
+                bSuccess = FALSE;
+            }
+        }
+
+        // Failure to open one?
+        if( !bSuccess )
+        {
+            // For each opened sub-file...
+            for( j=0 ; j<m_DFS[FileIndex].DeviceFiles.GetCount() ; j++ )
+            {
+                // Close the bad boy...
+                g_IoMgr.CloseDeviceFile( m_DFS[FileIndex].DeviceFiles[j] );
+            }
+
+            // Clean it up (the following m_DFS.Delete does NOT call a destructor!)
+            m_DFS[FileIndex].DeviceFiles.Clear();
+
+            // Free the header file now.
+#ifdef USE_VM_ALLOC
+            vm_Free( m_DFS[FileIndex].pHeader );
+#else
+            x_free( m_DFS[FileIndex].pHeader );
+#endif
+            // Now nuke it from the list.
+            m_DFS.Delete( FileIndex );
+        }
+    }
+
+    // Bump filesystem count if successful.
+    if( bSuccess )
+    {
+        s_MountedCount++;
+
+        // Let FileSystem search in latest mounted .dfs
+        m_CurrentDFS = -1;
+
+        //DumpFileSystem( m_DFS.GetCount() - 1 );
+    }
+
+    // Release the mutex!
+    m_Mutex.Exit();
+
+    
+    // Tell the world.
+    return bSuccess;
+}
+
+//==============================================================================
+
+#undef USE_VM_ALLOC
 // Complete source-backed methods, retained donor bodies plus bounded PC API revision.
 RVA(0x275fa0, 0x208)
 xbool io_fs::UnmountFileSystem( const char* pPathName )

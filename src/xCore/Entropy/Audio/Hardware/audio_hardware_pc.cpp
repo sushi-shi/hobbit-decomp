@@ -2145,19 +2145,19 @@ static void pc_UpdateStreamADPCM(channel* pChannel)
         channel* pOther=pStream->pChannel[i];
         LPDIRECTSOUNDBUFFER pBuffer=pOther->Hardware.pdsBuffer;
         if(!pBuffer) { Finished++; continue; }
-        pBuffer->AddRef();
+        pOther->Hardware.pdsBuffer->AddRef();
         u32 Previous=pOther->EndPosition;
-        pBuffer->GetCurrentPosition((DWORD*)&pOther->EndPosition,NULL);
+        pOther->Hardware.pdsBuffer->GetCurrentPosition((DWORD*)&pOther->EndPosition,NULL);
         DWORD Status;
-        pBuffer->GetStatus(&Status);
+        pOther->Hardware.pdsBuffer->GetStatus(&Status);
         if(pOther->EndPosition<Previous && Previous>0x20000)
             pOther->CurrBufferPosition+=0x40000;
         u32 Position=g_AudioHardware.GetSamplesPlayed(pOther);
         pOther->PrevBufferPosition=Position;
-        Segment=Position>>16;
+        Segment=pOther->PrevBufferPosition>>16;
         if(Segment!=pOther->MidPoint) Transitions++;
         if(Position>=pOther->Sample.pHotSample->nSamples) Finished++;
-        pBuffer->Release();
+        pOther->Hardware.pdsBuffer->Release();
     }
     if(Count==Transitions)
     {

@@ -29,9 +29,11 @@ void pc_CopyCompletedStreamBuffer(io_request* pRequest,audio_stream* pStream,s32
     for(s32 i=0;i<Count;i++)
     {
         channel* pChannel=pStream->pChannel[i];
-        if(!pChannel->Hardware.InUse || !pChannel->Hardware.pdsBuffer) return;
+        if(!pChannel->Hardware.InUse) return;
+        LPDIRECTSOUNDBUFFER pBuffer=pChannel->Hardware.pdsBuffer;
+        if(!pBuffer) return;
         s32 Length=pRequest->GetLength()/Count;
-        g_AudioHardware.DecodeADPCMBuffer(pChannel->Hardware.pdsBuffer,
+        g_AudioHardware.DecodeADPCMBuffer(pBuffer,
             StreamBufferAtOffset((u8*)pRequest->GetBuffer(),Length*i),Length,
             WriteBufferIndex*0x9000,0x9000);
     }

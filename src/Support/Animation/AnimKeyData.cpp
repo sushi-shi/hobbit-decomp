@@ -22,9 +22,13 @@
 //
 //=========================================================================
 //                                            C    S  16   32
+DATA(0x337a98)
 static s32 s_ScaleFormatOverhead[] = {0, 12, 24, 0};
+DATA(0x337aa8)
 static s32 s_ScaleFormatSize[] = {0, 0, 2, 12};
+DATA(0x337ab8)
 static s32 s_RotationFormatOverhead[] = {0, 16, 0, 0};
+DATA(0x337ac8)
 static s32 s_RotationFormatSize[] = {0, 0, 8, 16};
 
 //=========================================================================
@@ -44,12 +48,19 @@ static s32 s_MaxAllowedDecompressedBytes = 300 * 1024;
 
 //=========================================================================
 
+DATA(0x3670ac)
 s32 anim_key_stream::s_SF;
+DATA(0x3670a0)
 s32 anim_key_stream::s_RF;
+DATA(0x3670b0)
 s32 anim_key_stream::s_TF;
+DATA(0x3670b4)
 s32 anim_key_stream::s_SO;
+DATA(0x36709c)
 s32 anim_key_stream::s_RO;
+DATA(0x3670a8)
 s32 anim_key_stream::s_TO;
+DATA(0x3670a4)
 byte* anim_key_stream::s_pData;
 
 //=========================================================================
@@ -165,6 +176,7 @@ void anim_key_stream::GetOffsetsAndFormats(
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_KEY_ACCESS)
 inline void anim_key_stream::GrabKey(s32 iFrame, anim_key& Key) {
 #if USE_SCALE_KEYS
 
@@ -221,9 +233,64 @@ inline void anim_key_stream::GrabKey(s32 iFrame, anim_key& Key) {
     }
 }
 
+#else
+inline void anim_key_stream::GrabKey(s32 iFrame, anim_key& Key) {
+#if USE_SCALE_KEYS
+
+    // Decompress scale
+    {
+        if (s_SF == CONSTANT_VALUE) {
+            Key.Scale.Set(1.0f, 1.0f, 1.0f);
+        } else if (s_SF == SINGLE_VALUE) {
+            const vector3p& V = ((vector3p*)(s_pData + s_SO))[0];
+            Key.Scale.Set(V.X, V.Y, V.Z);
+        } else if (s_SF == PRECISION_32) {
+            const vector3p& V = ((vector3p*)(s_pData + s_SO))[iFrame];
+            Key.Scale.Set(V.X, V.Y, V.Z);
+        }
+    }
+#endif
+
+    // Decompress rotation
+    {
+        if (s_RF == PRECISION_16) {
+            // I'm using temp variables to tell the compiler that pR doesn't
+            // point to Key.Rotation so it can do the math out of order.
+            u16* pR = &((u16*)(s_pData + s_RO))[iFrame << 2];
+            f32 TempX = ((f32)pR[0] * (2.0f / 65535.0f)) - 1.0f;
+            f32 TempY = ((f32)pR[1] * (2.0f / 65535.0f)) - 1.0f;
+            f32 TempZ = ((f32)pR[2] * (2.0f / 65535.0f)) - 1.0f;
+            f32 TempW = ((f32)pR[3] * (2.0f / 65535.0f)) - 1.0f;
+            Key.Rotation.X = TempX;
+            Key.Rotation.Y = TempY;
+            Key.Rotation.Z = TempZ;
+            Key.Rotation.W = TempW;
+        } else if (s_RF == CONSTANT_VALUE) {
+            Key.Rotation.Identity();
+        } else if (s_RF == SINGLE_VALUE) {
+            Key.Rotation = ((quaternion*)(s_pData + s_RO))[0];
+        } else if (s_RF == PRECISION_32) {
+            Key.Rotation = ((quaternion*)(s_pData + s_RO))[iFrame];
+        }
+    }
+
+    // Decompress translation
+    {
+        if (s_TF == CONSTANT_VALUE) {
+            Key.Translation = vector3(0.0f, 0.0f, 0.0f);
+        } else if (s_TF == SINGLE_VALUE) {
+            Key.Translation = ((vector3*)(s_pData + s_TO))[0];
+        } else if (s_TF == PRECISION_32) {
+            Key.Translation = ((vector3*)(s_pData + s_TO))[iFrame];
+        }
+    }
+}
+
+#endif
+
 //=========================================================================
 
-void anim_key_stream::GetRawKey(byte* pData, s32 nFrames, s32 iFrame, anim_key& Key) {
+inline void anim_key_stream::GetRawKey(byte* pData, s32 nFrames, s32 iFrame, anim_key& Key) {
     s_SF = (Offset >> STREAM_SCL_SHIFT) & STREAM_SCL_MASK;
     s_RF = (Offset >> STREAM_ROT_SHIFT) & STREAM_ROT_MASK;
     s_TF = (Offset >> STREAM_TRS_SHIFT) & STREAM_TRS_MASK;
@@ -237,6 +304,7 @@ void anim_key_stream::GetRawKey(byte* pData, s32 nFrames, s32 iFrame, anim_key& 
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_KEY_ACCESS)
 void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, f32 T, anim_key& Key) {
     ASSERT(iFrame < nFrames - 1);
 
@@ -255,6 +323,104 @@ void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, f32 T, 
 
     Key.Interpolate(K0, K1, T);
 }
+
+#else
+inline void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, f32 T, anim_key& Key) {
+    ASSERT(iFrame < nFrames - 1);
+    s_pData = pData;
+    s_SF = (Offset >> STREAM_SCL_SHIFT) & STREAM_SCL_MASK;
+    s_RF = (Offset >> STREAM_ROT_SHIFT) & STREAM_ROT_MASK;
+    s_TF = (Offset >> STREAM_TRS_SHIFT) & STREAM_TRS_MASK;
+    s_SO = (Offset >> STREAM_OFT_SHIFT) & STREAM_OFT_MASK;
+    s_RO = s_SO + s_ScaleFormatOverhead[s_SF] + s_ScaleFormatSize[s_SF] * nFrames;
+    s_TO = s_RO + s_RotationFormatOverhead[s_RF] + s_RotationFormatSize[s_RF] * nFrames;
+
+    // The earlier PC decoder completes constant streams once, and interpolates
+    // only varying streams. Packed vector records have three genuine floats.
+    s32 nHandled = 0;
+    if (s_SF == CONSTANT_VALUE) {
+        Key.Scale.Set(1.0f, 1.0f, 1.0f);
+        ++nHandled;
+    } else if (s_SF == SINGLE_VALUE) {
+        const vector3p& V = ((vector3p*)(s_pData + s_SO))[0];
+        Key.Scale.Set(V.X, V.Y, V.Z);
+        ++nHandled;
+    }
+
+    if (s_RF == PRECISION_16) {
+        const u16* pR = &((u16*)(s_pData + s_RO))[iFrame << 2];
+        quaternion Q0;
+        quaternion Q1;
+        Q0.X = ((f32)pR[0] * (2.0f / 65535.0f)) - 1.0f;
+        Q0.Y = ((f32)pR[1] * (2.0f / 65535.0f)) - 1.0f;
+        Q0.Z = ((f32)pR[2] * (2.0f / 65535.0f)) - 1.0f;
+        Q0.W = ((f32)pR[3] * (2.0f / 65535.0f)) - 1.0f;
+        Q1.X = ((f32)pR[4] * (2.0f / 65535.0f)) - 1.0f;
+        Q1.Y = ((f32)pR[5] * (2.0f / 65535.0f)) - 1.0f;
+        Q1.Z = ((f32)pR[6] * (2.0f / 65535.0f)) - 1.0f;
+        Q1.W = ((f32)pR[7] * (2.0f / 65535.0f)) - 1.0f;
+        f32 Dot = Q0.X*Q1.X + Q0.Y*Q1.Y + Q0.Z*Q1.Z + Q0.W*Q1.W;
+        if ((Dot > 2.0f) || (Dot < -2.0f)) {
+            Key.Rotation = Q0;
+        } else {
+            // Genuine original Blend polynomial ancestry, with the earlier PC
+            // decoder's precomputed dot and direct result fields.
+            f32 x0,y0,z0,w0;
+            if (Dot < 0.0f) {
+                x0 = -Q0.X; y0 = -Q0.Y; z0 = -Q0.Z; w0 = -Q0.W;
+            } else {
+                x0 = Q0.X; y0 = Q0.Y; z0 = Q0.Z; w0 = Q0.W;
+            }
+            x0 = x0 + T*(Q1.X-x0);
+            y0 = y0 + T*(Q1.Y-y0);
+            z0 = z0 + T*(Q1.Z-z0);
+            w0 = w0 + T*(Q1.W-w0);
+            f32 LenSquared = x0*x0 + y0*y0 + z0*z0 + w0*w0;
+            f32 OneOverL;
+            if (LenSquared < 0.857f)
+                OneOverL = (0.699368f*LenSquared - 1.819985f)*LenSquared + 2.126369f;
+            else
+                OneOverL = (0.454012f*LenSquared - 1.403517f)*LenSquared + 1.949542f;
+            Key.Rotation.X = x0*OneOverL;
+            Key.Rotation.Y = y0*OneOverL;
+            Key.Rotation.Z = z0*OneOverL;
+            Key.Rotation.W = w0*OneOverL;
+        }
+        ++nHandled;
+    } else if (s_RF == SINGLE_VALUE) {
+        Key.Rotation = ((quaternion*)(s_pData + s_RO))[0];
+        ++nHandled;
+    }
+
+    if (s_TF == CONSTANT_VALUE) {
+        Key.Translation.Zero();
+        ++nHandled;
+    } else if (s_TF == SINGLE_VALUE) {
+        const vector3p& V = ((vector3p*)(s_pData + s_TO))[0];
+        Key.Translation.Set(V.X, V.Y, V.Z);
+        ++nHandled;
+    }
+    if (nHandled == 3)
+        return;
+
+    if (s_SF == PRECISION_32) {
+        const vector3p& V0 = ((vector3p*)(s_pData + s_SO))[iFrame];
+        const vector3p& V1 = ((vector3p*)(s_pData + s_SO))[iFrame+1];
+        Key.Scale.Set(V0.X + T*(V1.X-V0.X), V0.Y + T*(V1.Y-V0.Y), V0.Z + T*(V1.Z-V0.Z));
+    }
+    if (s_RF == CONSTANT_VALUE) {
+        Key.Rotation.Identity();
+    } else if (s_RF == PRECISION_32) {
+        Key.Rotation = Blend(((quaternion*)(s_pData + s_RO))[iFrame],
+                             ((quaternion*)(s_pData + s_RO))[iFrame+1], T);
+    }
+    if (s_TF == PRECISION_32) {
+        const vector3p& V0 = ((vector3p*)(s_pData + s_TO))[iFrame];
+        const vector3p& V1 = ((vector3p*)(s_pData + s_TO))[iFrame+1];
+        Key.Translation.Set(V0.X + T*(V1.X-V0.X), V0.Y + T*(V1.Y-V0.Y), V0.Z + T*(V1.Z-V0.Z));
+    }
+}
+#endif
 
 //=========================================================================
 
@@ -406,6 +572,7 @@ xbool anim_keys::IsBoneMasked(const anim_group& AnimGroup, s32 iBone) const {
 
 //=========================================================================
 
+RVA(0x13f7a0, 0x28f)
 void anim_keys::GetRawKey(
     const anim_group& AnimGroup,
     s32 iFrame,
@@ -430,6 +597,7 @@ void anim_keys::GetRawKey(
 
 //=========================================================================
 
+RVA(0x13fa30, 0xe5)
 void anim_keys::GetInterpKey(
     const anim_group& AnimGroup,
     f32 Frame,
@@ -456,6 +624,7 @@ void anim_keys::GetInterpKey(
 
 //=========================================================================
 
+RVA(0x13fb20, 0x329)
 void anim_keys::GetRawKeys(const anim_group& AnimGroup, s32 iFrame, anim_key* pKey) const {
     xcontext Context("anim_keys::GetRawKeys");
     s32 iBlock = iFrame >> MAX_KEYS_PER_BLOCK_SHIFT;
@@ -476,7 +645,9 @@ void anim_keys::GetRawKeys(const anim_group& AnimGroup, s32 iFrame, anim_key* pK
 
 //=========================================================================
 
+RVA(0x13fe50, 0x1ac)
 void anim_keys::GetInterpKeys(const anim_group& AnimGroup, f32 Frame, anim_key* pKey) const {
+    xcontext Context("anim_keys::GetInterpKeys");
     s32 iFrame = (s32)Frame;
     f32 fFrac = Frame - (f32)iFrame;
     s32 iBlock = iFrame >> MAX_KEYS_PER_BLOCK_SHIFT;
