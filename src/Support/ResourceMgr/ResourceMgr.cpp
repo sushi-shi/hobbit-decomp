@@ -1,5 +1,5 @@
 // Imported surviving engine source: Area51 pristine431f72b9, Support/ResourceMgr/ResourceMgr.cpp
-// Provisional later-version interfaces; no PC identity claims. See IMPORT-NOTES.md.
+// Provisional later-version interfaces. Explicit PC method identities retain nonexact source bodies/layouts; see IMPORT-NOTES.md.
 //==============================================================================
 //
 //  ResourceMgr.cpp
@@ -9,7 +9,7 @@
 //==============================================================================
 //  INCLUDES
 //==============================================================================
-
+#include <rva.h>
 #include <Support/ResourceMgr/ResourceMgr.hpp>
 #include <xCore/x_files/x_string.hpp>
 #include <xCore/x_files/x_log.hpp>
@@ -86,19 +86,19 @@ rsc_mgr::~rsc_mgr(void) {
 
 //==============================================================================
 
-void rsc_mgr::Kill(void) {
+RVA(0x148440, 0x3a) void rsc_mgr::Kill(void) {
     Clear();
 }
 
 //==============================================================================
 
-void rsc_mgr::Init(void) {
+RVA(0x148480, 0x6b) void rsc_mgr::Init(void) {
     Clear();
 }
 
 //==============================================================================
 
-void rsc_mgr::Clear(void) {
+RVA(0x1486b0, 0x3b) void rsc_mgr::Clear(void) {
     x_free(m_pResource);
     m_pResource = NULL;
     m_nResources = 0;
@@ -134,13 +134,13 @@ void rsc_mgr::PrintStats(void) {
 
 //==============================================================================
 
-const char* rsc_mgr::GetRootDirectory(s32 i) const {
+RVA(0x1486f0, 0x11) const char* rsc_mgr::GetRootDirectory(s32 i) const {
     ASSERT((i >= 0) && (i < 4));
     return &m_RootDir[i * 256];
 }
 //==============================================================================
 
-void rsc_mgr::SetRootDirectory(const char* pRootDir, s32 i) {
+RVA(0x148710, 0x3f) void rsc_mgr::SetRootDirectory(const char* pRootDir, s32 i) {
     ASSERT((i >= 0) && (i < 4));
     x_strcpy(m_RootDir + i * 256, pRootDir);
 }
@@ -697,7 +697,7 @@ void rsc_mgr::Load(const char* pResourceName) {
 
 //==============================================================================
 
-void rsc_mgr::Unload(const char* pResourceName) {
+RVA(0x1491a0, 0xf1) void rsc_mgr::Unload(const char* pResourceName) {
     // Find resource in list
     s16 I = FindEntry(pResourceName);
 
@@ -747,7 +747,7 @@ void rsc_mgr::Refresh(const char* pResourceName) {
 
 //==============================================================================
 
-void rsc_mgr::UnloadAll(xbool bIgnoreTagged) {
+RVA(0x148ba0, 0xe4) void rsc_mgr::UnloadAll(xbool bIgnoreTagged) {
     // Loop through all resources and unload
     s16 I = m_FirstUsed;
     while (I != -1) {
@@ -807,7 +807,7 @@ void rsc_mgr::RefreshAll(void) {
 
 //==============================================================================
 
-void rsc_mgr::SetOnDemandLoading(xbool OnDemand) {
+RVA(0x1492a0, 0xa) void rsc_mgr::SetOnDemandLoading(xbool OnDemand) {
     m_OnDemandLoading = OnDemand;
 }
 

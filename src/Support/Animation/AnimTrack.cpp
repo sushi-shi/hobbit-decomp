@@ -763,7 +763,10 @@ anim_track_controller::anim_track_controller(void) {
 RVA(0x001432e0, 0x8c)
 anim_track_controller::~anim_track_controller(void) {
     Clear();
-    delete[] m_pBlendKey;
+    if (m_pBlendKey) {
+        delete[] m_pBlendKey;
+        m_pBlendKey = NULL;
+    }
 }
 
 //=========================================================================
@@ -802,17 +805,12 @@ void anim_track_controller::SetRemoveTurnYaw(xbool bRemove) {
 
 RVA(0x001433a0, 0x103)
 void anim_track_controller::SetAnimGroup(anim_group::handle AnimGroup) {
-    MEMORY_OWNER_DETAIL("anim_track_controller::SetAnimGroup()");
-    delete[] m_pBlendKey;
-
+    FreeCachedData();
     m_hAnimGroup = AnimGroup;
-    const anim_group& AG = GetAnimGroup();
-
-    ASSERT(AG.GetNBones() <= MAX_ANIM_BONES);
-
-    m_pBlendKey = new anim_key[AG.GetNBones()];
-    ASSERT(m_pBlendKey);
-
+    const anim_group& AnimGroupData = GetAnimGroup();
+    if (!m_pBlendKey) {
+        m_pBlendKey = new anim_key[AnimGroupData.GetNBones()];
+    }
     Clear();
 }
 
@@ -826,44 +824,20 @@ void anim_track_controller::GetInterpKeys(f32 Frame, anim_key* pKey) {
 
 RVA(0x001434b0, 0x400)
 void anim_track_controller::SetAnim(s32 iAnim, f32 BlendTime) {
-    ASSERT((iAnim >= 0) && (iAnim < GetAnimGroup().GetNAnims()));
+    CONTEXT("anim_track_controller::SetAnim");
+    if (iAnim < 0) iAnim = 0;
+    m_bOverrideRootBlend = FALSE;
+    if ((iAnim == m_iAnim) && !(GetAnimInfo().DoesLoop() && IsAtEnd())) return;
 
-    // If we are already playing this anim, don't reset
-    if (iAnim == m_iAnim) {
-        // If the animation is looping and we are pegged at the end then restart
-        if (!(GetAnimInfo().DoesLoop() && IsAtEnd())) {
-
-            return;
-        }
-    }
-
-    // Check for using a specified blend time
-    if (iAnim != -1) {
-        // Lookup anim info
-        const anim_group& AnimGroup = GetAnimGroup();
-        const anim_info& AnimInfo = AnimGroup.GetAnimInfo(iAnim);
-
-        // Use blend from animation if it's specified
-        if (AnimInfo.GetBlendTime() >= 0.0f) {
-            BlendTime = AnimInfo.GetBlendTime();
-        }
-    }
-
-    // Allocate mix buffer
-    anim_key* MixBuffer = base_player::GetMixBuffer(base_player::MIX_BUFFER_CONTROLLER);
-    ASSERT(MixBuffer);
-
-    // Setup blend information
-    if ((m_iAnim != -1) && (iAnim != m_iAnim)) {
-        // If we care about blending then prepare blend keys
-        if (BlendTime > 0) {
-
-            // If blending has not finished from previous animation then we
-            // need to combine the blend keys and the current keys back into
-            // the blend keys and use that as our 'previous' animation
-            if (m_BlendLength > 0) {
-                f32 T = m_BlendFrame / m_BlendLength;
-                s32 nBones = GetAnimGroup().GetNBones();
+    if (m_iAnim != -1) {
+        if (BlendTime > 0.0f) {
+            AllocBlendKeys();
+            if (m_BlendLength > 0.0f) {
+                const f32 T = m_BlendFrame / m_BlendLength;
+                const s32 nBones = GetAnimGroup().GetNBones();
+                // Genuine original later producer retained. PC uses direct static scratch
+                // at3698d0; its true source owner/lifetime remains unresolved, NONEXACT.
+                anim_key* MixBuffer = base_player::GetMixBuffer(base_player::MIX_BUFFER_CONTROLLER);
                 GetInterpKeys(m_Frame, MixBuffer);
                 for (s32 i = 0; i < nBones; i++) {
                     m_pBlendKey[i].Interpolate(m_pBlendKey[i], MixBuffer[i], T);
@@ -871,26 +845,22 @@ void anim_track_controller::SetAnim(s32 iAnim, f32 BlendTime) {
             } else {
                 GetInterpKeys(m_Frame, m_pBlendKey);
             }
-            if (m_bPreviousManualYaw || m_bOverrideRootBlend) {
+            if (m_bPreviousManualYaw) {
                 anim_key Key;
-                const anim_info AnimData = GetAnimGroup().GetAnimInfo(iAnim);
-                AnimData.GetRawKey(0, 0, Key);
+                GetAnimInfo().GetRawKey(0, 0, Key);
                 m_pBlendKey[0].Rotation = Key.Rotation;
             }
         }
-
         m_BlendLength = BlendTime;
         m_BlendFrame = 0.0f;
     }
-
     m_iAnim = iAnim;
     m_nFrames = GetAnimInfo().GetNFrames();
-    m_Frame = 0;
+    m_Frame = 0.0f;
     m_Cycle = 0;
-    m_PrevFrame = 0;
+    m_PrevFrame = 0.0f;
     m_PrevCycle = 0;
     m_bPreviousManualYaw = m_bManualYaw;
-    m_bOverrideRootBlend = FALSE;
 }
 
 //=========================================================================
@@ -917,7 +887,7 @@ void anim_track_controller::Advance(f32 nSeconds) {
     //
     // Count down blend time
     //
-    m_BlendFrame += x_abs(nSeconds);
+    m_BlendFrame += (nSeconds < 0.0f) ? -nSeconds : nSeconds;
     if (m_BlendFrame >= m_BlendLength) {
         m_BlendFrame = 0.0f;
         m_BlendLength = 0.0f;
@@ -926,7 +896,7 @@ void anim_track_controller::Advance(f32 nSeconds) {
     //
     // Advance frame
     //
-    f32 nFrames = nSeconds * (f32)GetAnimInfo().GetFPS() * m_Rate;
+    f32 nFrames = (f32)GetAnimInfo().GetFPS() * m_Rate * nSeconds;
     m_Frame += nFrames;
 
     // Update which cycle we are in and modulate the frame
@@ -952,6 +922,7 @@ void anim_track_controller::Advance(f32 nSeconds) {
 
 RVA(0x00143a40, 0x387)
 void anim_track_controller::GetInterpKeys(anim_key* pKey) {
+    CONTEXT("anim_track_controller::GetInterpKeys");
     s32 i;
     s32 nBones = GetAnimGroup().GetNBones();
 
@@ -980,6 +951,7 @@ void anim_track_controller::GetInterpKeys(anim_key* pKey) {
 
 RVA(0x00143dd0, 0x33b)
 void anim_track_controller::GetInterpKey(s32 iBone, anim_key& Key) {
+    CONTEXT("anim_track_controller::GetInterpKey");
     // Clear keys if no animation
     if (m_iAnim == -1) {
         Key.Identity();
@@ -1044,9 +1016,12 @@ f32 anim_track_controller::GetRate(void) {
 
 RVA(0x00144aa0, 0x40)
 void anim_track_controller::SetWeight(f32 Weight) {
-    m_Weight = Weight;
-    m_Weight = MIN(1.0f, m_Weight);
-    m_Weight = MAX(0.0f, m_Weight);
+    if (Weight < 1.0f) {
+        if (0.0f > Weight) m_Weight = 0.0f;
+        else m_Weight = Weight;
+    } else {
+        m_Weight = 1.0f;
+    }
 }
 
 //=========================================================================
@@ -1306,14 +1281,20 @@ void anim_track_controller::MixKeys(anim_key* pDestKey) {
     // Read interpolated keys from the animation
     GetInterpKeys(m_Frame, MixBuffer);
 
+    {
+    CONTEXT("anim_track_controller::MixKeys::BlendPrevAnim");
     // Blend with previous anim exit keyframes
     if (m_BlendLength > 0.0f) {
+        AllocBlendKeys();
         f32 T = m_BlendFrame / m_BlendLength;
         for (i = 0; i < nBones; i++) {
             MixBuffer[i].Interpolate(m_pBlendKey[i], MixBuffer[i], T);
         }
     }
 
+    }
+    {
+    CONTEXT("anim_track_controller::MixKeys::BlendIntoAnim");
     // Check if this animation has bone masks
     if (GetAnimInfo().HasMasks()) {
         // Blend destination into track keys by weight amount
@@ -1327,6 +1308,7 @@ void anim_track_controller::MixKeys(anim_key* pDestKey) {
         for (i = 0; i < nBones; i++) {
             pDestKey[i].Interpolate(pDestKey[i], MixBuffer[i], m_Weight);
         }
+    }
     }
 }
 

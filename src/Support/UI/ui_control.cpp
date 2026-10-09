@@ -42,6 +42,7 @@ ui_control::~ui_control( void )
 
 //=========================================================================
 
+RVA(0x2aa710, 0x5)
 xbool ui_control::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     xbool   Success;
@@ -93,6 +94,7 @@ void ui_control::Render( s32 ox, s32 oy )
 
 //=========================================================================
 
+RVA(0x2aa830, 0x7)
 const irect& ui_control::GetNavPos( void )
 {
     return m_NavPos;
@@ -100,6 +102,7 @@ const irect& ui_control::GetNavPos( void )
 
 //=========================================================================
 
+RVA(0x2aa840, 0x23)
 void ui_control::SetNavPos( const irect& r )
 {
     m_NavPos = r;

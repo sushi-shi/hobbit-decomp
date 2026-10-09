@@ -22,6 +22,7 @@ import tempfile
 from pathlib import Path
 
 from hobbit.core.paths import BUILD, INCLUDE, VENDOR, dxsdk_dir
+from hobbit.tool.case_lookup import overlay_flags
 
 COMPDB = BUILD / "clangd/compile_commands.json"
 
@@ -92,6 +93,7 @@ def emit_ir(tu: str, cl_flags: list[str] | None) -> str | None:
             try:
                 cmd = [_clang(), "--driver-mode=cl", "/c", "/DHOBBIT_EMIT_META",
                        *cl_flags, *MS_WARN, *inc_cl(),
+                       *overlay_flags([*cl_flags, *inc_cl()], tu),
                        "-Xclang", "-emit-llvm", "-o", ll, tu]
                 res = subprocess.run(cmd, capture_output=True, text=True)
                 ir = Path(ll).read_text() \
@@ -104,7 +106,7 @@ def emit_ir(tu: str, cl_flags: list[str] | None) -> str | None:
             if ir:
                 return ir
         return None  # caller surfaces this; res.stderr is intentionally short-lived
-    cmd = [_clang(), "-DHOBBIT_EMIT_META", *MS_FLAGS, *inc_gcc(),
+    cmd = [_clang(), "-DHOBBIT_EMIT_META", *MS_FLAGS, *inc_gcc(), *overlay_flags(inc_gcc(), tu),
            "-S", "-emit-llvm", "-o", "-", tu]
     res = subprocess.run(cmd, capture_output=True, text=True)
     return res.stdout or None
@@ -113,11 +115,13 @@ def emit_ir(tu: str, cl_flags: list[str] | None) -> str | None:
 def ast_dump(tu: str, cl_flags: list[str] | None) -> dict | None:
     if cl_flags is not None:
         cmd = [_clang(), "--driver-mode=cl", "/DHOBBIT_EMIT_META", *cl_flags,
-               *inc_cl(), tu, "-fsyntax-only", "-Xclang", "-ast-dump=json"]
+               *inc_cl(), *overlay_flags([*cl_flags, *inc_cl()], tu), tu, "-fsyntax-only", "-Xclang", "-ast-dump=json"]
     else:
-        cmd = [_clang(), "-DHOBBIT_EMIT_META", *MS_FLAGS, *inc_gcc(), tu,
+        cmd = [_clang(), "-DHOBBIT_EMIT_META", *MS_FLAGS, *inc_gcc(), *overlay_flags(inc_gcc(), tu), tu,
                "-fsyntax-only", "-Xclang", "-ast-dump=json"]
     res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        return None
     try:
         return json.loads(res.stdout)
     except json.JSONDecodeError:
@@ -139,9 +143,9 @@ def var_facts(tu: str, cl_flags: list[str] | None) -> dict[str, dict] | None:
         import clang.cindex as cidx
     except ImportError:
         return None
-    args = (["--driver-mode=cl", "/DHOBBIT_EMIT_META", *cl_flags, *inc_cl()]
+    args = (["--driver-mode=cl", "/DHOBBIT_EMIT_META", *cl_flags, *inc_cl(), *overlay_flags([*cl_flags, *inc_cl()], tu)]
             if cl_flags is not None
-            else ["-DHOBBIT_EMIT_META", *MS_FLAGS, *inc_gcc()])
+            else ["-DHOBBIT_EMIT_META", *MS_FLAGS, *inc_gcc(), *overlay_flags(inc_gcc(), tu)])
     try:
         parsed = cidx.Index.create().parse(tu, args=args)
     except cidx.LibclangError:

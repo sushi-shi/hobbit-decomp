@@ -800,7 +800,7 @@ public:
     //
     // Tells the animation system which package of animations to use.
     //
-    void SetAnimGroup(const anim_group::handle& hGroup);
+    void SetAnimGroup(anim_group::handle hGroup);
 
     //
     // Sets the current Track0 animation.  The Manual bools tell the animation
@@ -810,8 +810,7 @@ public:
         s32 iAnim,
         xbool ManualVert,
         xbool ManualHoriz,
-        f32 BlendTime = DEFAULT_BLEND_TIME,
-        xbool ResetFrameCount = FALSE
+        f32 BlendTime = DEFAULT_BLEND_TIME
     );
     void SetAnimHoriz(s32 iAnim, f32 BlendTime = DEFAULT_BLEND_TIME);
     void SetAnimVert(s32 iAnim, f32 BlendTime = DEFAULT_BLEND_TIME);
@@ -972,6 +971,7 @@ public:
     void SetTrackController(s32 iTrack, track_controller* pTrackController);
     track_controller* GetTrackController(s32 iTrack);
     void ClearTracks(void);
+    void ReleaseCachedData(void);
     void ClearTrack(s32 iTrack);
 
     //-------------------------------------------------------------------------

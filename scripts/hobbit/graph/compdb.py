@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from hobbit.core.paths import BUILD, INCLUDE, REPO, VENDOR, dxsdk_dir, msvc_dir
+from hobbit.tool.case_lookup import overlay_flags
 
 OUT_DIR = BUILD / "clangd"
 OUT_FILE = OUT_DIR / "compile_commands.json"
@@ -189,6 +190,10 @@ def generate(quiet: bool = False) -> bool:
     dx_low = build_lowercase_mirror(dx_inc, MIRROR_DIR / "dx") if dx_inc else None
     shared = base_flags(msvc_inc, dx_inc, msvc_low, dx_low)
     shared[1] = "-fms-compatibility-version=" + manifest.get("build", {}).get("msvc_compat", MSC_COMPAT)
+    # Index per-unit include namespaces without adding/reordering search roots.
+    parse_roots = [flag for unit in manifest.get("unit", [])
+                   for flag in unit_flags(manifest["flags"][unit["flags"]])]
+    shared += overlay_flags([*shared, *parse_roots])
 
     entries = [{
         "directory": str(REPO),

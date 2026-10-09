@@ -1,4 +1,5 @@
-// Reconstructed older UI family adaptation; PC qualification in docs/imports/ui-hobbit-family.md.
+// Complete PC-qualified slider callbacks/layout; surviving source revisions retained below.
+// Unknown shared virtual-query slot is not fabricated; current shared-vtable difference remains NONEXACT.
 // Original Tribes-AA 4aab7137 support/ui/ui_slider.cpp; complete Area51 variant retained as reference.
 //=========================================================================
 //
@@ -9,6 +10,7 @@
 #include <rva.h>
 
 #include <xCore/Entropy/Entropy.hpp>
+#include <xCore/Entropy/e_Audio.hpp>
 #include <Support/AudioMgr/tribes-aa/audio.hpp>
 #include <Support/LabelSets/reference/tribes-aa/Tribes2Types.hpp>
 
@@ -57,6 +59,7 @@ ui_slider::~ui_slider( void )
 
 //=========================================================================
 
+#if defined(HOBBIT_UI_LATER_SLIDER)
 xbool ui_slider::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     xbool   Success;
@@ -83,6 +86,35 @@ xbool ui_slider::Create( s32 UserID, ui_manager* pManager, const irect& Position
 
     return Success;
 }
+#else
+RVA(0x2a5a20, 0x9e) xbool ui_slider::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
+{
+    xbool   Success;
+
+    Success = ui_control::Create( UserID, pManager, Position, pParent, Flags );
+
+    // Initialize Data
+    m_iElementBar   = m_pManager->FindElement( "slider_bar"   );
+    m_iElementThumb = m_pManager->FindElement( "slider_thumb" );
+    ASSERT( m_iElementBar   != -1 );
+    ASSERT( m_iElementThumb != -1 );
+    m_Min   = 0;
+    m_Max   = 100;
+    m_Value = 0;
+    m_ValueParametric = 0.0f;
+    m_IsParametric = FALSE;
+    m_UseSound = FALSE;
+    m_Step  = 10;
+    m_StepScaler    = 1;
+    m_StepScalerMax = 1;
+
+#ifdef TARGET_PC
+    m_MouseDown = FALSE;
+#endif
+
+    return Success;
+}
+#endif
 
 //=========================================================================
 
@@ -168,6 +200,7 @@ void ui_slider::OnUpdate( f32 DeltaTime )
 
 //=========================================================================
 
+#if defined(HOBBIT_UI_LATER_SLIDER)
 void ui_slider::OnPadNavigate( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats )
 {
     xbool       Processed = FALSE;
@@ -241,6 +274,82 @@ void ui_slider::OnPadNavigate( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats 
             m_pParent->OnPadNavigate( pWin, Code, Presses, Repeats );
     }
 }
+#else
+RVA(0x2a5cc0, 0x14d) void ui_slider::OnPadNavigate( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats )
+{
+    xbool       Processed = FALSE;
+    s32         dx = 0;
+    static s32  ScaleCounter = 0;
+
+    // Determine movement required
+    switch( Code )
+    {
+    case ui_manager::NAV_LEFT:
+        {
+            // Reset Scaler on Press
+            if( Presses != 0 )
+            {
+                ScaleCounter = 0;
+                m_StepScaler = 1;
+            }
+            dx = -m_Step;
+        }
+        break;
+    case ui_manager::NAV_RIGHT:
+        {
+            // Reset Scaler on Press
+            if( Presses != 0 )
+            {
+                ScaleCounter = 0;
+                m_StepScaler = 1;
+            }
+            dx =  m_Step;
+        }
+    }
+
+    // Check for scaling movement
+    if( Presses == 0 )
+    {
+//        ScaleCounter++;
+        if( ScaleCounter >= 10 )
+        {
+            m_StepScaler *= 10;
+            if( m_StepScaler > m_StepScalerMax )
+                m_StepScaler = m_StepScalerMax;
+            ScaleCounter = 0;
+        }
+    }
+
+    // Apply movement
+    if( dx != 0 )
+    {
+        s32 OldValue = m_Value;
+
+        m_Value += dx * m_StepScaler;
+        if( m_Value <  m_Min ) m_Value = m_Min;
+        if( m_Value >= m_Max ) m_Value = m_Max;
+
+        if( (m_Value != OldValue) && m_pParent )
+        {
+            if( m_Max > m_Min )
+                m_ValueParametric = (f32)(m_Value - m_Min) / (f32)(m_Max-m_Min);
+
+            m_pParent->OnNotify( m_pParent, this, WN_SLIDER_CHANGE, (void*)m_Value );
+            if( m_UseSound )
+                g_AudioMgr.Play( "VolumeFader_SFX", TRUE );
+        }
+
+        Processed = TRUE;
+    }
+
+    // Pass up chain if not processed
+    if( !Processed )
+    {
+        if( m_pParent )
+            m_pParent->OnPadNavigate( pWin, Code, Presses, Repeats );
+    }
+}
+#endif
 
 //=========================================================================
 
@@ -297,7 +406,7 @@ s32 ui_slider::GetStep( void ) const
 
 //=========================================================================
 
-void ui_slider::SetValue( s32 Value )
+RVA(0x2a5e90, 0x7c) void ui_slider::SetValue( s32 Value )
 {
     if( Value <  m_Min ) Value = m_Min;
     if( Value >= m_Max ) Value = m_Max;
@@ -322,6 +431,7 @@ s32 ui_slider::GetValue( void ) const
 
 //=========================================================================
 
+#if defined(HOBBIT_UI_LATER_SLIDER)
 void ui_slider::OnLBDown( ui_win* pWin )
 {
     (void)pWin;
@@ -339,9 +449,31 @@ void ui_slider::OnLBDown( ui_win* pWin )
     }
 #endif
 }
+#else
+RVA(0x2a5f10, 0x49) void ui_slider::OnLBDown( ui_win* pWin )
+{
+    (void)pWin;
+
+#ifdef TARGET_PC
+    SetFlag( WF_SELECTED, TRUE );
+
+    xbool       Processed = FALSE;
+    s32         dx = 0;
+    static s32  ScaleCounter = 0;
+ 
+    // If the cursor is in the thumb then allow the mouse to start dragging it.
+    if( (m_MouseX >= m_Thumb.l) && (m_MouseX <= m_Thumb.r) &&
+        (m_MouseY >= m_Thumb.t) && (m_MouseY <= m_Thumb.b) )
+    {
+        m_MouseDown = TRUE;
+    }
+#endif
+}
+#endif
 
 //=========================================================================
 
+#if defined(HOBBIT_UI_LATER_SLIDER)
 void ui_slider::OnCursorMove( ui_win* pWin, s32 x, s32 y )
 {
     (void) pWin;
@@ -382,9 +514,54 @@ void ui_slider::OnCursorMove( ui_win* pWin, s32 x, s32 y )
     m_MouseY = y;
 #endif
 }
+#else
+RVA(0x2a5f60, 0x128) void ui_slider::OnCursorMove( ui_win* pWin, s32 x, s32 y )
+{
+    (void) pWin;
+    (void)x;
+    (void)y;
+
+#ifdef TARGET_PC
+
+    // We are still dragging the thumb.
+    if( m_MouseDown )
+    {
+        s32 OldValue = m_Value;
+
+        ScreenToLocal( x, y );
+        x = MINMAX( 0, x, m_Position.GetWidth() );
+
+        // Get the ratio to multily by.
+        f32 Value = (f32)x/(f32)m_Position.GetWidth();
+        Value *= (f32)m_Max;
+        m_Value = (s32)Value;
+        
+        // Try to minimize the loss from float to int conversion.
+        if( Value > (f32)m_Value )
+            m_Value += 1;
+        
+        // Is it in bound.
+        if( m_Value <  m_Min ) m_Value = m_Min;
+        if( m_Value >= m_Max ) m_Value = m_Max;
+
+        if( (m_Value != OldValue) && m_pParent )
+        {
+            m_pParent->OnNotify( m_pParent, this, WN_SLIDER_CHANGE, (void*)m_Value );
+            if( m_UseSound )
+                g_AudioMgr.Play( "VolumeFader_SFX", TRUE );
+        }
+    }
+    
+    // The current mouse position.
+    m_MouseX = x;
+    m_MouseY = y;
+#endif
+}
+#endif
 
 //=========================================================================
 
+#if defined(HOBBIT_UI_LATER_SLIDER)
 void ui_slider::OnLBUp( ui_win* pWin )
 {
     (void)pWin;
@@ -399,9 +576,27 @@ void ui_slider::OnLBUp( ui_win* pWin )
 #endif
 
 }
+#else
+RVA(0x2a60a0, 0x33) void ui_slider::OnLBUp( ui_win* pWin )
+{
+    (void)pWin;
+
+#ifdef TARGET_PC
+    SetFlag( WF_SELECTED, FALSE );
+    // Stop dragging the thumb.
+    if( m_MouseDown )
+        m_MouseDown = FALSE;
+    
+    if( m_pParent )
+        m_pParent->OnLBUp( pWin );
+#endif
+
+}
+#endif
 
 //=========================================================================
 
+#if defined(HOBBIT_UI_LATER_SLIDER)
 void ui_slider::OnCursorExit ( ui_win* pWin )
 {
     (void)pWin;
@@ -421,6 +616,19 @@ void ui_slider::OnCursorExit ( ui_win* pWin )
         m_pParent->OnCursorExit( pWin );
     }
 }
+#else
+RVA(0x2a60e0, 0x4a) void ui_slider::OnCursorExit ( ui_win* pWin )
+{
+#ifdef TARGET_PC
+    if( m_MouseDown ) m_MouseDown = FALSE;
+#endif
+    ui_win::OnCursorExit( pWin );
+#ifdef TARGET_PC
+    if( m_MouseDown ) m_MouseDown = FALSE;
+#endif
+    if( m_pParent ) m_pParent->OnCursorExit( pWin );
+}
+#endif
 
 //=========================================================================
 

@@ -418,6 +418,7 @@ s32 ui_manager::LoadElement( const char* pName, const char* pPathName, s32 nStat
 
 //=========================================================================
 
+RVA(0x29f520, 0x48)
 s32 ui_manager::FindElement( const char* pName ) const
 {
     s32 i;
@@ -592,6 +593,7 @@ void ui_manager::RenderElementUV( s32 iElement, const irect& Position, const ire
 
 //=========================================================================
 
+RVA(0x29f880, 0x10)
 const ui_manager::element* ui_manager::GetElement( s32 iElement ) const
 {
     ASSERT( (iElement >= 0) && (iElement < m_Elements.GetCount()) );
@@ -714,6 +716,7 @@ void ui_manager::TextSize( s32 iFont, irect& Rect, const xwchar* pString, s32 Co
 
 //=========================================================================
 
+RVA(0x29fcb0, 0x18)
 s32 ui_manager::GetLineHeight( s32 iFont ) const
 {
     ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );

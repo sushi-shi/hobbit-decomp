@@ -34,10 +34,11 @@ Animation_AnimEvent	36	35
 Animation_AnimGroup	19	19
 Animation_AnimInfo	3	3
 Animation_AnimKeyData	10	6
-Animation_AnimTrack	13	3
+Animation_AnimTrack	13	4
+Animation_CharAnimPlayer	16	2
 CollisionMgr_CollisionMgr	7	7
 CollisionMgr_CollisionPrimatives	1	1
-CollisionMgr_PolyCache	2	2
+CollisionMgr_PolyCache	1	1
 Decals_DecalMgr	1	1
 Decals_DecalMgr_StaticDecals	1	1
 Entropy_audio_channel_mgr	18	18
@@ -78,19 +79,20 @@ Parsing_TextIn	28	28
 Parsing_TextOut	18	18
 Parsing_bitstream	76	76
 Parsing_tokenizer	22	22
+ResourceMgr_ResourceMgr	8	0
 StringMgr_StringMgr	21	21
 UI_ui_button	1	0
 UI_ui_check	4	1
-UI_ui_control	1	0
+UI_ui_control	4	3
 UI_ui_dialog	2	1
 UI_ui_dlg_list	1	0
 UI_ui_font	1	0
-UI_ui_frame	2	0
-UI_ui_manager	19	11
+UI_ui_frame	2	1
+UI_ui_manager	22	14
 UI_ui_radio	1	0
-UI_ui_slider	2	1
+UI_ui_slider	9	2
 UI_ui_text	1	0
-UI_ui_textbox	5	3
+UI_ui_textbox	5	4
 UI_ui_win	26	26
 aux_Bitmap_DefaultBMP	1	1
 aux_Bitmap_Load_BMP	2	2
@@ -212,18 +214,34 @@ Animation_AnimKeyData	?GetRawKeys@anim_keys@@ABEXABVanim_group@@HPAUanim_key@@@Z
 Animation_AnimKeyData	?ReleaseStreams@anim_key_block@@QAEXXZ	100.0000	100.0000	1	f72c976b3c59	0x13f6f0	100.0000	
 Animation_AnimKeyData	?anim_SetMaxAllowedDecompressedBytes@@YAXH@Z	100.0000	100.0000	1	ecbb0c556994	0x13f530	100.0000	
 Animation_AnimTrack	??0anim_track_controller@@QAE@XZ	89.7500	89.7500	1	8bdb6bd67213	0x143280	89.7500	
-Animation_AnimTrack	??1anim_track_controller@@UAE@XZ	57.0263	57.0263	1	8a7a8364ff02	0x1432e0	57.0263	
-Animation_AnimTrack	?Advance@anim_track_controller@@UAEXM@Z	71.8333	71.8333	1	bc1ad46a2688	0x1438b0	71.8333	
+Animation_AnimTrack	??1anim_track_controller@@UAE@XZ	66.3684	66.3684	2	31d5e8ff1e06	0x1432e0	66.3684	
+Animation_AnimTrack	?Advance@anim_track_controller@@UAEXM@Z	71.8333	71.8333	2	b00d1e5ceafb	0x1438b0	71.8333	
 Animation_AnimTrack	?AllocBlendKeys@anim_track_controller@@QAEXXZ	40.1852	40.1852	1	b4d596feacff	0x1449e0	40.1852	
 Animation_AnimTrack	?Clear@anim_track_controller@@UAEXXZ	100.0000	100.0000	1	e24280600b84	0x143370	100.0000	
 Animation_AnimTrack	?FreeCachedData@anim_track_controller@@UAEXXZ	100.0000	100.0000	1	ce85ff6b86ce	0x1449c0	100.0000	
-Animation_AnimTrack	?GetInterpKey@anim_track_controller@@UAEXHAAUanim_key@@@Z	21.4237	21.4237	1	977237117f4a	0x143dd0	21.4237	
-Animation_AnimTrack	?GetInterpKeys@anim_track_controller@@UAEXPAUanim_key@@@Z	20.7014	20.7014	1	897d2ef0a744	0x143a40	20.7014	
+Animation_AnimTrack	?GetInterpKey@anim_track_controller@@UAEXHAAUanim_key@@@Z	26.3053	26.3053	2	40d1120e6204	0x143dd0	26.3053	
+Animation_AnimTrack	?GetInterpKeys@anim_track_controller@@UAEXPAUanim_key@@@Z	23.1691	23.1691	2	8ec579a734d9	0x143a40	23.1691	
 Animation_AnimTrack	?GetWeight@anim_track_controller@@UAEMXZ	100.0000	100.0000	1	df5fcaf5e452	0x144ae0	100.0000	
-Animation_AnimTrack	?MixKeys@anim_track_controller@@UAEXPAUanim_key@@@Z	24.6549	24.6549	1	555beb689d6d	0x144110	24.6549	
-Animation_AnimTrack	?SetAnim@anim_track_controller@@QAEXHM@Z	23.8604	23.8604	1	09043aa2c718	0x1434b0	23.8604	
-Animation_AnimTrack	?SetAnimGroup@anim_track_controller@@UAEXU?$rhandle@Vanim_group@@@@@Z	20.9375	20.9375	1	8bbb283ee1f0	0x1433a0	20.9375	
-Animation_AnimTrack	?SetWeight@anim_track_controller@@UAEXM@Z	0.0000	0.0000	1	bae7c83b204e	0x144aa0	0.0000	
+Animation_AnimTrack	?MixKeys@anim_track_controller@@UAEXPAUanim_key@@@Z	24.4565	24.4565	2	228541bf117c	0x144110	24.6549	
+Animation_AnimTrack	?SetAnim@anim_track_controller@@QAEXHM@Z	40.3831	40.3831	2	c26a89a46085	0x1434b0	40.3831	
+Animation_AnimTrack	?SetAnimGroup@anim_track_controller@@UAEXU?$rhandle@Vanim_group@@@@@Z	25.3625	25.3625	2	519615fa43aa	0x1433a0	25.3625	
+Animation_AnimTrack	?SetWeight@anim_track_controller@@UAEXM@Z	100.0000	100.0000	2	424b85a90196	0x144aa0	100.0000	
+Animation_CharAnimPlayer	??0char_anim_player@@QAE@XZ	99.9691	99.9691	1	3be2ef16fb7e	0x140450	99.9691	
+Animation_CharAnimPlayer	??0xcolor@@QAE@EEEE@Z	100.0000	100.0000	1	cpp:8ea1d51baf2b	0x13480	100.0000	
+Animation_CharAnimPlayer	??1char_anim_player@@QAE@XZ	77.4865	77.4865	1	bef469cf6330	0x1405d0	77.4865	
+Animation_CharAnimPlayer	?Advance@char_anim_player@@QAEXMAAUvector3@@AAM@Z	16.5428	16.5428	1	ef489eb9fe1d	0x140900	16.5428	
+Animation_CharAnimPlayer	?CalcBasisVectors@char_anim_player@@AAEXABUvector3@@AAU2@11@Z	57.5571	57.5571	1	f5acf2085ec8	0x142030	57.5571	
+Animation_CharAnimPlayer	?ClearTracks@char_anim_player@@QAEXXZ	63.3333	63.3333	1	1285ae0acabb	0x141c70	63.3333	
+Animation_CharAnimPlayer	?ComputeAnimToWorldM@char_anim_player@@AAEXAAVmatrix4@@@Z	48.0537	48.0537	1	de92a6df2602	0x141d70	48.0537	
+Animation_CharAnimPlayer	?GetInterpKeys@char_anim_player@@AAEXPAUanim_key@@@Z	100.0000	100.0000	1	b47288e69382	0x1415b0	100.0000	
+Animation_CharAnimPlayer	?GetWorldAnimTranslation@char_anim_player@@QAE?AUvector3@@XZ	72.4931	72.4931	1	3a43643fde80	0x141180	72.4931	
+Animation_CharAnimPlayer	?PrepareRootKey@char_anim_player@@AAEXAAUanim_key@@@Z	44.2387	44.2387	1	daa4d94df712	0x141280	44.2387	
+Animation_CharAnimPlayer	?ReleaseCachedData@char_anim_player@@QAEXXZ	99.6875	99.6875	1	75b62b57ea4c	0x142580	99.6875	
+Animation_CharAnimPlayer	?SetAnim@char_anim_player@@QAEXHHHM@Z	53.0364	53.0364	1	412d07f634d8	0x140840	53.0364	
+Animation_CharAnimPlayer	?SetAnimGroup@char_anim_player@@QAEXU?$rhandle@Vanim_group@@@@@Z	20.9618	20.9618	1	b72032a7d448	0x140670	20.9618	
+Animation_CharAnimPlayer	?SetTrackController@char_anim_player@@QAEXHPAVtrack_controller@@@Z	10.9273	10.9273	1	ff5a3636bef8	0x141cc0	10.9273	
+Animation_CharAnimPlayer	?UpdateCachedBonePos@char_anim_player@@AAEXXZ	72.7344	72.7344	1	6ff6b1f8d268	0x1423d0	72.7344	
+Animation_CharAnimPlayer	?UpdateCachedL2W@char_anim_player@@AAEXXZ	66.3864	66.3864	1	e90581a078b4	0x142230	66.3864	
 CollisionMgr_CollisionMgr	??0collision@collision_mgr@@QAE@MABUvector3@@ABUplane@@1_KHW4primitive@@HMI@Z	100.0000	100.0000	1	cpp:edcb4610bc64	0x17ddb0	100.0000	
 CollisionMgr_CollisionMgr	??0vector3@@QAE@XZ	100.0000	100.0000	1	cpp:2bc838a797d1	0x1def0	100.0000	
 CollisionMgr_CollisionMgr	?CompareCollisions@@YAHPBX0@Z	100.0000	100.0000	1	cpp:edcb4610bc64	0x177900	100.0000	
@@ -232,7 +250,6 @@ CollisionMgr_CollisionMgr	?LengthSquared@vector3@@QBEMXZ	100.0000	100.0000	1	cpp
 CollisionMgr_CollisionMgr	?Scale@vector3@@QAEXM@Z	100.0000	100.0000	1	cpp:2bc838a797d1	0x48290	100.0000	
 CollisionMgr_CollisionMgr	?Set@vector3@@QAEXMMM@Z	100.0000	100.0000	1	cpp:2bc838a797d1	0x4870	100.0000	
 CollisionMgr_CollisionPrimatives	?BuildTrisForAABBox@@YAXABUbbox@@QAY02Uvector3@@@Z	100.0000	100.0000	1	0e685ffd47f6	0x207f20	100.0000	
-CollisionMgr_PolyCache	??0xcolor@@QAE@EEEE@Z	100.0000	100.0000	1	cpp:8ea1d51baf2b	0x13480	100.0000	
 CollisionMgr_PolyCache	?log_NULL@@YAXZZ	100.0000	100.0000	1	cpp:205c9bd74b61	0x25890	100.0000	
 Decals_DecalMgr	?PreScale@matrix4@@QAEXABUvector3@@@Z	100.0000	100.0000	1	cpp:6bad853c3976	0x6940	100.0000	
 Decals_DecalMgr_StaticDecals	?GetScale@matrix4@@QBE?AUvector3@@XZ	100.0000	100.0000	1	cpp:6bad853c3976	0x68c0	100.0000	
@@ -927,6 +944,14 @@ Parsing_tokenizer	?Rewind@token_stream@@QAEXXZ	100.0000	100.0000	1	ed562f88c43f	
 Parsing_tokenizer	?SetCursor@token_stream@@QAEXH@Z	100.0000	100.0000	1	7dc640c67cf1	0x243b70	100.0000	
 Parsing_tokenizer	?SetDelimeter@token_stream@@QAEXPAD@Z	100.0000	100.0000	1	ed04dc3e8631	0x243a90	100.0000	
 Parsing_tokenizer	?SkipWhitespace@token_stream@@IAEXXZ	100.0000	100.0000	1	1c5ab6a9e1a0	0x243c30	100.0000	
+ResourceMgr_ResourceMgr	?Clear@rsc_mgr@@AAEXXZ	0.0000	0.0000	1	79680d3c0444	0x1486b0	0.0000	
+ResourceMgr_ResourceMgr	?GetRootDirectory@rsc_mgr@@QBEPBDH@Z	84.7500	84.7500	1	a8f3b92c7c42	0x1486f0	84.7500	
+ResourceMgr_ResourceMgr	?Init@rsc_mgr@@QAEXXZ	1.3333	1.3333	1	34b208edab1e	0x148480	1.3333	
+ResourceMgr_ResourceMgr	?Kill@rsc_mgr@@QAEXXZ	2.3529	2.3529	1	4a9f76e8e37d	0x148440	2.3529	
+ResourceMgr_ResourceMgr	?SetOnDemandLoading@rsc_mgr@@QAEXH@Z	99.6667	99.6667	1	6408fdbbcc1f	0x1492a0	99.6667	
+ResourceMgr_ResourceMgr	?SetRootDirectory@rsc_mgr@@QAEXPBDH@Z	32.1429	32.1429	1	779fe0ef281e	0x148710	32.1429	
+ResourceMgr_ResourceMgr	?Unload@rsc_mgr@@QAEXPBD@Z	38.0233	38.0233	1	18eb37901468	0x1491a0	38.0233	
+ResourceMgr_ResourceMgr	?UnloadAll@rsc_mgr@@QAEXH@Z	15.5287	15.5287	1	401b15b6022e	0x148ba0	15.5287	
 StringMgr_StringMgr	??0string_mgr@@QAE@XZ	100.0000	100.0000	1	9bc8fc447bd6	0x2aadb0	100.0000	
 StringMgr_StringMgr	??0string_table@@QAE@XZ	100.0000	100.0000	1	68283f15a2ee	0x2aa8c0	100.0000	
 StringMgr_StringMgr	??1string_mgr@@QAE@XZ	100.0000	100.0000	1	73070f59a3f1	0x2aade0	100.0000	
@@ -953,12 +978,15 @@ UI_ui_check	?GetSelected@ui_check@@QBEHXZ	74.7500	74.7500	1	f0928f962e92	0x2a590
 UI_ui_check	?OnPadSelect@ui_check@@UAEXPAVui_win@@@Z	99.9583	99.9583	1	c8ba7e978824	0x2a5880	99.9583	
 UI_ui_check	?Render@ui_check@@UAEXHH@Z	78.7477	78.7477	1	9bccebd55fee	0x2a55b0	78.7477	
 UI_ui_check	?SetSelected@ui_check@@QAEXH@Z	100.0000	100.0000	1	6976c9500ee8	0x2a58d0	100.0000	
+UI_ui_control	?Create@ui_control@@QAEHHPAVui_manager@@ABUirect@@PAVui_win@@H@Z	100.0000	100.0000	1	10c32ff6422a	0x2aa710	100.0000	
+UI_ui_control	?GetNavPos@ui_control@@QAEABUirect@@XZ	100.0000	100.0000	1	c81db64f1aff	0x2aa830	100.0000	
 UI_ui_control	?Render@ui_control@@UAEXHH@Z	99.9277	99.9277	1	474aafa46f3d	0x2aa720	99.9277	
+UI_ui_control	?SetNavPos@ui_control@@QAEXABUirect@@@Z	100.0000	100.0000	1	d808f80b4aa9	0x2aa840	100.0000	
 UI_ui_dialog	?GetCreatePosition@ui_dialog@@UBEABUirect@@XZ	100.0000	100.0000	1	3afe87ac04b7	0x2a2950	100.0000	
 UI_ui_dialog	?Render@ui_dialog@@UAEXHH@Z	0.0000	0.0000	1	74eb8281b963	0x2a2880	0.0000	
 UI_ui_dlg_list	?Render@ui_dlg_list@@UAEXHH@Z	99.8901	99.8901	1	426798389f7e	0x2a6360	99.8901	
 UI_ui_font	?TextSize@ui_font@@QBEXAAUirect@@PBGH@Z	18.9722	18.9722	1	7e5ce7e9286d	0x2a7dc0	18.9722	absent
-UI_ui_frame	?Create@ui_frame@@QAEHHPAVui_manager@@ABUirect@@PAVui_win@@H@Z	99.7222	99.7222	1	fd7065f60ffc	0x2a3750	99.7222	
+UI_ui_frame	?Create@ui_frame@@QAEHHPAVui_manager@@ABUirect@@PAVui_win@@H@Z	100.0000	100.0000	1	fd7065f60ffc	0x2a3750	100.0000	
 UI_ui_frame	?Render@ui_frame@@UAEXHH@Z	65.2746	65.2746	1	a6a29470f015	0x2a37d0	65.2746	
 UI_ui_manager	?AddHighlight@ui_manager@@QAEXHAAUirect@@H@Z	99.8438	99.8438	1	64fb2a8b3165	0x2a0430	99.8438	
 UI_ui_manager	?CreateWin@ui_manager@@QAEPAVui_win@@HPBDABUirect@@PAV2@H@Z	100.0000	100.0000	1	6b822d220e3a	0x29fe40	100.0000	
@@ -966,7 +994,10 @@ UI_ui_manager	?DisableUserInput@ui_manager@@QAEXXZ	100.0000	100.0000	1	a31955e84
 UI_ui_manager	?EnableUser@ui_manager@@QAEXHH@Z	100.0000	100.0000	1	94d5d25b0ad7	0x2a0420	100.0000	
 UI_ui_manager	?EndDialog@ui_manager@@QAEXHH@Z	100.0000	100.0000	1	8d81e25f2582	0x2a16c0	100.0000	
 UI_ui_manager	?EndUsersDialogs@ui_manager@@QAEXH@Z	100.0000	100.0000	1	afe8ad536a71	0x2a1760	100.0000	
+UI_ui_manager	?FindElement@ui_manager@@QBEHPBD@Z	100.0000	100.0000	1	69a6dd100757	0x29f520	100.0000	
 UI_ui_manager	?FindFont@ui_manager@@QBEHPBD@Z	100.0000	100.0000	1	90292524a48b	0x29fa60	100.0000	
+UI_ui_manager	?GetElement@ui_manager@@QBEPBUelement@1@H@Z	100.0000	100.0000	1	f82f8e1d8163	0x29f880	100.0000	
+UI_ui_manager	?GetLineHeight@ui_manager@@QBEHH@Z	100.0000	100.0000	1	568ea7c67275	0x29fcb0	100.0000	
 UI_ui_manager	?GetNumUserDialogs@ui_manager@@QAEHH@Z	100.0000	100.0000	1	b3645a2d5eef	0x2a1790	100.0000	
 UI_ui_manager	?GetTopmostDialog@ui_manager@@QAEPAVui_dialog@@H@Z	100.0000	100.0000	1	967f4dfbec06	0x2a17a0	100.0000	
 UI_ui_manager	?GetUser@ui_manager@@QBEPAUuser@1@H@Z	100.0000	100.0000	1	76bcbdd0215c	0x2a0380	100.0000	
@@ -980,10 +1011,17 @@ UI_ui_manager	?SetCursorPos@ui_manager@@QAEXHHH@Z	99.9333	99.9333	1	6febbe36959e
 UI_ui_manager	?SetUserBackground@ui_manager@@QAEXHH@Z	100.0000	100.0000	1	cbbf1964ac08	0x2a0410	100.0000	
 UI_ui_manager	?TextSize@ui_manager@@QBEXHAAUirect@@PBGH@Z	99.9167	99.5833	1	ace5415e6e50	0x29fc80	99.9167	
 UI_ui_radio	?Render@ui_radio@@UAEXHH@Z	60.3152	60.3152	1	803d0d9cb66b	0x2a7650	60.3152	
+UI_ui_slider	?Create@ui_slider@@QAEHHPAVui_manager@@ABUirect@@PAVui_win@@H@Z	100.0000	100.0000	1	400d44801bad	0x2a5a20	100.0000	
+UI_ui_slider	?OnCursorExit@ui_slider@@UAEXPAVui_win@@@Z	99.9583	99.9583	1	f721d937ff63	0x2a60e0	99.9583	
+UI_ui_slider	?OnCursorMove@ui_slider@@UAEXPAVui_win@@HH@Z	99.9381	99.9381	1	4281cbf01965	0x2a5f60	99.9381	
+UI_ui_slider	?OnLBDown@ui_slider@@UAEXPAVui_win@@@Z	88.3333	88.3333	1	7344753e44e0	0x2a5f10	88.3333	
+UI_ui_slider	?OnLBUp@ui_slider@@UAEXPAVui_win@@@Z	99.9375	99.9375	1	ff0182321dff	0x2a60a0	99.9375	
+UI_ui_slider	?OnPadNavigate@ui_slider@@UAEXPAVui_win@@HHH@Z	99.9307	99.9307	1	1e58c92e6a4c	0x2a5cc0	99.9307	
 UI_ui_slider	?Render@ui_slider@@UAEXHH@Z	88.8937	88.8937	1	83e8950aadc6	0x2a5ac0	88.8937	
 UI_ui_slider	?SetRange@ui_slider@@QAEXHH@Z	100.0000	100.0000	1	719505255ae3	0x2a5e20	100.0000	
+UI_ui_slider	?SetValue@ui_slider@@QAEXH@Z	99.9565	99.9565	1	6a4b81b51a74	0x2a5e90	99.9565	
 UI_ui_text	?Render@ui_text@@UAEXHH@Z	96.4179	96.4179	1	8f26a75a0c04	0x2a72a0	96.4179	
-UI_ui_textbox	?Create@ui_textbox@@QAEHHPAVui_manager@@ABUirect@@PAVui_win@@H@Z	99.4697	99.4697	1	139324a924a2	0x2a6660	99.4697	
+UI_ui_textbox	?Create@ui_textbox@@QAEHHPAVui_manager@@ABUirect@@PAVui_win@@H@Z	100.0000	100.0000	1	139324a924a2	0x2a6660	100.0000	
 UI_ui_textbox	?OnCursorExit@ui_textbox@@UAEXPAVui_win@@@Z	100.0000	100.0000	1	5a733491d14e	0x2a7150	100.0000	
 UI_ui_textbox	?OnLBUp@ui_textbox@@UAEXPAVui_win@@@Z	100.0000	100.0000	1	87e0a8ab4ce3	0x2a7070	100.0000	
 UI_ui_textbox	?Render@ui_textbox@@UAEXHH@Z	84.0394	84.0394	1	359edc580ddb	0x2a6840	84.0394	

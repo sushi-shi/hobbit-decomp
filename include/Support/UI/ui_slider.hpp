@@ -76,6 +76,7 @@ protected:
 
     xbool           m_IsParametric;
     f32             m_ValueParametric;
+    xbool           m_UseSound; // Genuine Area51 field, actual PC final offset +0x12c.
 };
 
 //==============================================================================

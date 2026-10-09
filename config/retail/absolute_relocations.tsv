@@ -61842,6 +61842,9 @@ site_rva	kind
 0x2fcf10	dir32
 0x2fcf14	dir32
 0x2fcf1c	dir32
+0x2fcf24	dir32
+0x2fcf28	dir32
+0x2fcf3c	dir32
 0x2fcf40	dir32
 0x2fcf44	dir32
 0x2fcf50	dir32
