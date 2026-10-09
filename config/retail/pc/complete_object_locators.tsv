@@ -1,6 +1,6 @@
 # PC structural evidence; all addresses are PC RVAs.
 # Input SHA256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
-# Donor Gruntz 7d4bd55b99e32f084834d991badf7609889481f4; see scripts/hobbit/evidence/pc_structure.py.
+# PE import table; Gruntz 7d4bd55b99e32f084834d991badf7609889481f4 format.
 rva	type_descriptor_rva	decorated	base_offset	cd_offset	hierarchy_rva
 0x2fe0bc	0x337a34	.?AVanim_loader@@	0	0	0x2fe0ac
 0x2fe11c	0x337eb8	.?AVhead_track_controller@@	0	0	0x2fe10c

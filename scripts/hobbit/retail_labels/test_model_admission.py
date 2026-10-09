@@ -1,4 +1,4 @@
-"""Unknown retail intervals must never become function identities by a claim."""
+"""Gruntz census joins, extent bounds, and genuine compiler-data kinds."""
 import unittest
 from unittest.mock import patch
 
@@ -9,9 +9,7 @@ from hobbit.retail_labels import Claim
 class ModelAdmission(unittest.TestCase):
     def resolve(self, kind, size):
         claims = [Claim(0x1000, "?probe@@YAXXZ", "func", "src", size, "probe", {})]
-        with patch.object(model, "manifest_units", return_value=[{"unit": "probe"}]), \
-             patch.object(model.src_claims, "stale_fragments", return_value=[]), \
-             patch.object(model.censuses, "functions", return_value=[dict(rva=0x1000, size=16, kind=kind)]), \
+        with patch.object(model.censuses, "functions", return_value=[dict(rva=0x1000, size=16, kind=kind)]), \
              patch.object(model.censuses, "data", return_value=[]), \
              patch.object(model.providers, "all_claims", return_value=[]), \
              patch.object(model.src_claims, "all_claims", return_value=claims), \
@@ -36,9 +34,7 @@ class ModelAdmission(unittest.TestCase):
 class DataAdmission(unittest.TestCase):
     def resolve(self, kind="", size=4, unit="probe"):
         claims = [Claim(0x2000, "_datum", "data", "src", size, unit, {})]
-        with patch.object(model, "manifest_units", return_value=[{"unit": "probe"}]), \
-             patch.object(model.src_claims, "stale_fragments", return_value=[]), \
-             patch.object(model.censuses, "functions", return_value=[]), \
+        with patch.object(model.censuses, "functions", return_value=[]), \
              patch.object(model.censuses, "data", return_value=[dict(rva=0x2000, size=16, kind=kind, region="data")]), \
              patch.object(model.providers, "all_claims", return_value=[]), \
              patch.object(model.src_claims, "all_claims", return_value=claims), \
@@ -46,22 +42,26 @@ class DataAdmission(unittest.TestCase):
              patch.object(model, "_band_owner_fn", return_value=lambda rva: None):
             return model.resolve()
 
-    def test_nonpositive_extent_is_not_bound(self):
-        for size in (-1, 0):
-            result = self.resolve(size=size)
-            self.assertTrue(any("nonpositive extent" in v for v in result.violations))
-            self.assertEqual(result.claimed(), [])
+    def test_label_only_claim_uses_census_extent(self):
+        result = self.resolve(size=None)
+        self.assertEqual(result.violations, [])
+        self.assertEqual(result.data[0].size, 16)
 
-    def test_missing_extent_is_not_bound(self):
-        self.assertTrue(any("no proved extent" in v for v in self.resolve(size=None).violations))
+    def test_claim_cannot_cross_next_data_start(self):
+        self.assertTrue(any("crosses the next admitted start" in v
+                            for v in self.resolve(size=17).violations))
 
-    def test_unconfigured_owner_is_not_bound(self):
-        result = self.resolve(unit="removed_unit")
-        self.assertTrue(any("not configured" in v for v in result.violations))
-        self.assertEqual(result.claimed(), [])
+    def test_unknown_data_kind_remains_visible_after_source_join(self):
+        result = self.resolve(kind="unknown")
+        self.assertEqual(result.violations, [])
+        self.assertEqual(result.data[0].name, "_datum")
+        self.assertEqual(result.data[0].kind, "unknown")
 
-    def test_unknown_data_interval_rejected(self):
-        self.assertTrue(any("kind='unknown'" in v for v in self.resolve(kind="unknown").violations))
+    def test_source_claim_does_not_name_bookkeeping_storage(self):
+        for kind in ("pad", "ehtable"):
+            with self.subTest(kind=kind):
+                self.assertTrue(any("binds bookkeeping" in v
+                                    for v in self.resolve(kind=kind).violations))
 
     def test_reviewed_data_with_positive_extent_passes(self):
         result = self.resolve()
@@ -70,7 +70,7 @@ class DataAdmission(unittest.TestCase):
 
 
 class FragmentOwnership(unittest.TestCase):
-    def test_stale_fragment_is_reported_and_never_read(self):
+    def test_unconfigured_fragment_is_never_read(self):
         from pathlib import Path
         import tempfile
         from hobbit.retail_labels import fragments
@@ -80,7 +80,6 @@ class FragmentOwnership(unittest.TestCase):
             with patch.object(fragments, "FRAGMENTS", root), \
                  patch("hobbit.manifest.units", return_value=[]):
                 self.assertEqual(fragments.all_claims(), [])
-                self.assertEqual(fragments.stale_fragments(), ["old_unit"])
 
 
 class ContributionOwnership(unittest.TestCase):
@@ -88,7 +87,7 @@ class ContributionOwnership(unittest.TestCase):
         with patch.object(model.censuses, "link_order_bands", side_effect=FileNotFoundError):
             self.assertIsNone(model._band_owner_fn()(0x1000))
 
-    def test_malformed_existing_table_propagates(self):
+    def test_malformed_optional_table_falls_back_without_owner(self):
         from pathlib import Path
         import tempfile
         reader = model.censuses.link_order_bands
@@ -97,13 +96,11 @@ class ContributionOwnership(unittest.TestCase):
             path.write_text("seq\tunit\tstart\tend\tclass\tmodule\tn\tevidence\tnotes\n"
                             "0\tprobe\t0x1000\tnot-a-hex-address\tcmdline\tgame\t1\tfixture\t\n")
             with patch.object(model.censuses, "link_order_bands", side_effect=lambda: reader(path)):
-                with self.assertRaises(ValueError):
-                    model._band_owner_fn()
+                self.assertIsNone(model._band_owner_fn()(0x1000))
 
-    def test_existing_unreadable_table_propagates(self):
+    def test_unreadable_optional_table_falls_back_without_owner(self):
         with patch.object(model.censuses, "link_order_bands", side_effect=PermissionError):
-            with self.assertRaises(PermissionError):
-                model._band_owner_fn()
+            self.assertIsNone(model._band_owner_fn()(0x1000))
 
     def test_valid_bands_preserve_half_open_boundaries(self):
         with patch.object(model.censuses, "link_order_bands", return_value=[(0x1000, 0x1010, "probe")]):

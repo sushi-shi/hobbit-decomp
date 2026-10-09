@@ -23,7 +23,7 @@ class PrivateStringNamespaceControls(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name);self.base=self.root/'objdiff/base';self.base.mkdir(parents=True)
         self.addCleanup(patch.stopall);patch.object(model,'BUILD',self.root).start()
         self.payloads={0x100:b'first\0',0x200:b'second\0'}
-        patch('hobbit.evidence.pc_structure.checked_pe',return_value=SimpleNamespace(read=lambda a,n:self.payloads.get(a,b'')[:n])).start()
+        patch('hobbit.core.pe.image',return_value=SimpleNamespace(read=lambda a,n:self.payloads.get(a,b'')[:n])).start()
     def binding(self, unit='one',rva=0x100):
         return model.Binding(rva,len(self.payloads[rva]),'string','data','$SG7',unit,'data_compgen',())
     def write(self, unit='one',**kwargs):

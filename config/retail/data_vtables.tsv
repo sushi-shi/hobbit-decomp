@@ -1,10 +1,10 @@
 # Reviewed source-emitted game/engine vtables. Extents exclude the preceding COL pointer.
 # Emitting candidate objects determine ownership; Xbox names alone do not establish PC identity.
-# io_device evidence: config/evidence/io-device.json; exact 36-byte COMDAT including COL and 8 slots.
+# io_device evidence: exact 36-byte COMDAT including COL and 8 slots.
 # image-sha256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
 rva	size	name	kind	note
-0x2f9d20	0x20	??_7io_device@@6B@	primary	Natural io_device COMDAT; 8 exact slots and reviewed RTTI COL at 0x2f9d1c; config/evidence/io-device.json
-0x2f9d44	0x24	??_7io_device_dvd@@6B@	primary	Natural io_device_dvd COMDAT; 9 exact slots and reviewed RTTI COL at 0x2f9d40; actual weak _E resolves to defined _G; config/evidence/io-dvd-vtable.json
+0x2f9d20	0x20	??_7io_device@@6B@	primary	Natural io_device COMDAT; 8 exact slots and reviewed RTTI COL at 0x2f9d1c
+0x2f9d44	0x24	??_7io_device_dvd@@6B@	primary	Natural io_device_dvd COMDAT; 9 exact slots and reviewed RTTI COL at 0x2f9d40; actual weak _E resolves to defined _G
 0x2fd350	0x4	??_7linear_key_ctrl@@6B@	primary	Actual one-slot vtable; /GR-; no COL emitted. Surrounding words are separate unrelated contributions.
 0x2fd3cc	0x4	??_7smooth_key_ctrl@@6B@	primary	Actual one-slot vtable; /GR-; no COL emitted. Surrounding words are separate unrelated contributions.
 0x2fcf74	0x8c	??_7ui_dlg_list@@6B@	primary	ui_dlg_list primary vtable: 35 PC slots, 140 bytes; natural shared UI declarations emit the same slot count.

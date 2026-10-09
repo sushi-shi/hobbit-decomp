@@ -1,5 +1,5 @@
-// Reconstructed older UI family adaptation; PC qualification in docs/imports/ui-hobbit-family.md.
-// Original Tribes-AA 4aab7137 support/ui/ui_listbox.cpp; complete Area51 variant retained as reference.
+// Reconstructed older UI family adaptation.
+// Original Tribes-AA 4aab7137 support/ui/ui_listbox.cpp; complete Area51 variant available in external entropy-src donor.
 //=========================================================================
 //
 //  ui_listbox.cpp
@@ -464,11 +464,8 @@ void ui_listbox::OnPadShoulder2( ui_win* pWin, s32 Direction )
 
 //=========================================================================
 
-void ui_listbox::OnPadSelect( ui_win* pWin )
+RVA(0x2a49c0, 0xb8) void ui_listbox::OnPadSelect( ui_win* pWin )
 {
-    (void)pWin;
-
-    // Check if Exit on Select is disabled
     if( !m_ExitOnSelect && (m_Flags & WF_SELECTED) )
     {
         if( m_pParent )
@@ -476,30 +473,23 @@ void ui_listbox::OnPadSelect( ui_win* pWin )
     }
     else
     {
-        if( (m_Flags & WF_SELECTED) || (GetNumEnabledItems() > 0) )
+        irect scroll( m_UpArrow.l, m_UpArrow.t, m_DownArrow.r, m_DownArrow.b );
+        const s32 x = m_CursorX;
+        const s32 y = m_CursorY;
+        if( !(x >= scroll.l && x <= scroll.r &&
+              y >= scroll.t && y <= scroll.b) )
         {
-            // Toggle Selected
-            m_Flags ^= WF_SELECTED;
-
-            if( m_Flags & WF_SELECTED )
+            if( (m_Flags & WF_SELECTED) || (GetNumEnabledItems() > 0) )
             {
-                audio_Play( SFX_FRONTEND_SELECT_02,AUDFLAG_CHANNELSAVER );
+                m_Flags ^= WF_SELECTED;
                 m_iSelectionBackup = m_iSelection;
-//                if( m_pParent )
-//                    m_pParent->OnNotify( m_pParent, this, WN_LIST_CANCELLED, (void*)m_iSelection );
-            }
-            else
-            {
-                audio_Play( SFX_FRONTEND_CANCEL_02,AUDFLAG_CHANNELSAVER );
                 if( m_pParent )
                     m_pParent->OnNotify( m_pParent, this, WN_LIST_ACCEPTED, (void*)m_iSelection );
             }
         }
-        else
-        {
-            audio_Play( SFX_FRONTEND_ERROR,AUDFLAG_CHANNELSAVER );
-        }
     }
+    if( m_pParent )
+        m_pParent->OnPadSelect( pWin );
 }
 
 //=========================================================================

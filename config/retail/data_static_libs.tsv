@@ -1,5 +1,5 @@
 # Archive-proven external runtime/SDK data; no reconstructed game-source ownership.
 rva	size	name	unit	note
 0x2e9008	0x4	__imp__DirectSoundCreate8@12		Genuine pinned DirectX8 dsound.lib defined idata5/4B ordinal11 IAT; actual PE DSOUND.dll import; sdk-provider-proof.json
-0x2fd4d8	0x4	??_7type_info@@6B@		Genuine pinned VC6 LIBCMT typinfo.obj; full vtable/RTTI/destructor archive replay; config/evidence/crt-typeinfo-verification.json; no reconstructed game source ownership
-0x2fe018	0x10	_GUID_NULL		Genuine pinned VC6 UUID.LIB Guidlib.tmp_0\cguid_i_guid0.obj; complete original readonly GUID16 and actual SDK descriptor-copy operand evidence; config/evidence/cohort19-guid-null.json; no reconstructed game source ownership
+0x2fd4d8	0x4	??_7type_info@@6B@		Genuine pinned VC6 LIBCMT typinfo.obj; full vtable/RTTI/destructor archive replay; no reconstructed game source ownership
+0x2fe018	0x10	_GUID_NULL		Genuine pinned VC6 UUID.LIB Guidlib.tmp_0\cguid_i_guid0.obj; complete original readonly GUID16 and actual SDK descriptor-copy operand evidence; no reconstructed game source ownership

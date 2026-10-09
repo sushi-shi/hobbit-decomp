@@ -2241,7 +2241,8 @@ def _access(target, width=4, form="direct", rw="r", mnemonic="mov", text="",
                   text=text or f"{mnemonic} probe", owner=None)
 
 
-def _findings(claims, accesses, rows=(), layout=None, cells=(), image=None):
+def _findings(claims, accesses, rows=(), layout=None, cells=(), image=None,
+              owners=None):
     """Categories fired by one synthetic claim set - hermetic, no image."""
     from hobbit.verify import data_access as da
     img = image if image is not None else mock.Mock()
@@ -2255,8 +2256,9 @@ def _findings(claims, accesses, rows=(), layout=None, cells=(), image=None):
     spine = da.Spine(img, model, layout or _layout(), sorted(claims,
                                                              key=lambda c: c.rva),
                      list(rows))
-    owners = mock.Mock()
-    owners.at.return_value = None
+    if owners is None:
+        owners = mock.Mock()
+        owners.at.return_value = None
     found, _st = da.derive_findings(spine, list(accesses), list(cells), owners)
     return found
 
@@ -2478,6 +2480,39 @@ class DataAccessCategoryControls(unittest.TestCase):
             stale = da.gate_findings()
         self.assertTrue(any("STALE accept" in s for s in stale))
 
+    def test_shrink_fixture_requires_the_first_element_past_the_new_end(self):
+        from types import SimpleNamespace
+
+        from hobbit.verify import data_access as da
+        claim = _claim(0x1000, _arr(_prim("char", 1), 16, "char[16]"))
+        spine = SimpleNamespace(claims=[claim], starts=[claim.rva], layout=_layout())
+        accesses = [_access(0x1000, 1), _access(0x1005, 1)]
+        for access in accesses:
+            access.owner = 0x3000
+        self.assertNotIn("shrink", [p[0] for p in da.injection_plans(spine, accesses)])
+
+        adjacent = _access(0x1001, 1)
+        adjacent.owner = 0x3000
+        accesses.append(adjacent)
+        plans = [p for p in da.injection_plans(spine, accesses) if p[0] == "shrink"]
+        self.assertEqual(len(plans), 1)
+        _tag, _want, victim, mutate = plans[0]
+        owners = mock.Mock()
+        owners.at.return_value = 0x3000
+        self.assertIn("shortfall", _cats(_findings(
+            mutate(victim), accesses, owners=owners)))
+
+    def test_shrink_fixture_requires_a_shared_accessor_across_the_new_end(self):
+        from types import SimpleNamespace
+
+        from hobbit.verify import data_access as da
+        claim = _claim(0x1000, _arr(_prim("int", 4), 4, "int[4]"))
+        spine = SimpleNamespace(claims=[claim], starts=[claim.rva], layout=_layout())
+        accesses = [_access(0x1000), _access(0x1004)]
+        accesses[0].owner = 0x3000
+        accesses[1].owner = 0x4000
+        self.assertNotIn("shrink", [p[0] for p in da.injection_plans(spine, accesses)])
+
     def test_the_injected_defects_are_all_caught_on_the_real_tree(self):
         """The whole-tree harness: nine planted defects, each a class this
         campaign has shipped. A sieve returning 0 rows because it is BLIND is
@@ -2486,8 +2521,10 @@ class DataAccessCategoryControls(unittest.TestCase):
         from hobbit.verify import data_access as da
         if not (BUILD / "gen/bindings.tsv").is_file():
             self.skipTest("no bindings (unbuilt tree)")
+        results = da.run_selftest()
+        self.assertIn("shrink", [tag for tag, _want, _label, _caught in results])
         missed = [f"{tag}->{want}" for tag, want, _label, caught
-                  in da.run_selftest() if not caught]
+                  in results if not caught]
         self.assertEqual(missed, [])
 
 
@@ -3907,7 +3944,9 @@ class PipelineErrorControls(unittest.TestCase):
             with contextlib.redirect_stderr(io.StringIO()) as err:
                 code = rc_check.check(out="/root/denied.res")
         self.assertEqual(code, 2)
-        self.assertIn("--out", err.getvalue())
+        self.assertIn("COULD NOT RUN", err.getvalue())
+        self.assertIn("denied", err.getvalue())
+        self.assertNotIn("check FAILED", err.getvalue())
 
     def test_rsrc_rejects_an_unknown_subcommand_by_name(self):
         import contextlib
@@ -4292,7 +4331,11 @@ class AnonymousNamespaceControls(unittest.TestCase):
         from hobbit.compare.canonicalize import canonicalize_coff
         a = self.names()[0]
         b = self.names(nonce="9876")[0]
-        with self.assertRaisesRegex(ValueError, "namespace identities collide"):
+        # VC6's function-local pass can reject this COMMON-data collision
+        # before the anonymous-namespace pass. Both must reject the merge.
+        with self.assertRaisesRegex(
+                ValueError,
+                "namespace identities collide|VC6 function-local data identity collision"):
             canonicalize_coff(self.obj((a, b)))
 
     def test_same_source_compiled_into_multiple_objects_is_not_coalesced(self):
@@ -5196,10 +5239,10 @@ class ValueTempLivenessControls(unittest.TestCase):
             "push esi", "mov esi,ecx", "je 0x0")), 0x74)
 
 
-class ScopedMatchControls(unittest.TestCase):
-    """An unrelated import without an object must not break a unit match."""
+class CanonicalMatchReportControls(unittest.TestCase):
+    """Unit matching refreshes the same report consumed by banking and README."""
 
-    def test_only_selected_objects_are_opened_and_global_report_is_preserved(self):
+    def test_match_refreshes_canonical_report_without_unannotated_imports(self):
         import contextlib
         import io
         import json
@@ -5218,8 +5261,11 @@ class ScopedMatchControls(unittest.TestCase):
             original = global_report.read_bytes()
             manifest = {"unit": [{"unit": "selected"}, {"unit": "unbuilt"}]}
             observed = []
+            model = SimpleNamespace(
+                claimed=lambda: [SimpleNamespace(unit="selected")])
 
             def report(directory, output):
+                self.assertEqual(output, global_report)
                 doc = json.loads((directory / "objdiff.json").read_text())
                 self.assertEqual(doc["options"], {"functionRelocDiffs": "all"})
                 for unit in doc["units"]:
@@ -5233,8 +5279,9 @@ class ScopedMatchControls(unittest.TestCase):
 
             with mock.patch.object(verbs, "REPO", root), \
                     mock.patch.object(verbs, "ninja", return_value=0), \
-                    mock.patch("hobbit.model.resolve", return_value=SimpleNamespace()), \
-                    mock.patch("hobbit.model.serialize", return_value=(False, None)), \
+                    mock.patch("hobbit.model.resolve", return_value=model), \
+                    mock.patch("hobbit.model.serialize", return_value=(True, None)), \
+                    mock.patch("hobbit.delink.run.run") as delink, \
                     mock.patch("hobbit.manifest.load", return_value=manifest), \
                     mock.patch("hobbit.tool.objdiff.report", side_effect=report), \
                     mock.patch.object(verbs, "print_unit_functions"), \
@@ -5242,7 +5289,10 @@ class ScopedMatchControls(unittest.TestCase):
                 self.assertEqual(verbs.match_units(["selected"], jobs=None,
                                                    verbose=False), 0)
             self.assertEqual(observed, ["selected"])
-            self.assertEqual(global_report.read_bytes(), original)
+            self.assertNotEqual(global_report.read_bytes(), original)
+            self.assertEqual(json.loads(global_report.read_text()), {"units": []})
+            delink.assert_called_once_with(
+                model, target_dir=root / graph.TARGET_DIR, only=["selected"])
 
 
 class MatchReferenceControls(unittest.TestCase):

@@ -306,11 +306,6 @@ protected:
 //  Inlines for class fx_effect_base
 //==============================================================================
 
-inline
-fx_element** fx_effect_base::GetElementList( void )
-{
-    return( m_pElement );
-}
 
 //==============================================================================
 #endif // FX_MGR_PRIVATE_HPP

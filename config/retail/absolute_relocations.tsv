@@ -1,7 +1,6 @@
 # image-sha256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
 # Initial disassembly-based structural admission. No inferred source names.
 # unknown denotes unresolved bytes, never an ordinary function or zero fill.
-# Provenance/method: scripts/hobbit/evidence/pc_census.py; diagnostics remain under build/analysis/admitted-census.
 site_rva	kind
 0x100c	dir32
 0x10cb	dir32
@@ -47300,6 +47299,8 @@ site_rva	kind
 0x246f4c	dir32
 0x246f5e	dir32
 0x246f65	dir32
+0x246f74	dir32
+0x246f78	dir32
 0x24737d	dir32
 0x24739d	dir32
 0x247ae3	dir32
@@ -62360,7 +62361,9 @@ site_rva	kind
 0x2fd3a0	dir32
 0x2fd3a4	dir32
 0x2fd3a8	dir32
+0x2fd3ac	dir32
 0x2fd3b0	dir32
+0x2fd3b4	dir32
 0x2fd3b8	dir32
 0x2fd3bc	dir32
 0x2fd3c0	dir32
@@ -69437,6 +69440,8 @@ site_rva	kind
 0x34bb04	dir32
 0x34bb0c	dir32
 0x34bb14	dir32
+0x34bb1c	dir32
+0x34bb24	dir32
 0x34bb2c	dir32
 0x34bb3c	dir32
 0x34bb44	dir32
@@ -69452,6 +69457,9 @@ site_rva	kind
 0x34bb94	dir32
 0x34bb9c	dir32
 0x34bba4	dir32
+0x34bbac	dir32
+0x34bbb4	dir32
+0x34bbbc	dir32
 0x34bbcc	dir32
 0x34bbd4	dir32
 0x34bbdc	dir32
@@ -69477,6 +69485,7 @@ site_rva	kind
 0x34bc7c	dir32
 0x34bc84	dir32
 0x34bc8c	dir32
+0x34bc94	dir32
 0x34bc9c	dir32
 0x34bca4	dir32
 0x34bcac	dir32

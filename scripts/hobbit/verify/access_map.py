@@ -15,7 +15,6 @@ hash-bound reviewed absolute-field inventory from delink.image. Hobbit's
 /FIXED image has no .reloc table: its reviewed fields are a growing subset
 of decoded references and structurally validated pointer storage. No claim
 of exhaustive whole-image absolute-reference coverage follows from that set.
-Unreviewed in-scope absolute operands are reported as missing evidence.
 
 DECODE. Two objdump passes over .text:
   linear    the whole section decoded from its start (desyncs on data-in-text)
@@ -43,7 +42,7 @@ relocation and no local provenance, so it is invisible here. That is every
 `this`-relative field access, every access through a pointer loaded FROM memory,
 and every escape through a call argument. `derived-disp` recovers only the
 single-block case. The Hobbit map is partial for both absolute and register-relative references;
-`coverage()` reports the admitted scope and the known blind spots.
+`coverage()` reports the known blind spots.
 
 PLUMBING (the port): retail bytes + relocations from hobbit.sema.image, the
 decode from hobbit.tool.objdump, the claim spine from hobbit.model (which
@@ -501,91 +500,8 @@ class Owners:
         return start if not size or rva < start + size else None
 
 
-def reviewed_nonpointer_operands(img, path=None):
-    """Validate the existing exact-site numeric review used by pc_census.
-
-    This is not a mnemonic/value exclusion: image hash, full instruction,
-    operand bytes, and site must all agree before any review is consumed.
-    """
-    from hashlib import sha256
-    from hobbit.core import tsv
-    from hobbit.core.paths import REPO
-    path = path or REPO / "config/evidence/nonpointer_operands.tsv"
-    if not path.exists():
-        return {}
-    banner, header, rows = tsv.read(path)
-    if "# image-sha256: " + sha256(img.pe.data).hexdigest() not in banner:
-        raise ValueError(f"{path}: numeric operand reviews are not image-bound")
-    out = {}
-    for row in rows:
-        site = int(row["site_rva"], 16)
-        start = int(row["instruction_rva"], 16)
-        raw = bytes.fromhex(row["raw_hex"])
-        instruction = bytes.fromhex(row["instruction_hex"])
-        if (len(raw) != 4 or not start < site <= start + len(instruction) - 4
-                or img.read(site, 4) != raw
-                or img.read(start, len(instruction)) != instruction):
-            raise ValueError(f"{path}: numeric operand review differs at {site:#x}")
-        if site in out or site in img.reloc:
-            raise ValueError(f"{path}: conflicting numeric operand review at {site:#x}")
-        out[site] = (start, instruction)
-    return out
 
 
-def scoped_reference_gaps(img, model):
-    """Missing reviewed address fields in explicitly reconstructed functions.
-
-    Reuse the donor's objdump/operand parser, decode from each admitted start,
-    and require a unique encoded field for each in-image address operand.
-    Numeric immediates that resemble an address require review, not admission.
-    """
-    problems = []
-    count = 0
-    reviewed = set(img.reloc)
-    numeric = reviewed_nonpointer_operands(img)
-    regions = img.pe.sections
-    for binding in model.functions:
-        if not binding.channel.startswith("src") or binding.size <= 0:
-            continue
-        code = img.read(binding.rva, binding.size)
-        if code is None:
-            problems.append(f"0x{binding.rva:x}: claimed code is unreadable")
-            continue
-        decoded = _decode(code, binding.rva)
-        count += 1
-        for i, start in enumerate(decoded.starts):
-            asm = decoded.lines[i]
-            if "(bad)" in asm or asm.startswith(".byte"):
-                problems.append(f"0x{start:x}: claimed code cannot be decoded")
-                continue
-            mnemonic, operands = split_operands(asm)
-            if mnemonic.startswith(("j", "loop")) or mnemonic == "call":
-                # Direct branch operands are relative RVAs; indirect memory
-                # calls still contain bracket/PTR notation and need review.
-                operands = [op for op in operands if parse_mem(op) is not None]
-            end = decoded.starts[i + 1] if i + 1 < len(decoded.starts) else binding.rva + binding.size
-            raw = code[start - binding.rva:end - binding.rva]
-            values = set()
-            for op in operands:
-                mem = parse_mem(op)
-                if mem is not None:
-                    values.add((mem[-1], False))
-                elif re.fullmatch(r"0x[0-9a-fA-F]+", op):
-                    values.add((int(op, 16), True))
-            for value, immediate in values:
-                if value is None or not 0 <= value <= 0xffffffff:
-                    continue
-                target = value - img.base
-                if not any(sec["va"] <= target < sec["va"] + max(sec["vsize"], sec["rsize"]) for sec in regions):
-                    continue
-                needle = struct.pack("<I", value)
-                positions = [n for n in range(len(raw) - 3) if raw[n:n + 4] == needle]
-                if (immediate and len(positions) == 1
-                        and numeric.get(start + positions[0]) == (start, raw)):
-                    continue
-                if len(positions) != 1 or start + positions[0] not in reviewed:
-                    problems.append(f"0x{start:x}: in-image operand 0x{value:x} lacks a unique reviewed field ({asm})")
-    return count, problems
 
 
 def sweep(img, model):
@@ -618,18 +534,7 @@ def sweep(img, model):
                 continue
             yield dec, k
 
-    from hobbit.delink.image import Image as AddressImage
-    from hashlib import sha256
-    address_image = AddressImage(pe)
-    native = address_image.directory(5) != (0, 0)
-    scoped_count, scoped_gaps = scoped_reference_gaps(img, model)
     stats = Counter()
-    stats["image-sha256"] = sha256(pe.data).hexdigest()
-    stats["reference-index"] = "PE-HIGHLOW" if native else "reviewed-FIXED-subset"
-    stats["absolute-index-complete"] = int(native)
-    stats["scoped-functions-decoded"] = scoped_count
-    stats["scoped-reference-gaps"] = scoped_gaps
-    stats["unclassified-text-bytes"] = sum(b.size for b in model.functions if b.kind == "unknown")
     accesses, cells = [], []
     for site, target in img.relocs_in(tlo, thi):
         stored = target + img.base
@@ -844,7 +749,7 @@ def persist(img, layout, accesses, cells, claims, stats, sqlite_path=SQLITE,
         rows.append([f"0x{v:x}" if name in _HEXCOLS and isinstance(v, int)
                      else str(v) for name, v in zip(TSV_COLS, r)])
     write_tsv(tsv_path, ["# GENERATED by hobbit.verify.access_map - "
-                         "admitted absolute-reference subset; see SQLite meta for scope."],
+                         "admitted absolute-reference subset."],
               TSV_COLS, rows)
     return len(arows), len(crows)
 

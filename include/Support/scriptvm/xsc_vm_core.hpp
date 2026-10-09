@@ -120,7 +120,8 @@ public:
                                                   fnptr_vm              pFn     );              // Register Native Method
 
     nativemethod*       FindNativeMethod        ( const char*           pClassName,
-                                                  const char*           pMethodName );          // Find a native method
+                                                  const char*           pMethodName,
+                                                  const char*           pSignature );          // Find a native method
 
     void                ExecuteMethod           ( xsc_vm_methoddef*     pMethod,
                                                   void*                 pThis,
@@ -189,9 +190,11 @@ public:
     void                Exec_sconst              ( void );
     void                Exec_iload              ( void );
     void                Exec_fload              ( void );
+    void                Exec_sload               ( void );
     void                Exec_cload              ( void );
     void                Exec_istore             ( void );
     void                Exec_fstore             ( void );
+    void                Exec_sstore              ( void );
     void                Exec_cstore             ( void );
 
     void                Exec_iinc                ( void );

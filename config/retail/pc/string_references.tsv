@@ -1,6 +1,6 @@
 # PC structural evidence; all addresses are PC RVAs.
 # Input SHA256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
-# Donor Gruntz 7d4bd55b99e32f084834d991badf7609889481f4; see scripts/hobbit/evidence/pc_structure.py.
+# PE import table; Gruntz 7d4bd55b99e32f084834d991badf7609889481f4 format.
 instruction_rva	string_rva	reference_type	text	instruction
 0x124a	0x31cd30	DATA	C:\projects\meridian\Support\Levels\Swordlight\LevelSwordlight.cpp	PUSH 0x71cd30
 0x1cde	0x31cef0	DATA	obj_mgr::LockObject(Guid)	PUSH 0x71cef0

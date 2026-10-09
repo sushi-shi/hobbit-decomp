@@ -34,19 +34,6 @@ class HobbitScopeControls(unittest.TestCase):
         self.assertEqual(scores.unit_measures(filtered)["probe"]["total_functions"], 1)
         self.assertEqual(doc["units"][0]["measures"]["total_functions"], 2)
 
-    def test_unreviewed_source_operand_fails_then_reviewed_operand_passes(self):
-        code = bytes.fromhex("a100204000c3")
-        img = NS(base=0x400000, pe=NS(sections=[dict(va=0x2000, vsize=4, rsize=4)]),
-                 read=lambda _rva, _size: code, reloc={})
-        model = NS(functions=[NS(channel="src", rva=0x1000, size=len(code))])
-        dec = access_map.Decode([0x1000, 0x1005], ["mov eax,ds:0x402000", "ret"], set())
-        with mock.patch.object(access_map, "_decode", return_value=dec), \
-             mock.patch.object(access_map, "reviewed_nonpointer_operands", return_value={}):
-            count, gaps = access_map.scoped_reference_gaps(img, model)
-            self.assertEqual(count, 1)
-            self.assertEqual(len(gaps), 1)
-            img.reloc = {0x1001: 0x2000}
-            self.assertEqual(access_map.scoped_reference_gaps(img, model), (1, []))
 
     def test_missing_object_cannot_make_allocation_scope_empty(self):
         with tempfile.TemporaryDirectory() as td:

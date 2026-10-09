@@ -301,7 +301,8 @@ xbool xsc_vm_module::Link( void )
         if( m_pMethodDef[i].Flags & XSC_VM_METHOD_NATIVE )
         {
             // Locate in registered native methods
-            s32 Address = (s32)m_pVM->FindNativeMethod( pClassName, pMethodName );
+            s32 Address = (s32)m_pVM->FindNativeMethod( pClassName, pMethodName,
+                                                       &m_pConstStr[m_pMethodDef[i].SignatureOffset] );
             if( Address )
                 m_pMethodDef[i].MethodOffset = Address;
             else

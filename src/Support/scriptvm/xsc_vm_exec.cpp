@@ -45,6 +45,8 @@ exec_data ExecData[] =
     { vm_fcmp_le,       &xsc_vm_core::Exec_fcmp_le           },          // compare less or equal float   
     { vm_fcmp_lt,       &xsc_vm_core::Exec_fcmp_lt           },          // compare less than float       
     { vm_fcmp_ne,       &xsc_vm_core::Exec_fcmp_ne           },          // compare not equal float       
+    { vm_scmp_eq, &xsc_vm_core::Exec_scmp_eq },
+    { vm_scmp_ne, &xsc_vm_core::Exec_scmp_ne },
                         
     { vm_idup,          &xsc_vm_core::Exec_idup              },          // Duplicate top stack item int  
     { vm_fdup,          &xsc_vm_core::Exec_fdup              },          // Duplicate top stack item float
@@ -62,12 +64,17 @@ exec_data ExecData[] =
                         
     { vm_iconst,        &xsc_vm_core::Exec_iconst            },          // Load Const Int                
     { vm_fconst,        &xsc_vm_core::Exec_fconst            },          // Load Const Float              
+    { vm_sconst, &xsc_vm_core::Exec_sconst },
     { vm_iload,         &xsc_vm_core::Exec_iload             },          // Load Int from address
     { vm_fload,         &xsc_vm_core::Exec_fload             },          // Load Flt from address
+    { vm_sload, &xsc_vm_core::Exec_sload },
     { vm_cload,         &xsc_vm_core::Exec_cload             },          // Load Class from address
     { vm_istore,        &xsc_vm_core::Exec_istore            },          // Store Int to address
     { vm_fstore,        &xsc_vm_core::Exec_fstore            },          // Store Flt to address
+    { vm_sstore, &xsc_vm_core::Exec_sstore },
     { vm_cstore,        &xsc_vm_core::Exec_cstore            },          // Store Class to address
+    { vm_iinc, &xsc_vm_core::Exec_iinc },
+    { vm_idec, &xsc_vm_core::Exec_idec },
                         
     { vm_iadd,          &xsc_vm_core::Exec_iadd              },          // Add top 2 stack Int           
     { vm_idiv,          &xsc_vm_core::Exec_idiv              },          // Div top 2 stack Int           
@@ -75,6 +82,8 @@ exec_data ExecData[] =
     { vm_imul,          &xsc_vm_core::Exec_imul              },          // Mul top 2 stack Int           
     { vm_ineg,          &xsc_vm_core::Exec_ineg              },          // Neg top stack Int             
     { vm_isub,          &xsc_vm_core::Exec_isub              },          // Sub top 2 stack Int           
+    { vm_finc, &xsc_vm_core::Exec_finc },
+    { vm_fdec, &xsc_vm_core::Exec_fdec },
                         
     { vm_fadd,          &xsc_vm_core::Exec_fadd              },          // Add top 2 stack Float         
     { vm_fdiv,          &xsc_vm_core::Exec_fdiv              },          // Div top 2 stack Float         
@@ -133,6 +142,7 @@ void xsc_vm_core::PushStackFrame( void )
 //  PopStackFrame
 //==============================================================================
 
+RVA(0x246960, 0x57)
 void xsc_vm_core::PopStackFrame( void )
 {
     ASSERT( m_StackFrames.GetCount() > 0 );
@@ -367,11 +377,13 @@ void xsc_vm_core::Exec_scmp_ne( void )
     Push_s32( x_strcmp( pFirst, pSecond ) != 0 );
 }
 
+RVA(0x246e10, 0xd)
 void xsc_vm_core::Exec_idup         ( void )
 {
     Push_s32( *((s32*)(m_StackFrame.SP-4)) );
 }
 
+RVA(0x246e20, 0xd)
 void xsc_vm_core::Exec_fdup         ( void )
 {
     Push_f32( *((f32*)(m_StackFrame.SP-4)) );
@@ -415,10 +427,12 @@ void xsc_vm_core::Exec_invoke       ( void )
     m_StackFrame.IP         = m_StackFrame.pModule->m_pMethods + pMethodDef->MethodOffset;
 }
 
+RVA(0x246ee0, 0x93)
 void xsc_vm_core::Exec_invokenative ( void )
 {
     // Read MethodRef index
     s32 Index = Operand16();
+    s32 ArgByteSize = Operand16();
 
     // Get MethodDef
     xsc_vm_methoddef* pMethodDef = m_StackFrame.pModule->m_pMethodRef[Index].pMethodDef;
@@ -426,7 +440,7 @@ void xsc_vm_core::Exec_invokenative ( void )
     ASSERT( pMethodDef->Flags & XSC_VM_METHOD_NATIVE );
 
     nativemethod*   pNativeMethod       = (nativemethod*)pMethodDef->MethodOffset;
-    s32             ArgByteSize         = pMethodDef->ArgumentsSize;
+
 
     // Call Method
     pNativeMethod->pFn( m_StackFrame.SP-ArgByteSize );
@@ -435,16 +449,18 @@ void xsc_vm_core::Exec_invokenative ( void )
     m_StackFrame.SP -= ArgByteSize;
 
     // Move stack to acount for return value
-    switch( pNativeMethod->pSignature[0] )
+    switch( (s8)x_LowerCase[(u8)pNativeMethod->pSignature[0]] )
     {
-    case 'V':
+    case 'v':
         break;
-    case 'I':
+    case 'i':
         m_StackFrame.SP += 4;
         break;
-    case 'F':
+    case 'f':
         m_StackFrame.SP += 4;
         break;
+    case 'b':
+    case 's':
     case '&':
         m_StackFrame.SP += 4;
         break;
@@ -524,6 +540,11 @@ void xsc_vm_core::Exec_fload        ( void )
     Push_f32( *((f32*)Pop_s32()) );
 }
 
+void xsc_vm_core::Exec_sload( void )
+{
+    Push_s32( *((s32*)Pop_s32()) );
+}
+
 void xsc_vm_core::Exec_cload        ( void )
 {
     s32 Index = Operand16();
@@ -533,6 +554,7 @@ void xsc_vm_core::Exec_cload        ( void )
     m_StackFrame.SP += Size;
 }
 
+RVA(0x2471e0, 0x13)
 void xsc_vm_core::Exec_istore       ( void )
 {
     s32 a = Pop_s32();
@@ -543,6 +565,12 @@ void xsc_vm_core::Exec_fstore       ( void )
 {
     s32 a = Pop_s32();
     *((f32*)a) = *((f32*)(m_StackFrame.SP-4));
+}
+
+void xsc_vm_core::Exec_sstore( void )
+{
+    s32 a = Pop_s32();
+    *((s32*)a) = *((s32*)(m_StackFrame.SP-4));
 }
 
 void xsc_vm_core::Exec_cstore       ( void )
@@ -730,6 +758,7 @@ void xsc_vm_core::Exec_pop          ( void )
 }
 
 
+RVA(0x247650, 0x5)
 void xsc_vm_core::Exec_vret         ( void )
 {
     s32 ArgsSize = m_StackFrame.pMethod->ArgumentsSize;
@@ -737,6 +766,7 @@ void xsc_vm_core::Exec_vret         ( void )
     PopStackFrame();
 }
 
+RVA(0x247660, 0x20)
 void xsc_vm_core::Exec_iret         ( void )
 {
     s32 RetVal = *(s32*)(m_StackFrame.SP-4);
@@ -745,6 +775,7 @@ void xsc_vm_core::Exec_iret         ( void )
     Push_s32( RetVal );
 }
 
+RVA(0x247680, 0x1e)
 void xsc_vm_core::Exec_fret         ( void )
 {
     f32 RetVal = *(f32*)(m_StackFrame.SP-4);

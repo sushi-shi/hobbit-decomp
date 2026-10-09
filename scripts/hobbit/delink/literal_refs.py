@@ -52,12 +52,9 @@ def _exact_instruction_alignment_tail(obj, section, payload, start, size, end,
     return image.pe.read(tail_rva, len(tail)) == tail
 
 
-def _manual_string_extents():
-    from hobbit.core.paths import CONFIG
-    from hobbit.core import tsv
-    _comments, _header, rows = tsv.read(CONFIG / 'evidence/manual_data_starts.tsv')
-    return {int(r['rva'], 16): int(r['size'], 0) for r in rows
-            if r['kind'] == 'string'}
+def _string_extents(model):
+    return {binding.rva: binding.size for binding in model.data
+            if binding.kind == 'string' and binding.size > 0}
 
 
 def _admitted_string_pairing(candidate, retail, refs, found, members, model, image):
@@ -69,11 +66,11 @@ def _admitted_string_pairing(candidate, retail, refs, found, members, model, ima
     """
     if not found or not isinstance(members, dict):
         return []
-    admitted = _manual_string_extents()
+    admitted = _string_extents(model)
     eligible = []
     for name, rva in found:
         entry = members.get(name)
-        if not isinstance(entry, tuple) or len(entry) != 2:
+        if not isinstance(entry, tuple) or len(entry) < 2:
             continue
         payload = entry[1]
         if not isinstance(payload, bytes) or not payload.endswith(b'\0'):

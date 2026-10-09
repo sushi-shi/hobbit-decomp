@@ -1,5 +1,5 @@
-// Reconstructed older UI family adaptation; PC qualification in docs/imports/ui-hobbit-family.md.
-// Original Tribes-AA 4aab7137 support/ui/ui_listbox.hpp; complete Area51 variant retained as reference.
+// Reconstructed older UI family adaptation.
+// Original Tribes-AA 4aab7137 support/ui/ui_listbox.hpp; complete Area51 variant available in external entropy-src donor.
 //==============================================================================
 //  
 //  ui_listbox.hpp
@@ -31,6 +31,8 @@ class ui_listbox : public ui_control
 public:
     struct item
     {
+        RVA(0x2a5440, 0xf) item() {}
+        RVA(0x2a5450, 0x8) ~item() {}
         xbool       Enabled;
         xwstring    Label;
         s32         Data;

@@ -1,7 +1,6 @@
 # image-sha256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
 # Initial disassembly-based structural admission. No inferred source names.
 # unknown denotes unresolved bytes, never an ordinary function or zero fill.
-# Provenance/method: scripts/hobbit/evidence/pc_census.py; diagnostics remain under build/analysis/admitted-census.
 rva	kind
 0x1000	
 0x1076	pad
@@ -11776,7 +11775,11 @@ rva	kind
 0x246d93	pad
 0x246da0	
 0x246dd0	
-0x246e01	unknown
+0x246e01	pad
+0x246e10	
+0x246e1d	pad
+0x246e20	
+0x246e2d	unknown
 0x246ee0	
 0x246f73	unknown
 0x246fd0	
@@ -11795,7 +11798,9 @@ rva	kind
 0x247160	
 0x247176	pad
 0x247180	
-0x2471d5	unknown
+0x2471d5	pad
+0x2471e0	
+0x2471f3	unknown
 0x247260	
 0x247270	
 0x247280	
@@ -11843,7 +11848,9 @@ rva	kind
 0x247600	
 0x247618	pad
 0x247620	
-0x247647	unknown
+0x247647	pad
+0x247650	helper
+0x247655	pad
 0x247660	
 0x247680	
 0x24769e	pad
@@ -15321,7 +15328,9 @@ rva	kind
 0x2a52c0	
 0x2a5437	pad
 0x2a5440	
-0x2a544f	unknown
+0x2a544f	pad
+0x2a5450	
+0x2a5458	pad
 0x2a5460	
 0x2a54d5	pad
 0x2a54e0	
@@ -15792,7 +15801,9 @@ rva	kind
 0x2ba3a0	
 0x2ba3a7	pad
 0x2ba3b0	
-0x2ba545	unknown
+0x2ba545	pad
+0x2ba550	
+0x2ba648	pad
 0x2ba650	
 0x2ba65b	pad
 0x2ba660	
@@ -15817,7 +15828,9 @@ rva	kind
 0x2ba9a0	
 0x2baab5	pad
 0x2baac0	
-0x2bab99	unknown
+0x2bab99	pad
+0x2baba0	
+0x2bac93	pad
 0x2baca0	
 0x2bacd7	pad
 0x2bace0	

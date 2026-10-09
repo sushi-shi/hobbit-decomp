@@ -685,8 +685,10 @@ void anim_keys::GetInterpKeys(const anim_group& AnimGroup, f32 Frame, anim_key* 
     for (s32 i = 0; i < m_nBones; i++) {
         if (pStream[i].Offset & (STREAM_FLAG_MASKED << STREAM_FLG_SHIFT)) {
             pKey[i].Scale.Set(1.0f, 1.0f, 1.0f);
-            pKey[i].Rotation.Identity();
-            pKey[i].Translation.Zero();
+            pKey[i].Rotation = quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+            pKey[i].Translation.X = 0.0f;
+            pKey[i].Translation.Y = 0.0f;
+            pKey[i].Translation.Z = 0.0f;
         } else {
             pStream[i].GetInterpKey((byte*)pStream, KeyBlock.nFrames, iBlockFrame, fFrac, pKey[i]);
         }

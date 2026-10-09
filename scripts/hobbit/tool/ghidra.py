@@ -37,7 +37,7 @@ def install_dir() -> Path:
     """$GHIDRA_INSTALL_DIR, verified to look like a Ghidra installation."""
     value = os.environ.get("GHIDRA_INSTALL_DIR")
     if not value:
-        raise ToolError("$GHIDRA_INSTALL_DIR unset - run inside `nix develop` "
+        raise ToolError("$GHIDRA_INSTALL_DIR unset - run `bin/hobbit-shell --viewer` "
                         "(Ghidra is optional; the export needs it)")
     path = Path(value)
     if not (path / "Ghidra").is_dir():

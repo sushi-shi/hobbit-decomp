@@ -248,16 +248,14 @@ def match_units(units: list[str], *, jobs: int | None, verbose: bool) -> int:
     """
     import time
 
-    from hobbit.compare import run as compare
+    from hobbit.compare import normalize, project
     from hobbit.delink import run as delink
     from hobbit.model import resolve, serialize
+    from hobbit.tool import objdiff
     from hobbit.verify import scores
 
     started = time.monotonic()
-    # Gruntz compare/run.py accepts an explicit unit census and output path.
-    # Keep a scoped measurement separate from the whole-project report: the
-    # latter may include imports without successful current native objects.
-    compare_dir = REPO / "build/objdiff/match"
+    report_path = REPO / graph.REPORT_JSON
 
     targets = [f"{graph.BASE_DIR}/{u}.obj" for u in units]
     targets += [f"{graph.CLAIMS_DIR}/{u}.tsv" for u in units]
@@ -271,10 +269,16 @@ def match_units(units: list[str], *, jobs: int | None, verbose: bool) -> int:
     missing = [u for u in units if not (target_dir / f"{u}.c.obj").exists()]
     if bindings_changed or missing:
         delink.run(model, target_dir=target_dir, only=units)
-    report = compare.run(REPO / graph.BASE_DIR, target_dir, compare_dir,
-                         units=units, quiet=True)
+        # Gruntz projects the full reconstruction census. Hobbit also imports
+        # unannotated source; those units have no target object to compare.
+        admitted_units = sorted({b.unit for b in model.claimed() if b.unit})
+        project.project([{"unit": unit} for unit in admitted_units],
+                        target_dir, REPO / graph.COMPARE_DIR)
+    normalize.normalize(REPO / graph.BASE_DIR, target_dir,
+                        REPO / graph.COMPARE_DIR, units)
+    objdiff.report(REPO / graph.COMPARE_DIR, report_path)
 
-    after = scores.functions(report)
+    after = scores.functions(scores.load(report_path))
     print_unit_functions(units, after)
     print(f"\n[match] {', '.join(units)} in {time.monotonic() - started:.1f}s"
           + (" (labels changed: delinked)" if bindings_changed else ""))

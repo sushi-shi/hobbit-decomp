@@ -21,7 +21,7 @@
 //  STORAGE
 //==============================================================================
 
-fx_mgr              FXMgr;
+DATA(0x4137e0) fx_mgr              FXMgr;
 
 
 DATA(0x00415cb8) s32 fx_mgr::m_NCtrlTypes = 0;
@@ -178,6 +178,7 @@ fx_mgr::~fx_mgr( void )
 
 //==============================================================================
 
+RVA(0x2b6890, 0x27)
 void fx_mgr::BindHandle( fx_handle& Handle, s32 Index )
 {
     UnbindHandle( Handle );
@@ -197,6 +198,7 @@ void fx_mgr::BindHandle( fx_handle& Handle, s32 Index )
 
 //==============================================================================
 
+RVA(0x2b68c0, 0x43)
 void fx_mgr::UnbindHandle( fx_handle& Handle )
 {   
     s32 Index = Handle.Index;
@@ -244,6 +246,7 @@ s32 fx_mgr::GetSpriteCount( void )
 
 //==============================================================================
 
+RVA(0x2b6940, 0x5a)
 void fx_mgr::EndOfFrame( void )
 {
     CONTEXT( "fx_mgr::EndOfFrame" );
@@ -258,18 +261,6 @@ void fx_mgr::EndOfFrame( void )
         {
             // Get the flags
             u32 Flags = m_pEffect[i]->m_Flags;
-
-            // Check for deferred deletion
-            if( Flags & FX_DEFERRED_DELETE )
-            {
-                // Increment the counter and do the delete
-                if( m_pEffect[i]->m_NReferences++ > 2 )
-                {
-                    x_free( m_pEffect[i] );
-                    m_pEffect[i] = NULL;
-                }
-                continue;
-            }
 
             // Clear the logic ran flag
             if( ( Flags & FX_MASTER_COPY ) &&
@@ -630,6 +621,7 @@ xbool fx_mgr::UnloadEffect( const char* pEffectName )
 
 //==============================================================================
 
+RVA(0x2b7010, 0x89)
 void fx_mgr::CreateEffect( s32 Index, fx_def* pEffectDef )
 {
     s32        Size, i;
@@ -654,18 +646,14 @@ void fx_mgr::CreateEffect( s32 Index, fx_def* pEffectDef )
     // Add in space for element pointers
     Size += (pEffectDef->NElements * sizeof(fx_element*));
 
-    // elements can have vectors and matrices, and so they must be aligned
-    Size = ALIGN_16( Size );
-
     // Add in space for elements and memory required by particular element types,
-    // taking into account the required alignment restrictions.
     for( i = 0; i < pEffectDef->NElements; i++ )
     {   
         s32 ETypeIndex = pEffectDef->pElementDef[i]->TypeIndex;
         fx_element_memory_fn* pMemoryFn = m_ElementType[ ETypeIndex ].pMemoryFn;
 
         s32 MemSize = pMemoryFn( *(pEffectDef->pElementDef[i]) );
-        Size += ALIGN_16( MemSize );
+        Size += MemSize;
     }
 
     //
@@ -693,16 +681,11 @@ void fx_mgr::CreateEffect( s32 Index, fx_def* pEffectDef )
 
 //==============================================================================
 
+RVA(0x2b70a0, 0x1ad)
 xbool fx_mgr::InitEffect( s32& Index, const char* pName )
 {
     CONTEXT( "fx_mgr::InitEffect" );
     MEMORY_OWNER( "EFFECT DATA" );
-
-    if ( !pName )
-    {
-        ASSERTS( FALSE, "Null effect name pointer passed into fx-mgr::InitEffect" );
-        return FALSE;
-    }
 
     s32     i;
     fx_def* pEffectDef = NULL;
@@ -800,6 +783,7 @@ xbool fx_mgr::InitEffect( s32& Index, const char* pName )
 
 //==============================================================================
 
+RVA(0x2b7250, 0x68)
 void fx_mgr::KillEffect( s32 Index )
 {
     ASSERT( IN_RANGE( 0, Index, MAX_EFFECT_INSTANCES-1 ) );
@@ -807,6 +791,7 @@ void fx_mgr::KillEffect( s32 Index )
     ASSERT( m_pEffect[ Index ]->GetReferences() == 0 );
 
     fx_effect_base* pEffect = m_pEffect[ Index ];
+    m_pEffect[ Index ] = NULL;
 
     // There is one less instance of this effect definition.
     pEffect->m_pEffectDef->NInstances--;
@@ -824,8 +809,7 @@ void fx_mgr::KillEffect( s32 Index )
         }
     }
 
-    pEffect->m_Flags |= FX_DEFERRED_DELETE;
-    pEffect->m_NReferences = 0;
+    x_free( pEffect );
 }
 
 //==============================================================================
@@ -841,6 +825,7 @@ void fx_mgr::AdvanceLogic( fx_handle& Handle, f32 DeltaTime )
 
 //==============================================================================
 
+RVA(0x2b7340, 0xe0)
 void fx_mgr::Render( const fx_handle& Handle )
 {
     CONTEXT( "fx_mgr::Render" );
@@ -903,6 +888,7 @@ xbool fx_mgr::IsFinished( const fx_handle& Handle )
 
 //==============================================================================
 
+RVA(0x2b7480, 0x26)
 void fx_mgr::SetScale( fx_handle& Handle, const vector3& Scale )
 {
     if( Validate( Handle ) )
@@ -911,6 +897,7 @@ void fx_mgr::SetScale( fx_handle& Handle, const vector3& Scale )
 
 //==============================================================================
 
+RVA(0x2b74b0, 0x26)
 void fx_mgr::SetRotation( fx_handle& Handle, const radian3& Rotation )
 {
     if( Validate( Handle ) )
@@ -919,6 +906,7 @@ void fx_mgr::SetRotation( fx_handle& Handle, const radian3& Rotation )
 
 //==============================================================================
 
+RVA(0x2b74e0, 0x26)
 void fx_mgr::SetTranslation( fx_handle& Handle, const vector3& Translation )
 {
     if( Validate( Handle ) )

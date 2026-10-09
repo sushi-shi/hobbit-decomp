@@ -215,13 +215,17 @@
         export PYTHONPATH="$d/scripts''${PYTHONPATH:+:$PYTHONPATH}"
         exec python3 -m hobbit "$@"
       '';
-      hobbitShell = pkgs.mkShell {
-        name = "hobbit-decomp";
+      # Shell/tool environment port: local Gruntz flake.nix commonTools and
+      # gruntzShell at 7d4bd55b99e32f084834d991badf7609889481f4.
+      # Hobbit separates the optional one-way viewer from the matching shell.
+      mkHobbitShell = { viewer ? false }: pkgs.mkShell {
+        name = if viewer then "hobbit-viewer" else "hobbit-decomp";
         packages = [ hobbit-cli rust objdiff objdiff-cli vostok-delinker ] ++ (with pkgs; [
-          (python3.withPackages (ps: [ ps.pyghidra ps.libclang ps.pefile ps.capstone ]))
-          ghidra ninja llvm llvmPackages.clang-unwrapped ripgrep file xxd jq
-          binutils gdb wineWow64Packages.staging jdk21 p7zip cabextract
-        ]);
+          (python3.withPackages (ps: [ ps.libclang ps.capstone ]
+            ++ lib.optionals viewer [ ps.pyghidra ]))
+          ninja llvm llvmPackages.clang-unwrapped ripgrep file xxd jq
+          binutils gdb wineWow64Packages.staging p7zip cabextract
+        ]) ++ pkgs.lib.optionals viewer [ pkgs.ghidra pkgs.jdk21 ];
         shellHook = ''
           _hobbit_root="$PWD"
           while [ "$_hobbit_root" != "/" ] && [ ! -f "$_hobbit_root/scripts/hobbit/cli.py" ]; do
@@ -243,9 +247,11 @@
           case "$-" in *i*) trap 'wineserver -k >/dev/null 2>&1 || true' EXIT ;; esac
           export HOBBIT_TOOLCHAIN="${hobbit-toolchain}"
           export MSVC_DIR="${hobbit-toolchain}/msvc"
-          export GHIDRA_INSTALL_DIR="${pkgs.ghidra}/lib/ghidra"
-          export JAVA_HOME="${pkgs.jdk21}/lib/openjdk"
-          echo "[hobbit] matching shell: VC6, Wine, patched objdiff/vostok, llvm-pdbutil, clang and Ghidra" >&2
+          ${pkgs.lib.optionalString viewer ''
+            export GHIDRA_INSTALL_DIR="${pkgs.ghidra}/lib/ghidra"
+            export JAVA_HOME="${pkgs.jdk21}/lib/openjdk"
+          ''}
+          echo "[hobbit] ${if viewer then "viewer" else "matching"} shell: VC6 SP5, Wine, objdiff/vostok, LLVM and Clang${if viewer then ", Ghidra viewer" else ""}" >&2
           if [ -z "''${HOBBIT_SKIP_INIT:-}" ]; then
             python3 -m hobbit init || echo "[hobbit] init failed; inspect diagnostics and rerun hobbit init" >&2
           fi
@@ -256,6 +262,10 @@
         inherit vostok-delinker objdiff objdiff-cli hobbit-toolchain;
         default = vostok-delinker;
       };
-      devShells.${system} = { default = hobbitShell; build = hobbitShell; };
+      devShells.${system} = {
+        default = mkHobbitShell {};
+        build = mkHobbitShell {};
+        viewer = mkHobbitShell { viewer = true; };
+      };
     };
 }

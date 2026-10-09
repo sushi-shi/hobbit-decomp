@@ -1,5 +1,5 @@
-// Reconstructed older UI family adaptation; PC qualification in docs/imports/ui-hobbit-family.md.
-// Original Tribes-AA 4aab7137 support/ui/ui_manager.cpp; complete Area51 variant retained as reference.
+// Reconstructed older UI family adaptation.
+// Original Tribes-AA 4aab7137 support/ui/ui_manager.cpp; complete Area51 variant available in external entropy-src donor.
 //=========================================================================
 //
 //  ui_manager.cpp
@@ -436,8 +436,9 @@ s32 ui_manager::FindElement( const char* pName ) const
 
 //=========================================================================
 
-void ui_manager::RenderElement( s32 iElement, const irect& Position, s32 State, const xcolor& Color, xbool IsAdditive ) const
+RVA(0x29f570, 0x30a) void ui_manager::RenderElement( s32 iElement, const irect& Position, s32 State, const xcolor& Color, xbool IsAdditive ) const
 {
+    x_mem_owner __owner__("ui_manager::RenderElement");
     xbool       ScaleX = FALSE;
     xbool       ScaleY = FALSE;
     s32         ix;
@@ -670,7 +671,7 @@ void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, const 
 */
 //=========================================================================
 
-void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const xwchar* pString ) const
+RVA(0x29fb40, 0x7d) void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const xwchar* pString ) const
 {
     x_mem_owner Owner("ui_manager::RenderText");
     ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
@@ -728,8 +729,9 @@ s32 ui_manager::GetLineHeight( s32 iFont ) const
 
 //=========================================================================
 
-void ui_manager::RenderRect( const irect& r, const xcolor& Color, xbool IsWire ) const
+RVA(0x29fcd0, 0x71) void ui_manager::RenderRect( const irect& r, const xcolor& Color, xbool IsWire ) const
 {
+    x_mem_owner __owner__("ui_manager::RenderRect");
     draw_Rect( r, Color, IsWire );
 }
 

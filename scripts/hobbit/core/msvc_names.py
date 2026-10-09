@@ -47,6 +47,11 @@ ARRAY_STORAGE = re.compile(r"@@([3-9])Q")
 #: spelled `?$S<n>@?<scope>??<fn>@4EA$S<n>`). A name that is NOTHING BUT `$S<n>`
 #: is not this: that is the rva-keyed spelling `discriminate` produces.
 STATIC_ORDINAL = re.compile(r"(?<=.)\$S[0-9]+(?=@|$)")
+#: VC6's bare i386-prefixed static initializer records. Actual class-3/type-0
+#: .CRT$XCU symbols _$S<n> identify distinct pointer slots, each relocating to
+#: its own _$E<n> initializer. The prefix '_' is not a source datum's owner
+#: name, so applying the VC5 named-static suffix rule would merge those slots.
+VC6_INITIALIZER_RECORD = re.compile(r"_\$S[0-9]+\Z")
 #: cl's lexical-scope number in a function-local static's mangled name. MSVC
 #: spells 1..10 as the digits `0`..`9` and larger values in hex as `A..P@`.
 LOCAL_STATIC_SCOPE = re.compile(r"@\?(?:[0-9]|[A-P]+@)\?\?")
@@ -91,6 +96,8 @@ def local_source_name(name: str) -> str:
 
 def mask(name: str) -> str:
     """`name` with every volatile cl ordinal reduced to its canonical form."""
+    if VC6_INITIALIZER_RECORD.fullmatch(name):
+        return name
     return LOCAL_STATIC_SCOPE.sub(
         CANONICAL_SCOPE, STATIC_ORDINAL.sub("$S", anonymous_namespaces(local_source_name(name))))
 

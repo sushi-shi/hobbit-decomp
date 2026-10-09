@@ -24,11 +24,12 @@ enum disasm_args
     DA_NULL,
     DA_OFFSET,
     DA_COUNT,
-    DA_METHODREF,
-    DA_CLASSREF,
+    DA_METHODREF = 9,
+    DA_CLASSREF = 4,
     DA_FIELDREF,
     DA_CONST_INT,
     DA_CONST_FLT,
+    DA_CONST_STR,
 };
 
 disasm_data DisasmData[] =
@@ -57,6 +58,8 @@ disasm_data DisasmData[] =
     { vm_fcmp_le,       "fcmp_le",          0               },  // compare less or equal float          1 byte
     { vm_fcmp_lt,       "fcmp_lt",          0               },  // compare less than float              1 byte
     { vm_fcmp_ne,       "fcmp_ne",          0               },  // compare not equal float              1 byte
+    { vm_scmp_eq, "scmp_eq", 0 },
+    { vm_scmp_ne, "scmp_ne", 0 },
 
     { vm_idup,          "idup",             0               },  // Duplicate top stack item int         1 byte
     { vm_fdup,          "fdup",             0               },  // Duplicate top stack item float       1 byte
@@ -74,12 +77,17 @@ disasm_data DisasmData[] =
 
     { vm_iconst,        "iconst",           DA_CONST_INT    },  // Load Const Int                       3 bytes (Const index)
     { vm_fconst,        "fconst",           DA_CONST_FLT    },  // Load Const Float                     3 bytes (Const index)
+    { vm_sconst, "sconst", DA_CONST_STR },
     { vm_iload,         "iload",            0               },  // Load Int from address                1 byte
     { vm_fload,         "fload",            0               },  // Load Flt from address                1 byte
+    { vm_sload, "sload", 0 },
     { vm_cload,         "cload",            DA_CLASSREF     },  // Load Class from address              3 bytes (ClassRef index)
     { vm_istore,        "istore",           0               },  // Store Int to address                 1 byte
     { vm_fstore,        "fstore",           0               },  // Store Flt to address                 1 byte
+    { vm_sstore, "sstore", 0 },
     { vm_cstore,        "cstore",           DA_CLASSREF     },  // Store Class to address               3 bytes (ClassRef index)
+    { vm_iinc, "iinc", 0 },
+    { vm_idec, "idec", 0 },
 
     { vm_iadd,          "iadd",             0               },  // Add top 2 stack Int                  1 byte
     { vm_idiv,          "idiv",             0               },  // Div top 2 stack Int                  1 byte
@@ -87,6 +95,8 @@ disasm_data DisasmData[] =
     { vm_imul,          "imul",             0               },  // Mul top 2 stack Int                  1 byte
     { vm_ineg,          "ineg",             0               },  // Neg top stack Int                    1 byte
     { vm_isub,          "isub",             0               },  // Sub top 2 stack Int                  1 byte
+    { vm_finc, "finc", 0 },
+    { vm_fdec, "fdec", 0 },
 
     { vm_fadd,          "fadd",             0               },  // Add top 2 stack Float                1 byte
     { vm_fdiv,          "fdiv",             0               },  // Div top 2 stack Float                1 byte
@@ -157,7 +167,7 @@ xstring xsc_vm_core::Disasm( const xsc_vm_module* pModule, s32& IP )
         break;
     case DA_METHODREF:
         Operand = (((s32)pMethod[IP+0])<<8) + (((s32)pMethod[IP+1]));
-        IP += 2;
+        IP += 4; // MethodRef index followed by argument byte count
         s.AddFormat( "%d (%s.%s)", Operand, &pModule->m_pConstStr[pModule->m_pMethodRef[Operand].ClassNameOffset],
                      &pModule->m_pConstStr[pModule->m_pMethodRef[Operand].MethodNameOffset] );
         break;
@@ -180,6 +190,11 @@ xstring xsc_vm_core::Disasm( const xsc_vm_module* pModule, s32& IP )
         Operand = (((s32)pMethod[IP+0])<<8) + (((s32)pMethod[IP+1]));
         IP += 2;
         s.AddFormat( "%d (%f)", Operand, pModule->m_pConstFlt[Operand] );
+        break;
+    case DA_CONST_STR:
+        Operand = (((s32)pMethod[IP+0])<<8) + (((s32)pMethod[IP+1]));
+        IP += 2;
+        s.AddFormat( "%d (%s)", Operand, &pModule->m_pConstStr[Operand] );
         break;
     }
 

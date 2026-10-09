@@ -1,3 +1,4 @@
+#include <rva.h>
 //==============================================================================
 //
 //  xsc_vm_core.cpp
@@ -196,6 +197,7 @@ xsc_vm_fielddef* xsc_vm_core::FindField( const char* pClassName, const char* pFi
 //  RegisterNativeMethod
 //==============================================================================
 
+RVA(0x245370, 0x12c)
 void xsc_vm_core::RegisterNativeMethod( const char* pClassName,
                                         const char* pMethodName,
                                         const char* pSignature,
@@ -229,14 +231,15 @@ void xsc_vm_core::RegisterNativeMethod( const char* pClassName,
 //  FindNativeMethod
 //==============================================================================
 
-xsc_vm_core::nativemethod* xsc_vm_core::FindNativeMethod( const char* pClassName, const char* pMethodName )
+RVA(0x2454a0, 0x7e)
+xsc_vm_core::nativemethod* xsc_vm_core::FindNativeMethod( const char* pClassName, const char* pMethodName, const char* pSignature )
 {
     // Search list
     for( s32 i=0 ; i<m_NativeMethods.GetCount() ; i++ )
     {
         if( (x_strcmp(m_NativeMethods[i]->pClassName,  pClassName ) == 0) &&
-            (x_strcmp(m_NativeMethods[i]->pMethodName, pMethodName) == 0) ) //&&
-//            (x_strcmp(m_NativeMethods[i]->pSignature,  pSignature ) == 0) )
+            (x_strcmp(m_NativeMethods[i]->pMethodName, pMethodName) == 0) &&
+            (x_strcmp(m_NativeMethods[i]->pSignature,  pSignature ) == 0) )
             return m_NativeMethods[i];
     }
 

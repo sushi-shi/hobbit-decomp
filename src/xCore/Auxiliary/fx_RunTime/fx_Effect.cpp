@@ -35,6 +35,7 @@ void fx_effect_base::Initialize( const fx_def* pEffectDef )
 
 //==============================================================================
 
+RVA(0x2ba140, 0x128)
 const matrix4& fx_effect_base::GetL2W( void ) const
 {
     if( m_L2WDirty )
@@ -95,6 +96,7 @@ void fx_effect_base::SetScale( const vector3& Scale )
 
 //==============================================================================
 
+RVA(0x2ba2c0, 0x23)
 void fx_effect_base::SetRotation( const radian3& Rotation )
 {
     ASSERT( Rotation.IsValid() );
@@ -162,6 +164,15 @@ void fx_effect_base::GetBitmaps( s32 Index, const xbitmap*& pDiffuseMap,
 
 //==============================================================================
 
+RVA(0x2ba3a0, 0x7)
+fx_element** fx_effect_base::GetElementList( void )
+{
+    return( m_pElement );
+}
+
+//==============================================================================
+
+RVA(0x2ba3b0, 0x195)
 void fx_effect_base::Render( void )
 {
     // Render each element.
@@ -172,9 +183,6 @@ void fx_effect_base::Render( void )
 
         if( m_ColorDirty )
             pElement->BaseColor( m_Color );
-
-		if( m_Flags & FX_SINGLETON )
-			pElement->BaseL2W();
 
         if( (GetAge() >= pElementDef->TimeStart) && 
             (!pElement->IsFinished( this )) )
@@ -217,6 +225,7 @@ void fx_effect_base::Render( void )
 //  FX_EFFECT_CLONE FUNCTIONS
 //==============================================================================
 
+RVA(0x2ba550, 0xf8)
 const bbox& fx_effect_clone::GetBounds( void ) const
 {
     if( m_BBoxDirty )
@@ -268,6 +277,7 @@ void fx_effect_clone::SetSuspended( xbool Suspended )
 
 //==============================================================================
 
+RVA(0x2ba690, 0x3d)
 void fx_effect_clone::AdvanceLogic( f32 DeltaTime )
 {
     m_BBoxDirty = TRUE;
@@ -292,6 +302,7 @@ void fx_effect_clone::Restart( void )
 
 //==============================================================================
 
+RVA(0x2ba720, 0x2b)
 void fx_effect_clone::Initialize(       fx_effect_base* pMasterEffect, 
                                   const fx_def*         pEffectDef )
 {
@@ -308,6 +319,7 @@ void fx_effect_clone::Initialize(       fx_effect_base* pMasterEffect,
 //  FX_EFFECT FUNCTIONS
 //==============================================================================
 
+RVA(0x2ba750, 0x1e0)
 const bbox& fx_effect::GetBounds( void ) const
 {
     if( m_BBoxDirty )
@@ -379,6 +391,7 @@ void fx_effect::SetSuspended( xbool Suspended )
 
 //==============================================================================
 
+RVA(0x2ba9a0, 0x115)
 void fx_effect::Initialize( const fx_def* pEffectDef )
 {
     s32 i;
@@ -437,11 +450,6 @@ void fx_effect::Initialize( const fx_def* pEffectDef )
     m_pElement = (fx_element**)pPointer;
     pPointer  += (pEffectDef->NElements * 4);
 
-    // Need to align the pointer up to a 16 multiple offset.
-    {
-        s32 Offset = pPointer - (byte*)this;
-        pPointer   = ((byte*)this) + ALIGN_16( Offset );
-    }
     
     for( i = 0; i < pEffectDef->NElements; i++ )
     {
@@ -461,11 +469,6 @@ void fx_effect::Initialize( const fx_def* pEffectDef )
         // Advance the walking pointer.
         pPointer += fx_mgr::m_ElementType[ TypeIndex ].pMemoryFn( *pEffectDef->pElementDef[i] );
 
-        // Need to align the pointer up to a 16 multiple offset.
-        {
-            s32 Offset = pPointer - (byte*)this;
-            pPointer   = ((byte*)this) + ALIGN_16( Offset );
-        }
     }
 }
 
@@ -496,6 +499,7 @@ void fx_effect::Restart( void )
 
 //==============================================================================
 
+RVA(0x2baba0, 0xf3)
 void fx_effect::AdvanceLogic( f32 DeltaTime )
 {
     s32 i;
@@ -554,6 +558,7 @@ void fx_effect::AdvanceLogic( f32 DeltaTime )
 #undef new
 //==============================================================================
 
+RVA(0x2baca0, 0x37)
 void fx_effect::ForceConstruct( void* pAddress )
 {
     new( pAddress ) fx_effect;
@@ -561,6 +566,7 @@ void fx_effect::ForceConstruct( void* pAddress )
 
 //==============================================================================
 
+RVA(0x2bace0, 0x37)
 void fx_effect_clone::ForceConstruct( void* pAddress )
 {
     new( pAddress ) fx_effect_clone;

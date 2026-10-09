@@ -442,7 +442,6 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                 inputs=[graph.BINDINGS, RETAIL_EXE],
                 implicit=[*base_objs, RELOC_REFERENTS, "config/retail/targets.json",
                           "config/retail/absolute_relocations.tsv",
-                          "config/retail/absolute_reference_evidence.tsv",
                           *DELINK_MODS, graph.TOOLCHAIN_ID],
                 implicit_outputs=[DATA_MANIFEST])
         w.newline()

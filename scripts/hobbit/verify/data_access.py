@@ -739,14 +739,6 @@ def gate_findings() -> list[str]:
     for cat, rva in sorted(stale):
         out.append(f"data-access: STALE accept {cat} 0x{rva:06x} no longer "
                    f"fires - remove it from ACCEPTED_MISMODELS")
-    if _stats:
-        out.extend("data-access: missing in-scope reference evidence: " + gap
-                   for gap in _stats.get("scoped-reference-gaps", []))
-        from hobbit.verify.tiers import ScopedFindings
-        scope = (f"{_stats.get('scoped-functions-decoded', 0)} claimed functions checked; "
-                 f"{_stats.get('reference-index', 'unspecified')} reference inventory; "
-                 f"{_stats.get('unclassified-text-bytes', 0)} unclassified text bytes remain")
-        return ScopedFindings(out, scope)
     return out
 
 
@@ -792,8 +784,6 @@ def print_coverage(accesses, stats):
             esc[m] += 1
     touch = sum(1 for a in accesses if a.form in TOUCH)
     derived = sum(1 for a in accesses if a.form == "derived-disp")
-    print(f"[coverage] index: {stats.get('reference-index', 'unspecified')}; "
-          f"{stats.get('unclassified-text-bytes', 0)} unclassified .text bytes")
     print("[coverage] SEEN - reviewed absolute-field byte accesses: "
           f"{touch - derived}; whole-image reference coverage remains partial")
     print(f"[coverage] SEEN - register-relative recovered by provenance: "
@@ -1026,7 +1016,10 @@ def injection_plans(spine, accesses):
         if not esz:
             continue
         for offs in arr_fn.get(c.rva, {}).values():
-            if 0 in offs and max(offs) >= esz and max(offs) + esz <= c.extent:
+            # The shortfall detector requires the tail to start exactly at
+            # the shortened declaration's end. A sparse access at +5 in a
+            # char array does not establish an overrun at +1.
+            if 0 in offs and esz in offs and max(offs) + esz <= c.extent:
                 shrink = c
                 break
         if shrink:

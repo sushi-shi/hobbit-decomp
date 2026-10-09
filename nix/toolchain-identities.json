@@ -62,5 +62,20 @@
     "sha256": "96817df1bb0cb58e5b1d0fbcc5b993a63548182add1fbff66365401203ecfb6c",
     "compiler_banner": "Microsoft (R) Optimizing Compiler Version 12.00.9044.0",
     "note": "C2 file version resource is 13.0.9044.0; its compiler banner is 12.00.9044.0. Build 9044 equals Hobbit dominant Rich Utc12_2_CPP build 0x2354. CL frontend driver remains 12.00.8804."
+  },
+  "standard_headers": {
+    "XTREE": {
+      "sha256": "d0280d2cb8c2b2d14ce60dc868da5159adf1f5844a971d623883ffba4da35354",
+      "local_path": "build/toolchain/vc6-sp5/XTREE",
+      "destination": "msvc/include/XTREE",
+      "media_path": "vc98/include/xtree",
+      "media_sha256": "10a834041223ad21181c0e87c0a90930d976498556af2e8f959a044101e6a604",
+      "previous_sha256": "84c435c350d18783d6fb86ac61fbf257417548af54133a7922f2d5cb701c71fd",
+      "donor_project": "HoMM1 Buka",
+      "donor_revision": "327da239c1811bc55a078a29e47c5f382f4e9b67",
+      "donor_implementation": "scripts/homm1/toolchain.py:extract_media_files",
+      "donor_implementation_revision": "ea77041d959fd3f449561564fa3f672114da41a7",
+      "note": "Complete SP5 service-pack header; no compiler, runtime library or unit flags changed."
+    }
   }
 }

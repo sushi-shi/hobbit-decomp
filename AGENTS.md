@@ -20,6 +20,8 @@ Generated diagnostics and assembly stay under ignored `build/`.
 Use the normal Gruntz build/claim/model/delink/compare loop. Do not add
 separate proof, review, replay or freshness gates to comparison or README
 generation. Refresh the changed source through the normal build graph.
+Ghidra is an optional one-way viewer; nothing it produces feeds matching.
+Use `bin/hobbit-shell --viewer` only for the viewer commands.
 
 ## Tooling and workflow
 

@@ -42,6 +42,7 @@ const fx_handle& fx_handle::operator = ( const fx_handle& Handle )
 
 //==============================================================================
 
+RVA(0x2b75f0, 0x4a)
 xbool fx_handle::InitInstance( const char* pName )
 {
     FXMgr.UnbindHandle( *this );
@@ -59,6 +60,7 @@ xbool fx_handle::InitInstance( const char* pName )
 
 //==============================================================================
 
+RVA(0x2b7640, 0x13)
 void fx_handle::AdvanceLogic( f32 DeltaTime )
 {
     FXMgr.AdvanceLogic( *this, DeltaTime );
@@ -73,6 +75,7 @@ void fx_handle::KillInstance( void )
 
 //==============================================================================
 
+RVA(0x2b7670, 0xc)
 void fx_handle::Render( void ) const
 {
     FXMgr.Render( *this );
@@ -80,6 +83,7 @@ void fx_handle::Render( void ) const
 
 //==============================================================================
 
+RVA(0x2b7680, 0xc)
 void fx_handle::Restart( void )
 {
     FXMgr.RestartEffect( *this );
@@ -87,6 +91,7 @@ void fx_handle::Restart( void )
 
 //==============================================================================
 
+RVA(0x2b7690, 0xc)
 xbool fx_handle::IsFinished( void ) const
 {
     return( FXMgr.IsFinished( *this ) );
@@ -98,6 +103,7 @@ xbool fx_handle::IsFinished( void ) const
 
 //==============================================================================
 
+RVA(0x2b76a0, 0x13)
 void fx_handle::SetScale( const vector3& Scale )
 {
     FXMgr.SetScale( *this, Scale );
@@ -105,6 +111,7 @@ void fx_handle::SetScale( const vector3& Scale )
 
 //==============================================================================
 
+RVA(0x2b76c0, 0x13)
 void fx_handle::SetRotation( const radian3& Rotation )
 {
     FXMgr.SetRotation( *this, Rotation );
@@ -112,6 +119,7 @@ void fx_handle::SetRotation( const radian3& Rotation )
 
 //==============================================================================
 
+RVA(0x2b76e0, 0x13)
 void fx_handle::SetTranslation( const vector3& Translation )
 {
     FXMgr.SetTranslation( *this, Translation );
@@ -135,6 +143,7 @@ void fx_handle::SetTransform( const matrix4& L2W )
 
 //==============================================================================
 
+RVA(0x2b7700, 0x13)
 void fx_handle::SetColor( const xcolor& Color )
 {
     FXMgr.SetColor( *this, Color );
@@ -149,6 +158,7 @@ xcolor fx_handle::GetColor( void )
 
 //==============================================================================
 
+RVA(0x2b7720, 0x13)
 void fx_handle::SetSuspended( xbool Suspended )
 {
     FXMgr.SetSuspended( *this, Suspended );
@@ -156,6 +166,7 @@ void fx_handle::SetSuspended( xbool Suspended )
 
 //==============================================================================
 
+RVA(0x2b7740, 0xc)
 const bbox& fx_handle::GetBounds( void ) const
 {
     return( FXMgr.GetBounds( *this ) );

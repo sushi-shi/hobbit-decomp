@@ -1,5 +1,5 @@
-// Reconstructed older UI family adaptation; PC qualification in docs/imports/ui-hobbit-family.md.
-// Original Tribes-AA 4aab7137 support/ui/ui_dlg_list.hpp; complete Area51 variant retained as reference.
+// Reconstructed older UI family adaptation.
+// Original Tribes-AA 4aab7137 support/ui/ui_dlg_list.hpp; complete Area51 variant available in external entropy-src donor.
 //==============================================================================
 //  
 //  ui_dlg_list.hpp

@@ -1,6 +1,6 @@
 // Complete PC-qualified slider callbacks/layout; surviving source revisions retained below.
 // Unknown shared virtual-query slot is not fabricated; current shared-vtable difference remains NONEXACT.
-// Original Tribes-AA 4aab7137 support/ui/ui_slider.cpp; complete Area51 variant retained as reference.
+// Original Tribes-AA 4aab7137 support/ui/ui_slider.cpp; complete Area51 variant available in external entropy-src donor.
 //=========================================================================
 //
 //  ui_slider.cpp

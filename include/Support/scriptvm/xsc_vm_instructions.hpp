@@ -37,15 +37,17 @@ enum vm_instruction
     vm_fcmp_le,                 // compare less or equal float      1 byte
     vm_fcmp_lt,                 // compare less than float          1 byte
     vm_fcmp_ne,                 // compare not equal float          1 byte
+    vm_scmp_eq,
+    vm_scmp_ne,
 
     vm_idup,                    // Duplicate top stack item int     1 byte
     vm_fdup,                    // Duplicate top stack item float   1 byte
     vm_cdup,                    // Duplicate top stack item class   3 bytes (ClassRef index)
 
-    vm_invoke,                  // Invoke instance method           3 bytes (MethodRef index)
-    vm_invokenative,            // Invoke native method             3 bytes (MethodRef index)
-    vm_invokestatic,            // Invoke static method             3 bytes (MethodRef index)
-    vm_invokevirtual,           // Invoke virtual method            3 bytes (MethodRef index)
+    vm_invoke,                  // Invoke instance method           5 bytes (MethodRef index, argument byte count)
+    vm_invokenative,            // Invoke native method             5 bytes (MethodRef index, argument byte count)
+    vm_invokestatic,            // Invoke static method             5 bytes (MethodRef index, argument byte count)
+    vm_invokevirtual,           // Invoke virtual method            5 bytes (MethodRef index, argument byte count)
 
     vm_this,                    // Load this pointer                1 byte
     vm_aaddr,                   // Load argument address            3 bytes (Argument byte index)
@@ -54,12 +56,17 @@ enum vm_instruction
 
     vm_iconst,                  // Load Int Constant                3 bytes (Const index)
     vm_fconst,                  // Load Flt Constant                3 bytes (Const index)
+    vm_sconst,
     vm_iload,                   // Load Int from address on stack   1 byte
     vm_fload,                   // Load Flt from address on stack   1 byte
+    vm_sload,
     vm_cload,                   // Load Class from address on stack 3 bytes (ClassRef index)
     vm_istore,                  // Store Int to address on stack    1 byte
     vm_fstore,                  // Store Flt to address on stack    1 byte
+    vm_sstore,
     vm_cstore,                  // Store Class to address on stack  3 bytes (ClassRef index)
+    vm_iinc,
+    vm_idec,
 
     vm_iadd,                    // Add top 2 stack Int              1 byte
     vm_idiv,                    // Div top 2 stack Int              1 byte
@@ -67,6 +74,8 @@ enum vm_instruction
     vm_imul,                    // Mul top 2 stack Int              1 byte
     vm_ineg,                    // Neg top stack Int                1 byte
     vm_isub,                    // Sub top 2 stack Int              1 byte
+    vm_finc,
+    vm_fdec,
 
     vm_fadd,                    // Add top 2 stack Int              1 byte
     vm_fdiv,                    // Div top 2 stack Int              1 byte
