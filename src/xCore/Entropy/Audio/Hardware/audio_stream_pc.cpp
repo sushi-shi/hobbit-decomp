@@ -22,6 +22,7 @@ static u8* StreamBufferAtOffset(u8* pBuffer,s32 Offset)
 }
 // Complete earlier deferred copy body; distinct from the genuine short callback.
 // Original name unknown; source grouping supported by adjacent actual PC file paths.
+RVA(0x0027a700, 0xa9)
 void pc_CopyCompletedStreamBuffer(io_request* pRequest,audio_stream* pStream,s32 WriteBufferIndex)
 {
     s32 Count=pStream->Type;

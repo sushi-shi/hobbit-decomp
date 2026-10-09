@@ -1,4 +1,5 @@
 #include <rva.h>
+#include <xCore/Entropy/e_Virtual.hpp>
 #include <xCore/Entropy/IOManager/io_device.hpp>
 #include <xCore/Entropy/IOManager/io_mgr.hpp>
 #include <xCore/x_files/x_files.hpp>
@@ -350,6 +351,7 @@ void io_fs::Kill( void )
 //==============================================================================
 
 
+RVA(0x275e20, 0x6d)
 static void io_clean_path( char* pClean, const char* pFilename )
 {
     char* pOrig = pClean;
@@ -387,6 +389,76 @@ static void io_clean_path( char* pClean, const char* pFilename )
 
 
 // Complete source-backed methods, retained donor bodies plus bounded PC API revision.
+RVA(0x275fa0, 0x208)
+xbool io_fs::UnmountFileSystem( const char* pPathName )
+{
+    xbool bSuccess = FALSE;
+    s32   i;
+    char  pCleanFilename[X_MAX_PATH];
+
+    CONTEXT( "io_fs::UnmountFileSystem" );
+
+    // Snag that bad boy!
+    m_Mutex.Enter();
+
+    // Clean the filename.
+    ASSERT( pPathName );
+    io_clean_path( pCleanFilename, pPathName );
+
+    // Search thru all the disk file systems.
+    for( i=0 ; i<m_DFS.GetCount() ; i++ )
+    {
+        // Match?
+        if( x_stricmp( m_DFS[i].PathName, pPathName ) == 0 )
+            break;
+    }
+    
+    // Find it?
+    if( i<m_DFS.GetCount() )
+    {
+        // This the current file?
+        if( i == m_CurrentDFS )
+        {
+            m_CurrentDFS      = -1;
+            m_CurrentDFSIndex = 0;
+        }
+
+        // For each opened sub-file...
+        for( s32 j=0 ; j<m_DFS[i].DeviceFiles.GetCount() ; j++ )
+        {
+            io_device_file* pFile = m_DFS[i].DeviceFiles[j];
+            ASSERT( pFile );
+
+            // Close the bad boy...
+            g_IoMgr.CloseDeviceFile( pFile );
+
+            // Look for a file reference (should not have one).
+            for( s32 k=0 ; k<MAX_FILES ; k++ )
+            {
+                ASSERT( m_Files[ k ].pDeviceFile != pFile );
+            }
+        }
+
+        // Clean it up (the following m_DFS.Delete does NOT call a destructor!)
+        m_DFS[i].DeviceFiles.Clear();
+
+        // Free the header file now.
+        vm_Free( m_DFS[i].pHeader );
+        // Now nuke it from the list.
+        m_DFS.Delete( i );
+
+        // One less file mounted...
+        s_MountedCount--;
+    }
+
+    // Release it!
+    m_Mutex.Exit();
+
+    // Tell the world.
+    return bSuccess;
+}
+
+
 RVA(0x2761b0, 0x36)
 io_open_file* io_fs::AcquireFile( void )
 {
@@ -849,6 +921,173 @@ void io_fs::Close( io_open_file* pOpenFile )
     // Let it go.
     m_Mutex.Exit();
 }
+
+DATA(0x3f871c)
+s32 g_IOFSReadBytesRequested = 0;
+DATA(0x3f8720)
+s32 g_IOFSReadBytesRead = 0;
+
+RVA(0x2768b0, 0x31c)
+s32 io_fs::Read( io_open_file* pOpenFile, byte* pBuffer, s32 Bytes )
+{
+    // Error check.
+    ASSERT( pOpenFile );
+    ASSERT( pBuffer );
+    ASSERT( Bytes >= 0 );
+
+#ifdef DEBUG_IO
+    x_DebugMsg( "FS Read: %08x, Buffer: %08x, Bytes: %d\n", pOpenFile, pBuffer, Bytes );
+#endif
+
+    // Actual earlier PC evaluates the existing DFS header flag before counters.
+    xbool IsFileSystemFile = (pOpenFile->pDeviceFile->pHeader != NULL);
+
+
+    // Setup counters
+    s32 BytesLeft    = Bytes;
+    s32 BytesRead    = 0;
+    s32 Position     = pOpenFile->Position;
+
+    g_IOFSReadBytesRequested += Bytes;
+
+        // Is this a read from the file system file?
+
+        // Make sure read does not pass end of file
+        BytesLeft = MIN( BytesLeft, pOpenFile->Length-Position );
+
+    #ifdef DEBUG_IO
+        x_DebugMsg( "   Acquiring Cache\n" );
+    #endif
+
+        // Acquire a cache. 
+        io_cache* pCache = AcquireCache( pOpenFile );
+
+    #ifdef DEBUG_IO
+        x_DebugMsg( "   Acquired!\n" );
+    #endif
+
+        // Loop until all bytes have been read
+        while( BytesLeft > 0 )
+        {
+            s32 PhysicalByte = pOpenFile->Offset + Position;
+
+            // Check if there is data in the cache, if so copy it, else fill cache.
+            if( pCache->IsCacheValid() &&
+                (PhysicalByte >= pCache->GetFirstByte()) &&
+                (PhysicalByte <= (pCache->GetFirstByte() + pCache->GetBytesCached()-1)) )
+            {
+                CONTEXT("IOFS - ReadCacheHit");
+
+                // Determine how many bytes we get from the cache
+                s32 nBytes = MIN( BytesLeft, (s32)(pCache->GetFirstByte() + pCache->GetBytesCached() - PhysicalByte) );
+
+                // Copy Data
+                x_memcpy( (void*)pBuffer, &pCache->GetBuffer()[ PhysicalByte - pCache->GetFirstByte() ], nBytes );
+
+                // Update Counters
+                BytesRead += nBytes;
+                BytesLeft -= nBytes;
+                Position  += nBytes;
+                pBuffer   += nBytes;
+            }
+            else
+            {
+                CONTEXT("IOFS - ReadCacheMiss");
+
+                s32         SectorByte;
+                s32         Offset;
+                s32         SectorSize   = 2048;
+                s32         ReadAttempts = 0;
+                xbool       Success      = FALSE;
+                io_request  Request;
+                io_request* pRequest     = &Request;
+                s32         BytesToCache;
+
+                // Calculate how many bytes to read into the cache
+                if( IsFileSystemFile )
+                {
+                    dfs_header* pHeader = (dfs_header*)pOpenFile->pDeviceFile->pHeader;
+                    SectorSize = pHeader->SectorSize;
+                }
+
+                SectorByte   = PhysicalByte - (PhysicalByte % SectorSize);
+                Offset       = SectorByte;
+                BytesToCache = MIN( pCache->GetCacheSize(), pOpenFile->pDeviceFile->Length - SectorByte );
+                g_IOFSReadBytesRead += BytesToCache;
+
+                // Allow for 10 retries...
+                while( !Success )
+                {
+                    // Only try so many times before bailing...
+                    if( ReadAttempts > m_Retries )
+                    {
+                        while( 1 )
+                            x_DelayThread( 1 );
+                        ASSERT( 0 );
+                        goto Error;
+                    }
+                    
+                    // Cache is now invalid...
+                    pCache->Invalidate();
+
+                    // Bump the read attempt.
+                    ReadAttempts++;
+
+                    // Set up the read request (use the request semaphore).
+                    pRequest->SetRequest( pOpenFile, pCache->GetBuffer(), (s32)Offset, BytesToCache, io_request::MEDIUM_PRIORITY, TRUE, 0, 0, NULL ); 
+                    
+    #ifdef DEBUG_IO
+                    x_DebugMsg( "   Requesting Read\n" );
+    #endif
+                    // Queue the read request.
+                    g_IoMgr.QueueRequest( pRequest );
+
+                    // Wait for read to finish...
+                    pRequest->AcquireSemaphore();
+
+    #ifdef DEBUG_IO
+                    x_DebugMsg( "   Request complete!\n" );
+    #endif
+
+                    // Successful?
+                    if( pRequest->GetStatus() == io_request::COMPLETED )
+                    {
+                        // All good!
+                        Success = TRUE;
+
+                        // Set cache bytes read.
+                        pCache->SetFirstByte( SectorByte );
+                        pCache->Validate( BytesToCache );
+                    }
+                    else
+                    {
+                        x_DelayThread( 1 );
+                    }
+                }
+            }
+        }
+
+    Error:
+
+        // Release the cache.
+        ReleaseCache( pCache );
+
+
+    // Set new position back into open file structure
+    pOpenFile->Position = Position;
+
+    // Return number of bytes read
+    return BytesRead;
+}
+
+// Complete earlier PC unsupported-write behavior: no cache/request side effects.
+// Full later cached-write method remains retained under the real revision selector.
+RVA(0x276bd0, 0x5)
+s32 io_fs::Write( io_open_file* pOpenFile, const byte* pBuffer, s32 Bytes )
+{
+    return 0;
+}
+
 
 #else
 #include "reference/before-cohort19-iofs-PC/io_filesystem.cpp.inc"

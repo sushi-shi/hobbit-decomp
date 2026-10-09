@@ -2126,8 +2126,9 @@ void audio_hardware::InitChannelStreamed(channel* pChannel)
 #endif
 
 #if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
-// Descriptive helper spelling, independently decoded ADPCM behavior; no PC annotation.
-// Completed-copy function ownership/declaration remains unreconstructed.
+// Reconstructed Hardware helper identity; original spelling UNKNOWN, native body NONEXACT.
+// Completed-copy body belongs to the recovered stream platform family; pointer-helper header ownership remains unproved.
+RVA(0x0027b260, 0x1c3)
 static void pc_UpdateStreamADPCM(channel* pChannel)
 {
     if(!pChannel->StreamData.StreamControl) return;
