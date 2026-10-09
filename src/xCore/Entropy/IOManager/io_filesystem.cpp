@@ -986,7 +986,7 @@ io_open_file* io_fs::Open( const char* pPathName, const char* pMode )
         ++pModeLocal;
     }
     if( !s_Initialized )
-        return NULL;
+        goto ReturnNull;
     if( bWrite )
     {
         pOpenFile = AcquireFile();
@@ -1010,6 +1010,7 @@ io_open_file* io_fs::Open( const char* pPathName, const char* pMode )
         }
         ReleaseFile( pOpenFile );
         m_Mutex.Exit();
+ReturnNull:
         return NULL;
     }
     if( s_MountedCount )

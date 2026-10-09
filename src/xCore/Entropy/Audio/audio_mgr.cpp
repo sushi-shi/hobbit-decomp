@@ -3169,6 +3169,7 @@ void audio_mgr::SetMasterVolume( f32 Volume )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25af40, 0x3d)
 void audio_mgr::SetMusicVolume( f32 Volume )
 {
     audio_package::package_link* pLink;
@@ -3219,6 +3220,7 @@ void audio_mgr::SetSFXVolume( f32 Volume )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25afc0, 0x3d)
 void audio_mgr::SetVoiceVolume( f32 Volume )
 {
     audio_package::package_link* pLink;

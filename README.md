@@ -13,21 +13,21 @@ See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
 
 <!-- match-score:start -->
 
-**Windows `Meridian.exe`: 7.79% matched (MAX)** — 1,406 / 8,552 functions exact (16.4%), weighted by size over 2,413,984 bytes of admitted reconstruction code.
+**Windows `Meridian.exe`: 7.76% matched (MAX)** — 1,382 / 8,552 functions exact (16.2%), weighted by size over 2,413,984 bytes of admitted reconstruction code.
 
 | Score | Functions exact | Weighted | Meaning                                        |
 | :---- | --------------: | -------: | :--------------------------------------------- |
-| CUR   |           1,403 |    7.79% | last measured score                            |
-| MAX   |           1,406 |    7.79% | best result for each function's current source |
-| HIST  |           1,408 |    7.79% | all-time peak across source revisions          |
+| CUR   |           1,378 |    7.76% | last measured score                            |
+| MAX   |           1,382 |    7.76% | best result for each function's current source |
+| HIST  |           1,384 |    7.76% | all-time peak across source revisions          |
 
 MAX by module:
 
 | Module        | Units |   Functions exact MAX | Weighted MAX |
 | :------------ | ----: | --------------------: | -----------: |
-| `xCore`       |    70 | 1,249 / 1,269 (98.4%) |        99.6% |
+| `xCore`       |    69 | 1,225 / 1,245 (98.4%) |        99.6% |
 | `Support`     |    28 |     157 / 185 (84.9%) |        90.8% |
-| `(unmatched)` |     — |      0 / 7,098 (0.0%) |         0.0% |
+| `(unmatched)` |     — |      0 / 7,122 (0.0%) |         0.0% |
 
 Unclassified `.text`: 517,259 bytes outside the scores. Other compared code: 8 spans / 204 bytes, 8 exact; excluded from the function denominator.
 

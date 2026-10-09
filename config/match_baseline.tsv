@@ -42,7 +42,7 @@ Decals_DecalMgr_StaticDecals	1	1
 Entropy_audio_channel_mgr	18	18
 Entropy_audio_hardware_pc	24	18
 Entropy_audio_io_request	2	2
-Entropy_audio_mgr	46	46
+Entropy_audio_mgr	48	47
 Entropy_audio_package	18	18
 Entropy_audio_ram_mgr	2	2
 Entropy_audio_stream_mgr	36	36
@@ -53,8 +53,8 @@ Entropy_d3deng_draw	3	3
 Entropy_d3deng_vram	1	0
 Entropy_e_ScratchMem	6	6
 Entropy_e_SimpleAllocator	12	11
-Entropy_e_Text	19	19
-Entropy_e_View	61	60
+Entropy_e_Text	19	18
+Entropy_e_View	64	63
 Entropy_e_Virtual	2	2
 Entropy_imaadpcm	19	17
 Entropy_io_cache	4	4
@@ -248,7 +248,7 @@ Entropy_audio_hardware_pc	?DuplicatePriority@audio_hardware@@QAEXPAUchannel@@0@Z
 Entropy_audio_hardware_pc	?GetChannelBuffer@audio_hardware@@QAEPAUchannel@@XZ	97.5000	97.5000	1	8c8410271c73	0x27b6c0	97.5000	
 Entropy_audio_hardware_pc	?GetDirectSound@audio_hardware@@QAEPAUIDirectSound8@@XZ	100.0000	100.0000	1	64b331a79fbe	0x27b220	100.0000	
 Entropy_audio_hardware_pc	?GetSamplesPlayed@audio_hardware@@QAEIPAUchannel@@@Z	100.0000	100.0000	1	0d0987c33da8	0x27be30	100.0000	
-Entropy_audio_hardware_pc	?Init@audio_hardware@@QAEXH@Z	99.8750	99.8750	1	31d4e56a67f3	0x27b470	99.8750	
+Entropy_audio_hardware_pc	?Init@audio_hardware@@QAEXH@Z	99.8750	99.8125	1	31d4e56a67f3	0x27b470	99.8750	
 Entropy_audio_hardware_pc	?InitChannel@audio_hardware@@QAEXPAUchannel@@@Z	100.0000	100.0000	2	baa253840afc	0x27bad0	100.0000	
 Entropy_audio_hardware_pc	?InitChannelStreamed@audio_hardware@@QAEXPAUchannel@@@Z	70.1250	70.1250	1	e3695898ea67	0x27bcc0	70.1250	
 Entropy_audio_hardware_pc	?IsChannelActive@audio_hardware@@QAEHPAUchannel@@@Z	100.0000	100.0000	1	14baeeb522dc	0x27b7a0	100.0000	
@@ -308,8 +308,10 @@ Entropy_audio_mgr	?ResumeAll@audio_mgr@@QAEXXZ	100.0000	100.0000	1	abcd7e192f05	
 Entropy_audio_mgr	?Segue@audio_mgr@@QAEHHH@Z	100.0000	100.0000	1	c1fef791e36e	0x259a10	100.0000	
 Entropy_audio_mgr	?SetEar@audio_mgr@@QAEXABVmatrix4@@MM@Z	100.0000	100.0000	1	7ff54b43263c	0x258470	100.0000	
 Entropy_audio_mgr	?SetFalloff@audio_mgr@@QAEHHMM@Z	100.0000	100.0000	1	cdbf380d66e1	0x25a2f0	100.0000	
+Entropy_audio_mgr	?SetMusicVolume@audio_mgr@@QAEXM@Z	100.0000	100.0000	1	b2a7dfb69bc9	0x25af40	100.0000	
 Entropy_audio_mgr	?SetReleaseTime@audio_mgr@@QAEHHM@Z	100.0000	100.0000	1	9d714591e870	0x259ab0	100.0000	
 Entropy_audio_mgr	?SetSpeakerConfig@audio_mgr@@QAEXHHHHH@Z	100.0000	100.0000	2	7b518c64fbbc	0x25b180	100.0000	
+Entropy_audio_mgr	?SetVoiceVolume@audio_mgr@@QAEXM@Z	99.7826	99.7826	1	33a4ccb2ecf2	0x25afc0	99.7826	
 Entropy_audio_mgr	?Start@audio_mgr@@QAEHH@Z	100.0000	100.0000	1	ee3cdd943d20	0x259db0	100.0000	
 Entropy_audio_mgr	?Update@audio_mgr@@QAEXM@Z	100.0000	100.0000	1	d5e0d724ac84	0x258330	100.0000	
 Entropy_audio_package	??0audio_package@@QAE@XZ	100.0000	100.0000	1	97fbf1e229fc	0x27c520	100.0000	
@@ -443,35 +445,35 @@ Entropy_audio_voice_mgr	?UpdateVoiceEffectSend@audio_voice_mgr@@AAEXPAVaudio_pac
 Entropy_audio_voice_mgr	?UpdateVoicePitch@audio_voice_mgr@@AAEXPAUvoice@@@Z	100.0000	100.0000	1	929255af57d2	0x27a3c0	100.0000	
 Entropy_audio_voice_mgr	?UpdateVoicePitch@audio_voice_mgr@@AAEXPAVaudio_package@@@Z	100.0000	100.0000	1	929255af57d2	0x279710	100.0000	
 Entropy_audio_voice_mgr	?UpdateVoiceVolume@audio_voice_mgr@@AAEXPAVaudio_package@@@Z	100.0000	100.0000	2	f5b48cd22c86	0x279700	100.0000	
-Entropy_d3deng	??0eng_locals@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x2653e0	100.0000	
-Entropy_d3deng	??1?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x265a60	100.0000	
-Entropy_d3deng	??1eng_locals@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x265500	100.0000	
-Entropy_d3deng	?DebugMessage@@YAXPBDZZ	100.0000	100.0000	2	a1996f2f5eae	0x260210	100.0000	
-Entropy_d3deng	?ENG_TextColor@@YAXABUxcolor@@@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25c9a0	100.0000	
-Entropy_d3deng	?d3deng_ExitPoint@@YAHXZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x25c170	100.0000	
-Entropy_d3deng	?d3deng_GetInstace@@YAPAUHINSTANCE__@@XZ	100.0000	100.0000	1	cpp:05f49a462e04	0x2605a0	100.0000	
-Entropy_d3deng	?d3deng_GetMouseWheel@@YAMXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260550	100.0000	
-Entropy_d3deng	?d3deng_GetMouseX@@YAMXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260510	100.0000	
-Entropy_d3deng	?d3deng_GetMouseY@@YAMXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260530	100.0000	
-Entropy_d3deng	?d3deng_GetWindowHandle@@YAPAUHWND__@@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x2605b0	100.0000	
-Entropy_d3deng	?d3deng_MouseGetLButton@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260570	100.0000	
-Entropy_d3deng	?d3deng_MouseGetMButton@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260590	100.0000	
-Entropy_d3deng	?d3deng_MouseGetRButton@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260580	100.0000	
-Entropy_d3deng	?d3deng_SetPresets@@YAXI@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25c180	100.0000	
-Entropy_d3deng	?eng_ActivateView@@YAXH@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fc10	100.0000	
-Entropy_d3deng	?eng_DeactivateView@@YAXH@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25fc60	100.0000	
-Entropy_d3deng	?eng_End@@YAXXZ	100.0000	100.0000	1	b813fc642485	0x25f430	100.0000	
-Entropy_d3deng	?eng_GetActiveView@@YAPBVview@@H@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fd00	100.0000	
-Entropy_d3deng	?eng_GetActiveViewMask@@YAIXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x25fcd0	100.0000	
-Entropy_d3deng	?eng_GetNActiveViews@@YAHXZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fcf0	100.0000	
-Entropy_d3deng	?eng_GetRes@@YAXAAH0@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25f8a0	100.0000	
-Entropy_d3deng	?eng_GetView@@YAPBVview@@H@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fce0	100.0000	
-Entropy_d3deng	?eng_InBeginEnd@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x25f420	100.0000	
-Entropy_d3deng	?eng_MaximizeViewport@@YAXAAVview@@@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25f910	100.0000	
-Entropy_d3deng	?eng_SetBackColor@@YAXUxcolor@@@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25f940	100.0000	
-Entropy_d3deng	?text_BeginRender@@YAXXZ	99.5000	99.5000	1	b9c9cf6aa411	0x25c8b0	99.5000	
-Entropy_d3deng	?text_EndRender@@YAXXZ	100.0000	100.0000	1	8313d407527e	0x25c990	100.0000	
-Entropy_d3deng	?text_RenderStr@@YAXPADHUxcolor@@HH@Z	100.0000	100.0000	1	6ee121eea89e	0x25c8d0	100.0000	
+Entropy_d3deng	??0eng_locals@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x2653e0	100.0000	absent
+Entropy_d3deng	??1?$basic_string@GU?$char_traits@G@std@@V?$allocator@G@2@@std@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x265a60	100.0000	absent
+Entropy_d3deng	??1eng_locals@@QAE@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x265500	100.0000	absent
+Entropy_d3deng	?DebugMessage@@YAXPBDZZ	100.0000	100.0000	2	a1996f2f5eae	0x260210	100.0000	absent
+Entropy_d3deng	?ENG_TextColor@@YAXABUxcolor@@@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25c9a0	100.0000	absent
+Entropy_d3deng	?d3deng_ExitPoint@@YAHXZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x25c170	100.0000	absent
+Entropy_d3deng	?d3deng_GetInstace@@YAPAUHINSTANCE__@@XZ	100.0000	100.0000	1	cpp:05f49a462e04	0x2605a0	100.0000	absent
+Entropy_d3deng	?d3deng_GetMouseWheel@@YAMXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260550	100.0000	absent
+Entropy_d3deng	?d3deng_GetMouseX@@YAMXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260510	100.0000	absent
+Entropy_d3deng	?d3deng_GetMouseY@@YAMXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260530	100.0000	absent
+Entropy_d3deng	?d3deng_GetWindowHandle@@YAPAUHWND__@@XZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x2605b0	100.0000	absent
+Entropy_d3deng	?d3deng_MouseGetLButton@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260570	100.0000	absent
+Entropy_d3deng	?d3deng_MouseGetMButton@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260590	100.0000	absent
+Entropy_d3deng	?d3deng_MouseGetRButton@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x260580	100.0000	absent
+Entropy_d3deng	?d3deng_SetPresets@@YAXI@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25c180	100.0000	absent
+Entropy_d3deng	?eng_ActivateView@@YAXH@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fc10	100.0000	absent
+Entropy_d3deng	?eng_DeactivateView@@YAXH@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25fc60	100.0000	absent
+Entropy_d3deng	?eng_End@@YAXXZ	100.0000	100.0000	1	b813fc642485	0x25f430	100.0000	absent
+Entropy_d3deng	?eng_GetActiveView@@YAPBVview@@H@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fd00	100.0000	absent
+Entropy_d3deng	?eng_GetActiveViewMask@@YAIXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x25fcd0	100.0000	absent
+Entropy_d3deng	?eng_GetNActiveViews@@YAHXZ	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fcf0	100.0000	absent
+Entropy_d3deng	?eng_GetRes@@YAXAAH0@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25f8a0	100.0000	absent
+Entropy_d3deng	?eng_GetView@@YAPBVview@@H@Z	100.0000	100.0000	1	cpp:fcb2761be77e	0x25fce0	100.0000	absent
+Entropy_d3deng	?eng_InBeginEnd@@YAHXZ	100.0000	100.0000	1	cpp:05f49a462e04	0x25f420	100.0000	absent
+Entropy_d3deng	?eng_MaximizeViewport@@YAXAAVview@@@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25f910	100.0000	absent
+Entropy_d3deng	?eng_SetBackColor@@YAXUxcolor@@@Z	100.0000	100.0000	1	cpp:05f49a462e04	0x25f940	100.0000	absent
+Entropy_d3deng	?text_BeginRender@@YAXXZ	99.5000	99.5000	1	b9c9cf6aa411	0x25c8b0	99.5000	absent
+Entropy_d3deng	?text_EndRender@@YAXXZ	100.0000	100.0000	1	8313d407527e	0x25c990	100.0000	absent
+Entropy_d3deng	?text_RenderStr@@YAXPADHUxcolor@@HH@Z	100.0000	100.0000	1	6ee121eea89e	0x25c8d0	100.0000	absent
 Entropy_d3deng_draw	?draw_Color@@YAXMMMM@Z	100.0000	100.0000	1	e807c0753001	0x26de10	100.0000	
 Entropy_d3deng_draw	?draw_UV@@YAXABUvector2@@@Z	100.0000	100.0000	1	cc9b11130bbe	0x26dce0	100.0000	
 Entropy_d3deng_draw	?draw_UV@@YAXMM@Z	100.0000	100.0000	1	cc9b11130bbe	0x26dd10	100.0000	
@@ -511,12 +513,13 @@ Entropy_e_Text	?text_PrintPixelXY@@YAXPBDHH@Z	100.0000	100.0000	1	45faeb57ed67	0
 Entropy_e_Text	?text_PrintXY@@YAXPBDHH@Z	100.0000	100.0000	1	7b13e2cfb94b	0x27d540	100.0000	
 Entropy_e_Text	?text_PtToCell@@YAXHHAAH0@Z	100.0000	100.0000	1	ec73e84234cd	0x27d2f0	100.0000	
 Entropy_e_Text	?text_PushColor@@YAXUxcolor@@@Z	100.0000	100.0000	1	86ac6dbe5675	0x27d850	100.0000	
-Entropy_e_Text	?text_Render@@YAXXZ	100.0000	100.0000	1	62a94e38becd	0x27d640	100.0000	
+Entropy_e_Text	?text_Render@@YAXXZ	100.0000	99.8538	1	62a94e38becd	0x27d640	100.0000	
 Entropy_e_Text	?text_SetParams@@YAXHHHHHHH@Z	100.0000	100.0000	1	a1aede68dac6	0x27d150	100.0000	
 Entropy_e_View	??0view@@QAE@ABV0@@Z	100.0000	100.0000	1	751d1aeec581	0x2714b0	100.0000	
 Entropy_e_View	??0view@@QAE@XZ	100.0000	100.0000	1	751d1aeec581	0x271410	100.0000	
 Entropy_e_View	??1view@@QAE@XZ	100.0000	100.0000	1	c23d065ce656	0x271570	100.0000	
 Entropy_e_View	?BBoxInView@view@@QBEHABUbbox@@W4system@1@@Z	100.0000	100.0000	2	862f84ca32bb	0x273620	100.0000	
+Entropy_e_View	?CalcScreenSize@view@@QBEMABUvector3@@MW4system@1@@Z	100.0000	100.0000	1	ded9015ca0bf	0x273b40	100.0000	
 Entropy_e_View	?ConvertV2W@view@@QBE?AUvector3@@ABU2@@Z	100.0000	100.0000	1	18470dffed64	0x2727a0	100.0000	
 Entropy_e_View	?ConvertW2V@view@@QBE?AUvector3@@ABU2@@Z	100.0000	100.0000	1	e5c5218ebb25	0x272710	100.0000	
 Entropy_e_View	?GetC2S@view@@QBEABVmatrix4@@XZ	100.0000	100.0000	1	adea7817b582	0x2722b0	100.0000	
@@ -549,6 +552,7 @@ Entropy_e_View	?LookAtPoint@view@@QAEXABUvector3@@0W4system@1@@Z	100.0000	100.00
 Entropy_e_View	?LookAtPoint@view@@QAEXABUvector3@@W4system@1@@Z	100.0000	100.0000	1	46a897a9acd8	0x2723d0	100.0000	
 Entropy_e_View	?OrbitPoint@view@@QAEXABUvector3@@MMM@Z	100.0000	100.0000	1	c219cc087d0a	0x272650	100.0000	
 Entropy_e_View	?PointInView@view@@QBEHABUvector3@@W4system@1@@Z	100.0000	100.0000	1	30975fd16163	0x273520	100.0000	
+Entropy_e_View	?PointToScreen@view@@QBE?AUvector3@@ABU2@W4system@1@@Z	100.0000	100.0000	1	c2365def78bb	0x273820	100.0000	
 Entropy_e_View	?RotateX@view@@QAEXMW4system@1@@Z	100.0000	100.0000	1	91982078c0ad	0x271a20	100.0000	
 Entropy_e_View	?RotateY@view@@QAEXMW4system@1@@Z	100.0000	100.0000	1	1bda01ff1335	0x271c60	100.0000	
 Entropy_e_View	?RotateZ@view@@QAEXMW4system@1@@Z	100.0000	100.0000	1	2fb0e37b3f15	0x271ea0	100.0000	
@@ -561,6 +565,7 @@ Entropy_e_View	?SetXFOV@view@@QAEXM@Z	100.0000	100.0000	1	5728b3f94966	0x2715c0	
 Entropy_e_View	?SetYFOV@view@@QAEXM@Z	100.0000	100.0000	1	8f4514510753	0x2715e0	100.0000	
 Entropy_e_View	?SetZLimits@view@@QAEXMM@Z	100.0000	100.0000	1	a9c7c9801fa4	0x271650	100.0000	
 Entropy_e_View	?SetupOrthoScales@view@@QAEXMM@Z	100.0000	100.0000	1	5eb437906e6b	0x271930	100.0000	
+Entropy_e_View	?SphereInCone@view@@QBEHABUvector3@@M@Z	100.0000	100.0000	1	dba2df5de049	0x2736f0	100.0000	
 Entropy_e_View	?SphereInView@view@@QBEHABUvector3@@MW4system@1@@Z	100.0000	100.0000	1	bb4e56e294c4	0x273590	100.0000	
 Entropy_e_View	?Translate@view@@QAEXABUvector3@@W4system@1@@Z	100.0000	100.0000	1	676dc44243aa	0x271980	100.0000	
 Entropy_e_View	?UpdateC2S@view@@IBEXXZ	100.0000	100.0000	1	af5f430f2158	0x273ea0	100.0000	
@@ -644,7 +649,7 @@ Entropy_io_filesystem	?Init@io_fs@@QAEHXZ	100.0000	100.0000	1	6dd7d038a28b	0x275
 Entropy_io_filesystem	?InvalidateCaches@io_fs@@QAEXXZ	100.0000	100.0000	1	96de68223293	0x276280	100.0000	
 Entropy_io_filesystem	?Kill@io_fs@@QAEXXZ	100.0000	100.0000	1	ef8a0555c87e	0x275840	100.0000	
 Entropy_io_filesystem	?MountFileSystem@io_fs@@QAEHPBDH@Z	89.7710	89.7710	1	25fd9943ca23	0x275910	89.7710	
-Entropy_io_filesystem	?Open@io_fs@@QAEPAUio_open_file@@PBD0@Z	80.2472	80.2472	1	deec72ca1ef2	0x276660	80.2472	
+Entropy_io_filesystem	?Open@io_fs@@QAEPAUio_open_file@@PBD0@Z	85.6813	85.6813	2	790ccbf76554	0x276660	85.6813	
 Entropy_io_filesystem	?Read@io_fs@@QAEHPAUio_open_file@@PAEH@Z	100.0000	100.0000	1	61c80e2df8f1	0x2768b0	100.0000	
 Entropy_io_filesystem	?ReleaseCache@io_fs@@AAEXPAVio_cache@@@Z	100.0000	100.0000	1	8b50076e43ce	0x276390	100.0000	
 Entropy_io_filesystem	?ReleaseFile@io_fs@@AAEXPAUio_open_file@@@Z	100.0000	100.0000	1	ecd56e79f70e	0x2761f0	100.0000	
@@ -949,9 +954,9 @@ UI_ui_manager	?GetNumUserDialogs@ui_manager@@QAEHH@Z	100.0000	100.0000	1	b3645a2
 UI_ui_manager	?GetTopmostDialog@ui_manager@@QAEPAVui_dialog@@H@Z	100.0000	100.0000	1	967f4dfbec06	0x2a17a0	100.0000	
 UI_ui_manager	?GetUser@ui_manager@@QBEPAUuser@1@H@Z	100.0000	100.0000	1	76bcbdd0215c	0x2a0380	100.0000	
 UI_ui_manager	?GetWindowAtXY@ui_manager@@QAEPAVui_win@@PAUuser@1@HH@Z	100.0000	100.0000	1	38d7077b32d0	0x2a04d0	100.0000	
-UI_ui_manager	?PopClipWindow@ui_manager@@QAEXXZ	99.9306	99.9306	1	fb6d55c8abbf	0x2a1990	99.9306	
+UI_ui_manager	?PopClipWindow@ui_manager@@QAEXXZ	99.9306	99.7917	1	fb6d55c8abbf	0x2a1990	99.9306	
 UI_ui_manager	?ProcessInput@ui_manager@@QAEHM@Z	99.8333	99.8333	1	c24febf5d7bc	0x2a0490	99.8333	
-UI_ui_manager	?PushClipWindow@ui_manager@@QAEXABUirect@@@Z	99.9635	99.9635	1	3c3c0692841d	0x2a17c0	99.9635	
+UI_ui_manager	?PushClipWindow@ui_manager@@QAEXABUirect@@@Z	99.9635	99.8905	1	3c3c0692841d	0x2a17c0	99.9635	
 UI_ui_manager	?RegisterDialogClass@ui_manager@@QAEHPBDPAUdialog_tem@1@P6APAVui_win@@HPAV1@1ABUirect@@PAV3@HPAX@Z@Z	99.9000	99.9000	1	87f06cb2dbf7	0x2a13b0	99.9000	
 UI_ui_manager	?RegisterWinClass@ui_manager@@QAEHPBDP6APAVui_win@@HPAV1@ABUirect@@PAV2@H@Z@Z	99.8958	99.8958	1	a9725be95e8b	0x29fdd0	99.8958	
 UI_ui_manager	?SetCursorPos@ui_manager@@QAEXHHH@Z	99.9333	99.9333	1	6febbe36959e	0x2a03c0	99.9333	

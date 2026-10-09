@@ -12,7 +12,7 @@
 #include "libdbc.h"
 #include "libmc2.h"
 #include <xCore/x_files/Implementation/x_tool_private.hpp>
-#include "../../Apps/GameApp/Config.hpp"
+#include <Apps/GameApp/Config.hpp>
 
 iop_manager g_IopManager;
 

@@ -126,7 +126,7 @@
 #include <xCore/Entropy/PS2/ps2_dlist.hpp>
 #endif
 
-#include "../../Apps/GameApp/Config.hpp"
+#include <Apps/GameApp/Config.hpp>
 
 #if defined(CONFIG_IS_DEMO)
 extern xtimer g_DemoIdleTimer;

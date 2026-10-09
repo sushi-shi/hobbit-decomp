@@ -10,7 +10,7 @@
 
 #include "Support/InputMgr/InputMgr.hpp"
 #include "Support/InputMgr/Monkey.hpp"
-#include "../../Apps/GameApp/Config.hpp"
+#include <Apps/GameApp/Config.hpp>
 #include "Support/StateMgr/StateMgr.hpp"
 
 //==============================================================================

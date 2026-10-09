@@ -5,7 +5,7 @@
 //=========================================================================
 
 #include <Support/StateMgr/PlayerProfile.hpp>
-#include "../../Apps/GameApp/Config.hpp"
+#include <Apps/GameApp/Config.hpp>
 #include <Support/MemCardMgr/MemCardMgr.hpp>
 
 //=========================================================================

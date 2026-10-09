@@ -12,7 +12,7 @@
 #include <xCore/Entropy/PS2/ps2_except.hpp>
 #include <xCore/Entropy/PS2/ps2_exceptiondefs.hpp>
 #include <xCore/Entropy/PS2/iopmanager.hpp>
-#include "../../Apps/GameApp/Config.hpp"
+#include <Apps/GameApp/Config.hpp>
 
 
 #if !defined(CONFIG_RETAIL) && (!CONFIG_IS_DEMO)

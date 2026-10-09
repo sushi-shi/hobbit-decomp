@@ -137,4 +137,92 @@ xbool d3deng_DisableMultisampling(xbool Disable)
 
 #include "d3deng_platform.inc"
 
+#include <math.h>
+// Actual SDK-typed globals; descriptive original spellings UNKNOWN.
+// GetGammaRamp writes1536B at VA7f04a8; no fake class or padding.
+static D3DGAMMARAMP g_OriginalGammaRamp_UNKNOWN;
+// IDirect3D8::GetDeviceCaps writes actual D3DCAPS8 atVA7f0f10.
+static D3DCAPS8 g_DeviceCaps_UNKNOWN;
+// Actual complete PC260a10/23; standard SDK pointer contract.
+static void d3deng_RestoreGamma_UNKNOWN()
+{
+    if(g_pd3dDevice)
+        g_pd3dDevice->SetGammaRamp(1,&g_OriginalGammaRamp_UNKNOWN);
+}
+// Actual complete PC2608d0/293. Original function spelling UNKNOWN.
+// Real GammaLookup table deliberately remains undeclared: full source array
+// extent/type/owning declaration not proven by the256-byte loop alone.
+static void d3deng_SetGamma_UNKNOWN(f32 Gamma)
+{
+    if(Gamma<=0.0f) return;
+    if(Gamma==1.0f)
+    {
+        d3deng_RestoreGamma_UNKNOWN();
+        s.GammaMode=0;
+        s.Gamma=Gamma;
+        return;
+    }
+    D3DGAMMARAMP Ramp;
+    double Exponent=1.0/(double)Gamma;
+    for(s32 i=0;i<256;++i)
+    {
+        double Value=pow((double)i*(1.0/255.0),Exponent);
+        Ramp.red[i]=Ramp.green[i]=Ramp.blue[i]=(WORD)(s32)(65535.0*Value);
+        g_GammaLookup_UNKNOWN[i]=(unsigned char)(s32)(255.0*Value);
+    }
+    if(!g_CurrentPresentParameters.Windowed &&
+       (g_DeviceCaps_UNKNOWN.Caps2&D3DCAPS2_FULLSCREENGAMMA))
+    {
+        g_pd3dDevice->SetGammaRamp(0,&Ramp);
+        s.GammaMode=1;
+    }
+    else s.GammaMode=3;
+    s.Gamma=Gamma;
+}
+
+// Actual complete PC260da0/213 and260e80/158 owner bodies.
+// Descriptive UNKNOWN spellings carry no provider/address claim.
+// Unreconstructed real gamma/container/count dependencies remain undeclared;
+// no bridge prototypes or duplicate storage supplied merely to compile.
+static void d3deng_BeforeDeviceReset_UNKNOWN()
+{
+    if (s.Resetting)
+    {
+        ++g_ResetWaitCount_UNKNOWN; // Actual mutable global VA7f1424.
+        Sleep(100);
+        if ((g_ResetWaitCount_UNKNOWN & (g_ResetWaitCount_UNKNOWN-1)) == 0)
+            x_DebugMsg("Lost D3D Device (duplicate %d)\n",g_ResetWaitCount_UNKNOWN);
+        return;
+    }
+    x_DebugMsg("Lost D3D Device\n");
+    g_ResetWaitCount_UNKNOWN = 0;
+    d3deng_RestoreGamma_UNKNOWN(); // Actual complete23B callee260a10, unresolved real gammaRamp.
+    draw_Kill();
+    if (s.pFont) { s.pFont->Release(); s.pFont=0; }
+    d3deng_ReleaseDeviceResources_UNKNOWN(); // Actual265B container lifecycle262790.
+    for (s32 Index=0; Index<s.ResetRegistry.GetCount(); ++Index)
+        if (s.ResetRegistry[Index].Active && s.ResetRegistry[Index].BeforeReset)
+            s.ResetRegistry[Index].BeforeReset(s.ResetRegistry[Index].Context);
+    g_pd3dDevice->ResourceManagerDiscardBytes(0xffffffff);
+    s.Resetting=true;
+}
+static void d3deng_AfterDeviceReset_UNKNOWN()
+{
+    x_DebugMsg("Reset D3D Device\n");
+    draw_Init();
+    D3DXCreateFont(g_pd3dDevice,s.Font,&s.pFont);
+    d3deng_SetGamma_UNKNOWN(s.Gamma); // Actual complete293B callee2608d0.
+    for(s32 Index=0; Index<s.ResetRegistry.GetCount(); ++Index)
+    {
+        observed_reset_registry_element Element=s.ResetRegistry[Index];
+        if(Element.Active)
+        {
+            if(Element.OneShot) d3deng_UnregisterFontReset(Index);
+            if(Element.AfterReset) Element.AfterReset(Element.Context);
+        }
+    }
+    s.Resetting=false;
+}
+
+
 #endif

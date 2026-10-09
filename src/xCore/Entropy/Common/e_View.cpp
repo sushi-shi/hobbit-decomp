@@ -764,6 +764,7 @@ void view::OrbitPoint( const vector3& Point,
     LookAtPoint( Point );
 }
 
+RVA(0x273820, 0x109)
 vector3 view::PointToScreen( const vector3& Point,
                                    system   System ) const
 {
@@ -785,8 +786,17 @@ vector3 view::PointToScreen( const vector3& Point,
 
     
     vector3 S;
-    S.X = m_ProjectX[0] + m_ProjectX[1] * (P.X/ProjZ);
-    S.Y = m_ProjectY[0] + m_ProjectY[1] * (P.Y/ProjZ);
+    if( m_Orthographic )
+    {
+        S.X = m_ProjectX[0] + m_ProjectX[1] * P.X;
+        S.Y = m_ProjectY[0] + m_ProjectY[1] * P.Y;
+    }
+    else
+    {
+        float InvZ = 1.0f / ProjZ;
+        S.X = m_ProjectX[0] + m_ProjectX[1] * (P.X * InvZ);
+        S.Y = m_ProjectY[0] + m_ProjectY[1] * (P.Y * InvZ);
+    }
     S.Z = P.Z;
 
     return( S );
@@ -817,6 +827,7 @@ vector3 view::RayFromScreen( float    ScreenX,
 }
 
 
+RVA(0x2736f0, 0xec)
 int view::SphereInCone    ( const vector3& Center,
                                     float      Radius ) const
 {
@@ -840,7 +851,11 @@ int view::SphereInCone    ( const vector3& Center,
         return 0;
 
     
-    float ConeRadius = m_ConeSlope * ZDist;
+    float ConeRadius;
+    if( m_Orthographic )
+        ConeRadius = m_ConeRadius;
+    else
+        ConeRadius = m_ConeSlope * ZDist;
     float PerpDist2 = DeltaLen2 - (ZDist*ZDist);
 
     
@@ -886,6 +901,7 @@ int view::SphereInConeAngle   ( const vector3& Center,
 }
 
 
+RVA(0x273b40, 0x99)
 float view::CalcScreenSize  ( const vector3& Position,
                                   float      WorldRadius,
                                   system   System  ) const
@@ -918,7 +934,10 @@ float view::CalcScreenSize  ( const vector3& Position,
     
 
     
-    return ((float)m_ShotSize * WorldRadius * 2 * m_ScreenDist)/ZDist;
+    if( m_Orthographic )
+        return (2.0f / m_OrthoWidth) * (float)m_ViewportWidth * WorldRadius;
+
+    return (WorldRadius * m_ScreenDist * 2.0f) / ZDist;
 }
 
 // Genuine complete later overload, provisional source extension without PC identity.
