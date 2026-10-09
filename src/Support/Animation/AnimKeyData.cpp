@@ -243,32 +243,33 @@ inline void anim_key_stream::GrabKey(s32 iFrame, anim_key& Key) {
             Key.Scale.Set(1.0f, 1.0f, 1.0f);
         } else if (s_SF == SINGLE_VALUE) {
             const vector3p& V = ((vector3p*)(s_pData + s_SO))[0];
-            Key.Scale.Set(V.X, V.Y, V.Z);
+            Key.Scale.X = V.X;
+            Key.Scale.Y = V.Y;
+            Key.Scale.Z = V.Z;
         } else if (s_SF == PRECISION_32) {
             const vector3p& V = ((vector3p*)(s_pData + s_SO))[iFrame];
-            Key.Scale.Set(V.X, V.Y, V.Z);
+            Key.Scale.X = V.X;
+            Key.Scale.Y = V.Y;
+            Key.Scale.Z = V.Z;
         }
     }
 #endif
 
     // Decompress rotation
     {
-        if (s_RF == PRECISION_16) {
-            // I'm using temp variables to tell the compiler that pR doesn't
-            // point to Key.Rotation so it can do the math out of order.
-            u16* pR = &((u16*)(s_pData + s_RO))[iFrame << 2];
-            f32 TempX = ((f32)pR[0] * (2.0f / 65535.0f)) - 1.0f;
-            f32 TempY = ((f32)pR[1] * (2.0f / 65535.0f)) - 1.0f;
-            f32 TempZ = ((f32)pR[2] * (2.0f / 65535.0f)) - 1.0f;
-            f32 TempW = ((f32)pR[3] * (2.0f / 65535.0f)) - 1.0f;
-            Key.Rotation.X = TempX;
-            Key.Rotation.Y = TempY;
-            Key.Rotation.Z = TempZ;
-            Key.Rotation.W = TempW;
-        } else if (s_RF == CONSTANT_VALUE) {
-            Key.Rotation.Identity();
+        if (s_RF == CONSTANT_VALUE) {
+            Key.Rotation.X = 0.0f;
+            Key.Rotation.Y = 0.0f;
+            Key.Rotation.Z = 0.0f;
+            Key.Rotation.W = 1.0f;
         } else if (s_RF == SINGLE_VALUE) {
             Key.Rotation = ((quaternion*)(s_pData + s_RO))[0];
+        } else if (s_RF == PRECISION_16) {
+            u16* pR = &((u16*)(s_pData + s_RO))[iFrame << 2];
+            Key.Rotation.X = ((f32)pR[0] * (2.0f / 65535.0f)) - 1.0f;
+            Key.Rotation.Y = ((f32)pR[1] * (2.0f / 65535.0f)) - 1.0f;
+            Key.Rotation.Z = ((f32)pR[2] * (2.0f / 65535.0f)) - 1.0f;
+            Key.Rotation.W = ((f32)pR[3] * (2.0f / 65535.0f)) - 1.0f;
         } else if (s_RF == PRECISION_32) {
             Key.Rotation = ((quaternion*)(s_pData + s_RO))[iFrame];
         }
@@ -682,7 +683,13 @@ void anim_keys::GetInterpKeys(const anim_group& AnimGroup, f32 Frame, anim_key* 
     anim_key_stream* pStream = KeyBlock.AcquireStreams(AnimGroup);
 
     for (s32 i = 0; i < m_nBones; i++) {
-        pStream[i].GetInterpKey((byte*)pStream, KeyBlock.nFrames, iBlockFrame, fFrac, pKey[i]);
+        if (pStream[i].Offset & (STREAM_FLAG_MASKED << STREAM_FLG_SHIFT)) {
+            pKey[i].Scale.Set(1.0f, 1.0f, 1.0f);
+            pKey[i].Rotation.Identity();
+            pKey[i].Translation.Zero();
+        } else {
+            pStream[i].GetInterpKey((byte*)pStream, KeyBlock.nFrames, iBlockFrame, fFrac, pKey[i]);
+        }
     }
 }
 

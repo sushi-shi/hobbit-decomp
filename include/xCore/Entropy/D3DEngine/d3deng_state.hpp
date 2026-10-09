@@ -44,8 +44,8 @@ struct eng_locals {
     int Adapter;
     float Gamma;
     int GammaMode;
-    int VertexProcessingMode;
-    int SoftwareVertexProcessing;
+    int SoftwareVertexProcessing; // PC mutable toggle at+0x30.
+    int VertexProcessingMode;     // PC mode getter25bb00 reads+0x34.
     int HasStencil;
     int ClearRequested;
     bool ShowInfo;

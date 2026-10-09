@@ -1,3 +1,4 @@
+#include <rva.h>
 //==============================================================================
 //
 //  xsc_vm_exec.cpp
@@ -243,12 +244,14 @@ void xsc_vm_core::Exec_break        ( void )
     ASSERT( 0 );
 }
 
+RVA(0x246a00, 0x27)
 void xsc_vm_core::Exec_ba           ( void )
 {
     s32 Offset = Operand16();
     m_StackFrame.IP += Offset;
 }
 
+RVA(0x246a30, 0x3a)
 void xsc_vm_core::Exec_bf           ( void )
 {
     s32 Offset = Operand16();
@@ -256,6 +259,7 @@ void xsc_vm_core::Exec_bf           ( void )
         m_StackFrame.IP += Offset;
 }
 
+RVA(0x246a70, 0x3a)
 void xsc_vm_core::Exec_bt           ( void )
 {
     s32 Offset = Operand16();
@@ -263,74 +267,104 @@ void xsc_vm_core::Exec_bt           ( void )
         m_StackFrame.IP += Offset;
 }
 
+RVA(0x246ab0, 0x17)
 void xsc_vm_core::Exec_itof         ( void )
 {
     Push_f32( (f32)Pop_s32() );
 }
 
+RVA(0x246ad0, 0x24)
 void xsc_vm_core::Exec_ftoi         ( void )
 {
     Push_s32( (s32)Pop_f32() );
 }
 
+RVA(0x246b00, 0x25)
 void xsc_vm_core::Exec_icmp_eq      ( void )
 {
     Push_s32( Pop_s32() == Pop_s32() );
 }
 
+RVA(0x246b30, 0x25)
 void xsc_vm_core::Exec_icmp_ge      ( void )
 {
     Push_s32( Pop_s32() <= Pop_s32() );
 }
 
+RVA(0x246b60, 0x25)
 void xsc_vm_core::Exec_icmp_gt      ( void )
 {
     Push_s32( Pop_s32() < Pop_s32() );
 }
 
+RVA(0x246b90, 0x25)
 void xsc_vm_core::Exec_icmp_le      ( void )
 {
     Push_s32( Pop_s32() >= Pop_s32() );
 }
 
+RVA(0x246bc0, 0x25)
 void xsc_vm_core::Exec_icmp_lt      ( void )
 {
     Push_s32( Pop_s32() > Pop_s32() );
 }
 
+RVA(0x246bf0, 0x25)
 void xsc_vm_core::Exec_icmp_ne      ( void )
 {
     Push_s32( Pop_s32() != Pop_s32() );
 }
 
+RVA(0x246c20, 0x33)
 void xsc_vm_core::Exec_fcmp_eq      ( void )
 {
     Push_s32( Pop_f32() == Pop_f32() );
 }
 
+RVA(0x246c60, 0x33)
 void xsc_vm_core::Exec_fcmp_ge      ( void )
 {
     Push_s32( Pop_f32() <= Pop_f32() );
 }
 
+RVA(0x246ca0, 0x33)
 void xsc_vm_core::Exec_fcmp_gt      ( void )
 {
     Push_s32( Pop_f32() < Pop_f32() );
 }
 
+RVA(0x246ce0, 0x33)
 void xsc_vm_core::Exec_fcmp_le      ( void )
 {
     Push_s32( Pop_f32() >= Pop_f32() );
 }
 
+RVA(0x246d20, 0x33)
 void xsc_vm_core::Exec_fcmp_lt      ( void )
 {
     Push_s32( Pop_f32() > Pop_f32() );
 }
 
+RVA(0x246d60, 0x33)
 void xsc_vm_core::Exec_fcmp_ne      ( void )
 {
     Push_s32( Pop_f32() != Pop_f32() );
+}
+
+RVA(0x246da0, 0x30)
+void xsc_vm_core::Exec_scmp_eq( void )
+{
+    const char* pFirst = (const char*)Pop_s32();
+    const char* pSecond = (const char*)Pop_s32();
+    Push_s32( x_strcmp( pFirst, pSecond ) == 0 );
+}
+
+RVA(0x246dd0, 0x31)
+void xsc_vm_core::Exec_scmp_ne( void )
+{
+    const char* pFirst = (const char*)Pop_s32();
+    const char* pSecond = (const char*)Pop_s32();
+    Push_s32( x_strcmp( pFirst, pSecond ) != 0 );
 }
 
 void xsc_vm_core::Exec_idup         ( void )
@@ -430,46 +464,61 @@ void xsc_vm_core::Exec_invokevirtual( void )
     ASSERT( 0 );
 }
 
+RVA(0x246fd0, 0xf)
 void xsc_vm_core::Exec_this         ( void )
 {
     Push_s32( *(s32*)m_StackFrame.pArguments );
 }
 
+RVA(0x246fe0, 0x30)
 void xsc_vm_core::Exec_aaddr        ( void )
 {
     s32 Offset = Operand16();
     Push_s32( (s32)m_StackFrame.pArguments + Offset );
 }
 
+RVA(0x247010, 0x30)
 void xsc_vm_core::Exec_laddr        ( void )
 {
     s32 Offset = Operand16();
     Push_s32( (s32)m_StackFrame.pLocals + Offset );
 }
 
+RVA(0x247040, 0x40)
 void xsc_vm_core::Exec_faddr        ( void )
 {
     s32 FieldIndex = Operand16();
     Push_s32( Pop_s32() + m_StackFrame.pModule->m_pFieldRef[FieldIndex].pFieldDef->FieldByteOffset );
 }
 
+RVA(0x247080, 0x36)
 void xsc_vm_core::Exec_iconst       ( void )
 {
     s32 Index = Operand16();
     Push_s32( m_StackFrame.pModule->m_pConstInt[Index] );
 }
 
+RVA(0x2470c0, 0x3b)
 void xsc_vm_core::Exec_fconst       ( void )
 {
     s32 Index = Operand16();
     Push_f32( m_StackFrame.pModule->m_pConstFlt[Index] );
 }
 
+RVA(0x247100, 0x35)
+void xsc_vm_core::Exec_sconst( void )
+{
+    s32 Index = Operand16();
+    Push_s32( (s32)&m_StackFrame.pModule->m_pConstStr[Index] );
+}
+
+RVA(0x247160, 0x16)
 void xsc_vm_core::Exec_iload        ( void )
 {
     Push_s32( *((s32*)Pop_s32()) );
 }
 
+RVA(0x247140, 0x16)
 void xsc_vm_core::Exec_fload        ( void )
 {
     Push_f32( *((f32*)Pop_s32()) );
@@ -506,11 +555,25 @@ void xsc_vm_core::Exec_cstore       ( void )
 }
 
 
+RVA(0x247260, 0x10)
+void xsc_vm_core::Exec_iinc( void )
+{
+    Push_s32( Pop_s32() + 1 );
+}
+
+RVA(0x247270, 0x10)
+void xsc_vm_core::Exec_idec( void )
+{
+    Push_s32( Pop_s32() - 1 );
+}
+
+RVA(0x247280, 0x18)
 void xsc_vm_core::Exec_iadd         ( void )
 {
     Push_s32( Pop_s32() + Pop_s32() );
 }
 
+RVA(0x2472a0, 0x23)
 void xsc_vm_core::Exec_idiv         ( void )
 {
     s32 v2 = Pop_s32();
@@ -518,6 +581,7 @@ void xsc_vm_core::Exec_idiv         ( void )
     Push_s32( v1/v2 );
 }
 
+RVA(0x2472d0, 0x23)
 void xsc_vm_core::Exec_imod         ( void )
 {
     s32 v2 = Pop_s32();
@@ -525,6 +589,7 @@ void xsc_vm_core::Exec_imod         ( void )
     Push_s32( v1%v2 );
 }
 
+RVA(0x247300, 0x21)
 void xsc_vm_core::Exec_imul         ( void )
 {
     s32 v2 = Pop_s32();
@@ -532,11 +597,13 @@ void xsc_vm_core::Exec_imul         ( void )
     Push_s32( v1*v2 );
 }
 
+RVA(0x247330, 0x14)
 void xsc_vm_core::Exec_ineg         ( void )
 {
     Push_s32( -Pop_s32() );
 }
 
+RVA(0x247350, 0x18)
 void xsc_vm_core::Exec_isub         ( void )
 {
     s32 v2 = Pop_s32();
@@ -545,11 +612,25 @@ void xsc_vm_core::Exec_isub         ( void )
 }
 
 
+RVA(0x247370, 0x1d)
+void xsc_vm_core::Exec_finc( void )
+{
+    Push_f32( Pop_f32() + 1.0f );
+}
+
+RVA(0x247390, 0x1d)
+void xsc_vm_core::Exec_fdec( void )
+{
+    Push_f32( Pop_f32() - 1.0f );
+}
+
+RVA(0x2473b0, 0x23)
 void xsc_vm_core::Exec_fadd         ( void )
 {
     Push_f32( Pop_f32() + Pop_f32() );
 }
 
+RVA(0x2473e0, 0x23)
 void xsc_vm_core::Exec_fdiv         ( void )
 {
     f32 v2 = Pop_f32();
@@ -557,6 +638,7 @@ void xsc_vm_core::Exec_fdiv         ( void )
     Push_f32( v1/v2 );
 }
 
+RVA(0x247410, 0x48)
 void xsc_vm_core::Exec_fmod         ( void )
 {
     f32 v2 = Pop_f32();
@@ -564,6 +646,7 @@ void xsc_vm_core::Exec_fmod         ( void )
     Push_f32( x_fmod(v1,v2) );
 }
 
+RVA(0x247460, 0x23)
 void xsc_vm_core::Exec_fmul         ( void )
 {
     f32 v2 = Pop_f32();
@@ -571,11 +654,13 @@ void xsc_vm_core::Exec_fmul         ( void )
     Push_f32( v1*v2 );
 }
 
+RVA(0x247490, 0x19)
 void xsc_vm_core::Exec_fneg         ( void )
 {
     Push_f32( -Pop_f32() );
 }
 
+RVA(0x2474b0, 0x23)
 void xsc_vm_core::Exec_fsub         ( void )
 {
     f32 v2 = Pop_f32();
@@ -584,31 +669,37 @@ void xsc_vm_core::Exec_fsub         ( void )
 }
 
 
+RVA(0x2474e0, 0x18)
 void xsc_vm_core::Exec_bit_and      ( void )
 {
     Push_s32( Pop_s32() & Pop_s32() );
 }
 
+RVA(0x247500, 0x18)
 void xsc_vm_core::Exec_bit_or       ( void )
 {
     Push_s32( Pop_s32() | Pop_s32() );
 }
 
+RVA(0x247520, 0x34)
 void xsc_vm_core::Exec_log_and      ( void )
 {
     Push_s32( Pop_s32() && Pop_s32() );
 }
 
+RVA(0x247560, 0x34)
 void xsc_vm_core::Exec_log_or       ( void )
 {
     Push_s32( Pop_s32() || Pop_s32() );
 }
 
+RVA(0x2475a0, 0x1b)
 void xsc_vm_core::Exec_not          ( void )
 {
     Push_s32( !Pop_s32() );
 }
 
+RVA(0x2475c0, 0x1c)
 void xsc_vm_core::Exec_shl          ( void )
 {
     s32 v2 = Pop_s32();
@@ -616,6 +707,7 @@ void xsc_vm_core::Exec_shl          ( void )
     Push_s32( v1<<v2 );
 }
 
+RVA(0x2475e0, 0x1c)
 void xsc_vm_core::Exec_shr          ( void )
 {
     s32 v2 = Pop_s32();
@@ -623,12 +715,14 @@ void xsc_vm_core::Exec_shr          ( void )
     Push_s32( v1>>v2 );
 }
 
+RVA(0x247600, 0x18)
 void xsc_vm_core::Exec_xor          ( void )
 {
     Push_s32( Pop_s32() ^ Pop_s32() );
 }
 
 
+RVA(0x247620, 0x27)
 void xsc_vm_core::Exec_pop          ( void )
 {
     s32 Count = Operand16();

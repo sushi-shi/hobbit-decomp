@@ -4387,7 +4387,7 @@ class ReadmeFreshnessControls(unittest.TestCase):
             path, refresh = self._refresh(Path(td))
             refresh()
             before = path.read_text()
-            anchor = "MAX by module:"
+            anchor = "## Match status"
             self.assertIn(anchor, before)
             path.write_text(before.replace(anchor, anchor + "-STALE", 1))
             self.assertTrue(refresh())
@@ -4421,7 +4421,7 @@ class ReadmeFreshnessControls(unittest.TestCase):
                 self.assertTrue(refresh())
                 self.assertFalse(refresh())
                 save.assert_not_called()
-            self.assertIn("MAX by module:", path.read_text())
+            self.assertIn("## Match status", path.read_text())
             self.assertEqual(baseline.read_bytes(), before)
 
     def test_lazy_stale_fingerprint_still_renders_the_report(self):
@@ -4444,7 +4444,7 @@ class ReadmeFreshnessControls(unittest.TestCase):
                 self.assertTrue(refresh())
                 save.assert_not_called()
             self.assertEqual(stale, {"unit"})
-            self.assertIn("MAX by module:", path.read_text())
+            self.assertIn("## Match status", path.read_text())
 
     def test_table_reports_current_source_max_and_historical_peak(self):
         from hobbit.verify import readme as rm
@@ -4456,12 +4456,12 @@ class ReadmeFreshnessControls(unittest.TestCase):
                                   mods, {"unit": "engine"})
         block = rm.render_block(mods, 2000, {"real_fn": 2, "real_code": 80,
                                            "unmatched_fn": 1}, totals)
-        self.assertIn("Windows `Meridian.exe`: 37.50% matched (MAX)", block)
+        self.assertIn("37.50% fuzzy.**", block)
         self.assertIn("0 / 2 functions exact", block)
         self.assertIn("25.00%", block)
         self.assertIn("50.00%", block)
         self.assertIn("75.0%", block)
-        self.assertNotIn("## Match status", block)
+        self.assertIn("## Match status", block)
         self.assertEqual(ledger, original)
 
     def test_report_older_than_native_object_still_renders(self):
@@ -4485,7 +4485,7 @@ class ReadmeFreshnessControls(unittest.TestCase):
                 self.assertTrue(refresh(report))
                 self.assertFalse(refresh(report))
                 save.assert_not_called()
-            self.assertIn("MAX by module:", path.read_text())
+            self.assertIn("## Match status", path.read_text())
             self.assertEqual(before, (report.read_bytes(), obj.read_bytes()))
 
     def test_readme_is_not_a_bank_input(self):

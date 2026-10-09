@@ -35,7 +35,7 @@
 //  ui_win
 //=========================================================================
 
-ui_win::ui_win( void )
+RVA(0x2a2de0, 0xa9) ui_win::ui_win( void )
 {
     m_ID    = -1;
     m_Flags = 0;
@@ -46,7 +46,7 @@ ui_win::ui_win( void )
 
 //=========================================================================
 
-ui_win::~ui_win( void )
+RVA(0x2a2eb0, 0x6f) ui_win::~ui_win( void )
 {
     Destroy();
 }

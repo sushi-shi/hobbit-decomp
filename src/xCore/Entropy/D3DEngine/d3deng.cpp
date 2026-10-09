@@ -137,6 +137,118 @@ xbool d3deng_DisableMultisampling(xbool Disable)
 
 #include "d3deng_platform.inc"
 
+#include <map>
+// PC-inferred cache contract: both vertex and index buffers enter the same
+// pointer-keyed tree. Both SDK interfaces have IDirect3DResource8 as their
+// single primary base, with no pointer adjustment. Original private names
+// and the original nominal map template arguments have not been recovered.
+// Original private getter spelling unknown; actual no-argument cdecl ABI.
+RVA(0x0025bb00, 0x6)
+s32 d3deng_GetVertexProcessingMode_UNKNOWN()
+{
+    return s.VertexProcessingMode;
+}
+
+DATA(0x003f0498)
+static std::map<IDirect3DResource8*, IDirect3DResource8*> g_BufferCopies;
+
+RVA(0x00262390, 0x141)
+IDirect3DVertexBuffer8* d3deng_GetVertexBufferCopy(IDirect3DVertexBuffer8* Buffer)
+{
+    if(d3deng_GetVertexProcessingMode_UNKNOWN() == 3) return Buffer;
+    if(!Buffer) return NULL;
+    std::map<IDirect3DResource8*, IDirect3DResource8*>::iterator Found = g_BufferCopies.find(Buffer);
+    if(Found != g_BufferCopies.end())
+        return static_cast<IDirect3DVertexBuffer8*>(Found->second);
+    g_pd3dDevice->ResourceManagerDiscardBytes(0);
+    D3DVERTEXBUFFER_DESC Desc;
+    Buffer->GetDesc(&Desc);
+    IDirect3DVertexBuffer8* Copy = NULL;
+    HRESULT Error = g_pd3dDevice->CreateVertexBuffer(Desc.Size, Desc.Usage|D3DUSAGE_WRITEONLY, Desc.FVF, D3DPOOL_DEFAULT, &Copy);
+    if(Error != D3D_OK) return NULL;
+    BYTE* Source;
+    BYTE* Destination;
+    Buffer->Lock(0,0,&Source,0);
+    Copy->Lock(0,0,&Destination,0);
+    memcpy(Destination,Source,Desc.Size);
+    Buffer->Unlock();
+    Copy->Unlock();
+    g_BufferCopies[Buffer] = Copy;
+    return Copy;
+}
+RVA(0x002624e0, 0x2f)
+HRESULT d3deng_SetStreamSource(UINT Stream, IDirect3DVertexBuffer8* Buffer, UINT Stride)
+{
+    return g_pd3dDevice->SetStreamSource(Stream,d3deng_GetVertexBufferCopy(Buffer),Stride);
+}
+RVA(0x00262510, 0x7a)
+void d3deng_ReleaseVertexBuffer(IDirect3DVertexBuffer8** Buffer)
+{
+    if(*Buffer)
+    {
+        std::map<IDirect3DResource8*, IDirect3DResource8*>::iterator Found = g_BufferCopies.find(*Buffer);
+        if(Found != g_BufferCopies.end())
+        {
+            Found->second->Release();
+            g_BufferCopies.erase(Found);
+        }
+        (*Buffer)->Release();
+        *Buffer = NULL;
+    }
+}
+RVA(0x00262590, 0x171)
+HRESULT d3deng_SetIndices(IDirect3DIndexBuffer8* Buffer, UINT BaseVertexIndex)
+{
+    // PC submission counter is the existing field at state+0x25a8.
+    ++s.RendererStat6;
+    if(d3deng_GetVertexProcessingMode_UNKNOWN() == 3)
+        return g_pd3dDevice->SetIndices(Buffer,BaseVertexIndex);
+    IDirect3DIndexBuffer8* Copy = NULL;
+    std::map<IDirect3DResource8*, IDirect3DResource8*>::iterator Found = g_BufferCopies.find(Buffer);
+    if(Found != g_BufferCopies.end())
+        Copy = static_cast<IDirect3DIndexBuffer8*>(Found->second);
+    else
+    {
+        g_pd3dDevice->ResourceManagerDiscardBytes(0);
+        D3DINDEXBUFFER_DESC Desc;
+        Buffer->GetDesc(&Desc);
+        HRESULT Error = g_pd3dDevice->CreateIndexBuffer(Desc.Size,Desc.Usage|D3DUSAGE_WRITEONLY,Desc.Format,D3DPOOL_DEFAULT,&Copy);
+        if(Error != D3D_OK) return Error;
+        BYTE* Source;
+        BYTE* Destination;
+        Buffer->Lock(0,0,&Source,0);
+        Copy->Lock(0,0,&Destination,0);
+        memcpy(Destination,Source,Desc.Size);
+        Buffer->Unlock();
+        Copy->Unlock();
+        g_BufferCopies[Buffer] = Copy;
+    }
+    g_pd3dDevice->SetIndices(Copy,BaseVertexIndex);
+    return D3D_OK;
+}
+RVA(0x00262710, 0x7a)
+void d3deng_ReleaseIndexBuffer(IDirect3DIndexBuffer8** Buffer)
+{
+    if(*Buffer)
+    {
+        std::map<IDirect3DResource8*, IDirect3DResource8*>::iterator Found = g_BufferCopies.find(*Buffer);
+        if(Found != g_BufferCopies.end())
+        {
+            Found->second->Release();
+            g_BufferCopies.erase(Found);
+        }
+        (*Buffer)->Release();
+        *Buffer = NULL;
+    }
+}
+RVA(0x00262790, 0x109)
+void d3deng_ReleaseDeviceResources_UNKNOWN()
+{
+    for(std::map<IDirect3DResource8*, IDirect3DResource8*>::iterator It=g_BufferCopies.begin();It!=g_BufferCopies.end();++It)
+        It->second->Release();
+    g_BufferCopies.clear();
+}
+
 #include <math.h>
 // Actual SDK-typed globals; descriptive original spellings UNKNOWN.
 // GetGammaRamp writes1536B at VA7f04a8; no fake class or padding.
@@ -150,8 +262,12 @@ static void d3deng_RestoreGamma_UNKNOWN()
         g_pd3dDevice->SetGammaRamp(1,&g_OriginalGammaRamp_UNKNOWN);
 }
 // Actual complete PC2608d0/293. Original function spelling UNKNOWN.
-// Real GammaLookup table deliberately remains undeclared: full source array
-// extent/type/owning declaration not proven by the256-byte loop alone.
+// PC writes exactly256 unsigned bytes; independent tree storage begins at
+// the following byte3f0428. Original private spelling is unknown.
+DATA(0x003f0328)
+static unsigned char g_GammaLookup_UNKNOWN[256];
+DATA(0x003f1424)
+static int g_ResetWaitCount_UNKNOWN;
 static void d3deng_SetGamma_UNKNOWN(f32 Gamma)
 {
     if(Gamma<=0.0f) return;
@@ -182,8 +298,8 @@ static void d3deng_SetGamma_UNKNOWN(f32 Gamma)
 
 // Actual complete PC260da0/213 and260e80/158 owner bodies.
 // Descriptive UNKNOWN spellings carry no provider/address claim.
-// Unreconstructed real gamma/container/count dependencies remain undeclared;
-// no bridge prototypes or duplicate storage supplied merely to compile.
+// Gamma lookup, wait counter and mixed-buffer cache now have complete
+// PC-supported storage and operations above.
 static void d3deng_BeforeDeviceReset_UNKNOWN()
 {
     if (s.Resetting)

@@ -2,12 +2,12 @@
 # Reprove defining source/header/profile/object and retire a row if genuine automatic pairing supersedes it.
 rva	size	name	owner	class
 0x31ceac	0x6	$SG58244	UI_ui_win	string
-0x355bd0	0x1e	$SG60641	UI_ui_manager	string
-0x355bf0	0xf	$SG60629	UI_ui_manager	string
-0x355c00	0x13	$SG60618	UI_ui_manager	string
+0x355bd0	0x1e	$SG60644	UI_ui_manager	string
+0x355bf0	0xf	$SG60632	UI_ui_manager	string
+0x355c00	0x13	$SG60621	UI_ui_manager	string
 0x355c64	0x12	$SG58694	UI_ui_dialog	string
 0x355cbc	0x11	$SG58404	UI_ui_frame	string
-0x355d08	0x13	$SG59837	UI_ui_listbox	string
+0x355d08	0x13	$SG59840	UI_ui_listbox	string
 0x355d4c	0x11	$SG62922	UI_ui_check	string
 0x355d78	0x12	$SG62970	UI_ui_slider	string
 0x355e38	0x13	$SG59689	UI_ui_textbox	string

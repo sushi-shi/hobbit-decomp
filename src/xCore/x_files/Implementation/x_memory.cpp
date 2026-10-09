@@ -220,7 +220,7 @@ int x_MemGetFree()
 }
 
 // Surviving sibling PC source explicitly returns zero for this API. The complete
-// non-PC original remains in area51-original/x_memory.cpp.inc. No Hobbit RVA
+// non-PC implementation remains in the external sibling source. No Hobbit RVA
 // or equivalence to x_MemGetAllocated is asserted by this unannotated import.
 int x_MemGetUsed()
 {

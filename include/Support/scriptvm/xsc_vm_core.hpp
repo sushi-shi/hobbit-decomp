@@ -168,6 +168,8 @@ public:
     void                Exec_fcmp_lt            ( void );
     void                Exec_fcmp_ne            ( void );
 
+    void                Exec_scmp_eq             ( void );
+    void                Exec_scmp_ne             ( void );
     void                Exec_idup               ( void );
     void                Exec_fdup               ( void );
     void                Exec_cdup               ( void );
@@ -184,6 +186,7 @@ public:
 
     void                Exec_iconst             ( void );
     void                Exec_fconst             ( void );
+    void                Exec_sconst              ( void );
     void                Exec_iload              ( void );
     void                Exec_fload              ( void );
     void                Exec_cload              ( void );
@@ -191,6 +194,8 @@ public:
     void                Exec_fstore             ( void );
     void                Exec_cstore             ( void );
 
+    void                Exec_iinc                ( void );
+    void                Exec_idec                ( void );
     void                Exec_iadd               ( void );
     void                Exec_idiv               ( void );
     void                Exec_imod               ( void );
@@ -198,6 +203,8 @@ public:
     void                Exec_ineg               ( void );
     void                Exec_isub               ( void );
 
+    void                Exec_finc                ( void );
+    void                Exec_fdec                ( void );
     void                Exec_fadd               ( void );
     void                Exec_fdiv               ( void );
     void                Exec_fmod               ( void );
@@ -234,6 +241,7 @@ private:
 //==============================================================================
 //  Data
 protected:
+    xbool                       m_Linked;                   // Aggregate module link state
     s32                         m_StackByteSize;            // Size of stack in bytes
     u8*                         m_pStackBase;               // Pointer to base of stack
     xarray<stackframe>          m_StackFrames;              // Stack frames

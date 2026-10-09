@@ -102,6 +102,8 @@ public:
 protected:
     xbool           m_ExitOnSelect;
     xbool           m_ShowBorders;
+    xbool           m_ShowFrame;
+    xbool           m_ShowScrollBar; // Reconstructed descriptive spelling; original unknown.
     s32             m_iElementFrame;
     s32             m_iElement_sb_arrowdown;
     s32             m_iElement_sb_arrowup;
@@ -117,6 +119,7 @@ protected:
     xbool           m_MouseDown;
     xbool           m_ScrollDown;
     f32             m_ScrollTime;
+    xbool           m_HighlightOuterRect; // Reconstructed descriptive spelling; original unknown.
 #endif
 
     xarray<item>    m_Items;

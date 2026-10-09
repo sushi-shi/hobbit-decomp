@@ -1408,7 +1408,7 @@ xbool auxbmp_IsPunchthruAlpha( xbitmap& Bmp )
 
 //=============================================================================
 
-// auxbmp_ConvertRGBToA8 later-source body retained in area51-original/aux_Bitmap.cpp.inc.
+// auxbmp_ConvertRGBToA8 is a later sibling API, not reconstructed here.
 
 
 //=============================================================================
@@ -1496,7 +1496,7 @@ extern "C"
 
 //=============================================================================
 
-// auxbmp_CompressRect later-source body retained in area51-original/aux_Bitmap.cpp.inc.
+// auxbmp_CompressRect is a later sibling API, not reconstructed here.
 
 
 //=============================================================================
@@ -1525,6 +1525,6 @@ static u32 BitScanReverse( u32 Mask )
 
 //=============================================================================
 
-// auxbmp_Compress later-source body retained in area51-original/aux_Bitmap.cpp.inc.
+// auxbmp_Compress is a later sibling API, not reconstructed here.
 
 #endif

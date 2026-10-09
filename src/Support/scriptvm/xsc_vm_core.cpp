@@ -22,6 +22,7 @@ xtimer g_vmTimer;
 xsc_vm_core::xsc_vm_core( void )
 {
     // Clear Data
+    m_Linked      = FALSE;
     m_pStackBase  = NULL;
     m_StackDepth  = 0;
 
@@ -133,6 +134,7 @@ xbool xsc_vm_core::Link( void )
     }
 
     // Return success code
+    m_Linked = Success;
     return Success;
 }
 
@@ -251,7 +253,7 @@ void xsc_vm_core::ExecuteMethod( xsc_vm_methoddef* pMethod, void* pThis, ... )
     if( VM_SWITCH_TIMING )
         g_vmTimer.Start();
 
-    if( pMethod )
+    if( m_Linked && pMethod )
     {
         // Create a stack frame for the method
         PushStackFrame();

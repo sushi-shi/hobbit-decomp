@@ -19,6 +19,7 @@ xsc_vm_module::xsc_vm_module( void )
 {
     // Not yet loaded
     m_Loaded = FALSE;
+    m_Linked = FALSE;
 }
 
 //==============================================================================
@@ -181,6 +182,7 @@ xbool xsc_vm_module::Load( xsc_vm_core* pVM, const char* pFileName )
     xbool   Success = FALSE;
 
     // Set VM pointer
+    m_Linked = FALSE;
     m_pVM = pVM;
 
     // Load the module as a binary
@@ -367,6 +369,7 @@ xbool xsc_vm_module::Link( void )
     }
 
     // Return success code
+    m_Linked = Success;
     return Success;
 }
 

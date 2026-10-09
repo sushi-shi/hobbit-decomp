@@ -1383,6 +1383,10 @@ def manifest_bytes(rows, refuted=None) -> bytes:
         placed = "section_ordinal" in r
         if placed:
             align = r.get("alignment", r["section"]["alignment"])
+        elif r["provenance"] == "retail-reference-private-string" and "alignment" in r:
+            align = r["alignment"]
+            if align <= 0 or align & (align - 1) or r["rva"] % align:
+                raise ValueError("invalid candidate-proven private string alignment")
         elif "proven_eh_alignment" in r:
             align = r["proven_eh_alignment"]
             if r["provenance"] != "retail-EH-funcinfo" or align <= 0 or align & (align - 1) or r["rva"] % align:

@@ -8,3 +8,5 @@ rva	size	name	kind	note
 0x2fd350	0x4	??_7linear_key_ctrl@@6B@	primary	Actual one-slot vtable; /GR-; no COL emitted. Surrounding words are separate unrelated contributions.
 0x2fd3cc	0x4	??_7smooth_key_ctrl@@6B@	primary	Actual one-slot vtable; /GR-; no COL emitted. Surrounding words are separate unrelated contributions.
 0x2fcf74	0x8c	??_7ui_dlg_list@@6B@	primary	ui_dlg_list primary vtable: 35 PC slots, 140 bytes; natural shared UI declarations emit the same slot count.
+0x2fcdc4	0x8c	??_7ui_listbox@@6B@	primary	Actual PC ui_listbox ctor and ordinary dtor write this vptr; RTTI COL2fe4b4 identifies .?AVui_listbox@@ with zero base offset; full natural source native vtable emits 35 slots, including independent RenderItem slot88. Extent excludes preceding COL.
+0x2fd29c	0x88	??_7ui_control@@6B@	primary	Actual34PCslots136B exclCOL; ctor/dtorinstallvptr, RTTICOL2fe7cc namesui_control with nonvirtualui_winbaseoffset0; genuine232Bsource NavPos16B after216Bui_win. Whole nativeownerdefinesnatural34slots.

@@ -72,6 +72,7 @@ public:
 //  Data
 protected:
     xbool                   m_Loaded;                   // TRUE when loaded
+    xbool                   m_Linked;                   // Aggregate resolved link state
     xsc_vm_core*            m_pVM;                      // Pointer to the virtual machine
 
     xstring                 m_FileName;                 // FileName of module

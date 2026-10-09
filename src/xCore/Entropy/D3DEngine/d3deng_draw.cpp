@@ -78,7 +78,11 @@ u32                         m_Flags;                                // Flags, se
 xbool                       m_Is2D;                                 // TRUE for 2D mode
 xbool                       m_IsTextured;                           // TRUE for Textured mode
 
+DATA(0x003f1590)
 matrix4                     m_L2W;                                  // L2W matrix for draw
+// Cached identity state; original private spelling is unknown.
+DATA(0x003f155c)
+xbool                       m_L2WIsIdentity;
 
 DATA(0x003f1550)
 const vector2*              m_pUVs[2];                                 // Pointer to UV array
@@ -214,6 +218,7 @@ void draw_Init( void )
 
     // Clear L2W matrix, UV, Color and Vertex
     m_L2W.Identity();
+    m_L2WIsIdentity = TRUE;
     m_UV[0] = vector2( 0.0f, 0.0f );
     m_UV[1] = vector2( 0.0f, 0.0f );
     m_Color = xcolor( 255, 255, 255, 255 );
@@ -318,7 +323,16 @@ void draw_SetMatrices( const view* pView )
         }
         else
         {
-            g_pd3dDevice->SetTransform( D3DTS_WORLD,      (D3DMATRIX*)&m_L2W );
+            if( m_L2WIsIdentity )
+            {
+                matrix4 m;
+                m.Identity();
+                g_pd3dDevice->SetTransform( D3DTS_WORLD, (D3DMATRIX*)&m );
+            }
+            else
+            {
+                g_pd3dDevice->SetTransform( D3DTS_WORLD, (D3DMATRIX*)&m_L2W );
+            }
             g_pd3dDevice->SetTransform( D3DTS_VIEW,       (D3DMATRIX*)&pView->GetW2V() );
             g_pd3dDevice->SetTransform( D3DTS_PROJECTION, (D3DMATRIX*)&pView->GetV2C() );
         }
@@ -846,14 +860,22 @@ RVA(0x0026d9a0, 0x1f) void draw_End( void )
 
 RVA(0x0026d9c0, 0x5d) void draw_SetL2W( const matrix4& L2W )
 {
+    if( !m_bEnabled )
+        return;
+
     m_L2W = L2W;
+    m_L2WIsIdentity = FALSE;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 RVA(0x0026dac0, 0xb8) void draw_ClearL2W( void )
 {
+    if( !m_bEnabled )
+        return;
+
     m_L2W.Identity();
+    m_L2WIsIdentity = TRUE;
 }
 
 ///////////////////////////////////////////////////////////////////////////

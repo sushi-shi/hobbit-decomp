@@ -41,3 +41,6 @@ rva	name	lib	confidence	source
 0x2c2750	__allmul	LIBCMT	HIGH	Complete pinned archive member/4402/52B exact zero refs; cohort21_codec_polish/runtime-proof.json
 0x2c2790	__aulldiv	LIBCMT	HIGH	Complete pinned archive member/4518/104B exact zero refs; cohort21_codec_polish/runtime-proof.json
 0x2c8050	_strchr	LIBCMT	HIGH	config/evidence/crt-strstr-verification.json; complete archive contribution and outgoing interior provider reference independently checked
+0x2c0370	__CIasin	LIBCMT	HIGH	Pinned VC6 LIBCMT sha256 28b9f04962378ec4668072f37d7fd2835cd6cacc17b40cf22002c57bd8e76714; complete 203B archive contribution linked/all typed refs exact; intrinsic20B entry alone ambiguous; actual distinct asin/acos _NAME_ payload and genuine checkTOS closure
+0x2c0520	__CIacos	LIBCMT	HIGH	Pinned VC6 LIBCMT sha256 28b9f04962378ec4668072f37d7fd2835cd6cacc17b40cf22002c57bd8e76714; complete 203B archive contribution linked/all typed refs exact; intrinsic20B entry alone ambiguous; actual distinct asin/acos _NAME_ payload and genuine checkTOS closure
+0x2c43c8	__checkTOS_withFB	LIBCMT	HIGH	Pinned VC6 LIBCMT sha256 28b9f04962378ec4668072f37d7fd2835cd6cacc17b40cf22002c57bd8e76714; complete 22B unique actual archive symbol all bytes exact/no relocations; both complete 203B qualified intrinsic contributions REL32 here

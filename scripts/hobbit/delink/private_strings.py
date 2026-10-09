@@ -15,6 +15,7 @@ _STORAGE = {'data-initialized':'data', 'rdata':'rdata'}
 
 
 def rows(model, image, base_dir):
+    from hobbit.delink.data_manifest import member_alignment
     result, withheld = [], []
     for unit, obj in coffx.objects(base_dir):
         pool = {}
@@ -34,11 +35,11 @@ def rows(model, image, base_dir):
                 if nul < 0:
                     withheld.append((0,name,'unterminated candidate private string'))
                     continue
-                pool[name] = (storage, value[:nul + 1])
+                pool[name] = (storage, value[:nul + 1], section["alignment"], offset)
         if not pool:
             continue
         addresses = referenced_addresses(model,image,unit,obj,pool, admitted_strings=True)
-        for member,(storage,payload) in sorted(pool.items()):
+        for member,(storage,payload,section_alignment,offset) in sorted(pool.items()):
             targets = addresses[member]
             if len(targets) != 1:
                 withheld.append((0,member,'private string needs one corroborated physical address'))
@@ -48,6 +49,10 @@ def rows(model, image, base_dir):
             if _STORAGE.get(start) != storage or start != end or image.pe.read(rva,len(payload)) != payload:
                 withheld.append((rva,member,'private string bytes/storage contradict candidate'))
                 continue
-            result.append(dict(name=f'$SG{rva}',member=member,object=f'{unit}.c',rva=rva,
+            # Gruntz 7d4bd55b99e32f084834d991badf7609889481f4 member_alignment.
+            # Preserve the candidate symbol's guaranteed alignment even when its
+            # ordinary section cannot be reconstructed as a complete section.
+            alignment = member_alignment(section_alignment, offset, rva)
+            result.append(dict(alignment=alignment,name=f'$SG{rva}',member=member,object=f'{unit}.c',rva=rva,
                                size=len(payload),storage=storage,provenance='retail-reference-private-string'))
     return result,withheld

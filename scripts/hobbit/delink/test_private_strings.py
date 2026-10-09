@@ -9,7 +9,7 @@ from hobbit.delink.literal_refs import referenced_addresses, _exact_instruction_
 
 class Candidate:
     section_table=[dict(index=1,name='.text',size=22,characteristics=0x20000020),
-                   dict(index=2,name='.data',size=8,characteristics=0x40)]
+                   dict(index=2,name='.data',size=8,alignment=4,characteristics=0x40)]
     def section_members(self,section):return [(0,'$SG1',3),(4,'$SG2',3)] if section==2 else []
     def section_payload(self,section):return (b'\x68\0\0\0\0\x68\0\0\0\0\xc3'*2 if section==1 else b'foo\0foo\0')
     def typed_relocations(self,section):return {1:('$SG1',6),6:('_anchor',6),12:('$SG2',6),17:('_anchor',6)}
@@ -36,6 +36,23 @@ class PrivateStringControls(unittest.TestCase):
         self.assertEqual([(r['member'],r['name'],r['rva']) for r in result],
                          [('$SG1','$SG12288',0x3000),('$SG2','$SG12292',0x3004)])
         self.assertEqual(withheld,[])
+
+    def test_shared_literal_alignment_survives_placed_and_unplaced_copies(self):
+        from hobbit.delink import data_manifest
+        result, withheld = self.run_case()
+        self.assertEqual(withheld, [])
+        original = result[0]
+        self.assertEqual(original['alignment'], 4)
+        placed = dict(original, object='other.c', section_ordinal=1,
+                      section_offset=0, section={'alignment': 4})
+        with patch.object(data_manifest, 'declared_types', return_value={}):
+            lines = data_manifest.manifest_bytes([original, placed]).decode().splitlines()[1:]
+        copies = [line.split('\t') for line in lines]
+        self.assertEqual(copies[0][5], '0x4')
+        self.assertEqual(copies[0][0:1] + copies[0][2:6],
+                         copies[1][0:1] + copies[1][2:6])
+        self.assertEqual(copies[0][6:8], ['-', '-'])
+        self.assertEqual(copies[1][6:8], ['1', '0x0'])
 
     def test_nonliteral_addend_unreviewed_field_and_wrong_bytes_are_refused(self):
         for kwargs in (dict(bad_anchor=True),dict(missing_site=True),dict(mismatch=True)):

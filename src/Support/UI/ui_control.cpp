@@ -28,14 +28,14 @@
 //  ui_control
 //=========================================================================
 
-ui_control::ui_control( void )
+RVA(0x2aa670, 0x2c) ui_control::ui_control( void )
 {
     m_NavPos.Set( 0, 0, 0, 0 );
 }
 
 //=========================================================================
 
-ui_control::~ui_control( void )
+RVA(0x2aa6c0, 0x4f) ui_control::~ui_control( void )
 {
     Destroy();
 }

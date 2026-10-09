@@ -50,14 +50,14 @@ RVA(0x246440, 0x11) static void xsc_1sqrt( u8* pArgs )
     *pRet = x_1sqrt( v );
 }
 
-static void xsc_floor( u8* pArgs )
+RVA(0x246460, 0x1c) static void xsc_floor( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_floor( v );
 }
 
-static void xsc_ceil( u8* pArgs )
+RVA(0x246480, 0x1c) static void xsc_ceil( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
@@ -92,7 +92,7 @@ RVA(0x2464e0, 0x1f) static void xsc_exp( u8* pArgs )
     *pRet = x_exp( v );
 }
 
-static void xsc_pow( u8* pArgs )
+RVA(0x246500, 0x13) static void xsc_pow( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );
@@ -100,7 +100,7 @@ static void xsc_pow( u8* pArgs )
     *pRet = x_pow( v1, v2 );
 }
 
-static void xsc_fmod( u8* pArgs )
+RVA(0x246520, 0x2a) static void xsc_fmod( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );
@@ -108,7 +108,7 @@ static void xsc_fmod( u8* pArgs )
     *pRet = x_fmod( v1, v2 );
 }
 
-static void xsc_lpr( u8* pArgs )
+RVA(0x246550, 0x3b) static void xsc_lpr( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );
@@ -116,7 +116,7 @@ static void xsc_lpr( u8* pArgs )
     *pRet = x_lpr( v1, v2 );
 }
 
-static void xsc_round( u8* pArgs )
+RVA(0x246590, 0x52) static void xsc_round( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );
@@ -124,7 +124,7 @@ static void xsc_round( u8* pArgs )
     *pRet = x_round( v1, v2 );
 }
 
-static void xsc_ldexp( u8* pArgs )
+RVA(0x2465f0, 0x20) static void xsc_ldexp( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );
@@ -132,14 +132,14 @@ static void xsc_ldexp( u8* pArgs )
     *pRet = x_ldexp( v1, v2 );
 }
 
-static void xsc_sin( u8* pArgs )
+RVA(0x246610, 0x1c) static void xsc_sin( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_sin( v );
 }
 
-static void xsc_cos( u8* pArgs )
+RVA(0x246630, 0x1c) static void xsc_cos( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
@@ -153,14 +153,14 @@ RVA(0x246650, 0xd) static void xsc_tan( u8* pArgs )
     *pRet = x_tan( v );
 }
 
-static void xsc_asin( u8* pArgs )
+RVA(0x246660, 0x10) static void xsc_asin( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_asin( v );
 }
 
-static void xsc_acos( u8* pArgs )
+RVA(0x246670, 0x10) static void xsc_acos( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
@@ -174,7 +174,7 @@ RVA(0x246680, 0xd) static void xsc_atan( u8* pArgs )
     *pRet = x_atan( v );
 }
 
-static void xsc_atan2( u8* pArgs )
+RVA(0x246690, 0x2a) static void xsc_atan2( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );
@@ -182,7 +182,7 @@ static void xsc_atan2( u8* pArgs )
     *pRet = x_atan2( v1, v2 );
 }
 
-static void xsc_sincos( u8* pArgs )
+RVA(0x2466c0, 0x1e) static void xsc_sincos( u8* pArgs )
 {
     f32  v1   = vmarg_f32( pArgs );
     f32* v2   = (f32*)vmarg_ptr( pArgs );
@@ -190,21 +190,21 @@ static void xsc_sincos( u8* pArgs )
     x_sincos( v1, *v2, *v3 );
 }
 
-static void xsc_ModAngle( u8* pArgs )
+RVA(0x2466e0, 0x7d) static void xsc_ModAngle( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_ModAngle( v );
 }
 
-static void xsc_ModAngle2( u8* pArgs )
+RVA(0x246760, 0x8d) static void xsc_ModAngle2( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_ModAngle2( v );
 }
 
-static void xsc_MinAngleDiff( u8* pArgs )
+RVA(0x2467f0, 0x8d) static void xsc_MinAngleDiff( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v1   = vmarg_f32( pArgs );

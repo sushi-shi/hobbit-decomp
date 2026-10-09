@@ -214,6 +214,7 @@ struct quaternion
         W *= scale;
     }
     quaternion(const quaternion& value) : X(value.X), Y(value.Y), Z(value.Z), W(value.W) {}
+    RVA(0x0002fda0, 0x1f)
     const quaternion& operator=(const quaternion& value) {
         X=value.X; Y=value.Y; Z=value.Z; W=value.W; return *this;
     }
