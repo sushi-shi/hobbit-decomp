@@ -62,6 +62,7 @@ ui_textbox::~ui_textbox( void )
 
 //=========================================================================
 
+RVA(0x2a6660, 0xff)
 xbool ui_textbox::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     xbool   Success;
@@ -247,6 +248,7 @@ void ui_textbox::Render( s32 ox, s32 oy )
 
 //=========================================================================
 
+RVA(0x2a6d20, 0x3e)
 void ui_textbox::SetPosition( const irect& Position )
 {
     m_Position      = Position;
@@ -490,6 +492,7 @@ void ui_textbox::OnLBDown ( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x2a7070, 0x11)
 void ui_textbox::OnLBUp ( ui_win* pWin )
 {
     (void)pWin;
@@ -551,6 +554,7 @@ void ui_textbox::OnUpdate ( ui_win* pWin, f32 DeltaTime )
 
 //=========================================================================
 
+RVA(0x2a7150, 0x13)
 void ui_textbox::OnCursorExit ( ui_win* pWin )
 {
     (void)pWin;

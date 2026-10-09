@@ -56,6 +56,7 @@ ui_frame::~ui_frame( void )
 
 //=========================================================================
 
+RVA(0x2a3750, 0x78)
 xbool ui_frame::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     xbool   Success;

@@ -60131,8 +60131,11 @@ site_rva	kind
 0x2f3c40	dir32
 0x2f3c48	dir32
 0x2f3c4c	dir32
+0x2f3c50	dir32
 0x2f3c54	dir32
 0x2f3c58	dir32
+0x2f3c5c	dir32
+0x2f3c60	dir32
 0x2f3c64	dir32
 0x2f3c68	dir32
 0x2f3c6c	dir32
@@ -61865,6 +61868,7 @@ site_rva	kind
 0x2fd004	dir32
 0x2fd008	dir32
 0x2fd00c	dir32
+0x2fd010	dir32
 0x2fd014	dir32
 0x2fd018	dir32
 0x2fd020	dir32
@@ -61873,7 +61877,9 @@ site_rva	kind
 0x2fd02c	dir32
 0x2fd030	dir32
 0x2fd034	dir32
+0x2fd048	dir32
 0x2fd060	dir32
+0x2fd064	dir32
 0x2fd070	dir32
 0x2fd090	dir32
 0x2fd094	dir32

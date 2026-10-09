@@ -253,6 +253,7 @@ void ui_slider::OnPadSelect( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x2a5e20, 0x6b)
 void ui_slider::SetRange( s32 Min, s32 Max )
 {
     ASSERT( Max >= Min );

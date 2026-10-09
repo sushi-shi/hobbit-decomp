@@ -67,6 +67,7 @@ void occluder_mgr::GatherOccluders(void) {
 
 //=========================================================================
 
+RVA(0x1a7e00, 0x3a)
 void occluder_mgr::Clear(void) {
     m_bDirtyOccluders = FALSE;
     m_nOccluders = 0;
@@ -451,6 +452,7 @@ void occluder_mgr::SetView(const view& View) {
 
 //=========================================================================
 
+RVA(0x1a8f30, 0x69)
 xbool occluder_mgr::IsBBoxCompletelyInsidePlanes(const occluder& O, const bbox& BBox) {
     s32 j;
 
