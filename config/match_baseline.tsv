@@ -52,9 +52,9 @@ Entropy_audio_stream_mgr	36	36
 Entropy_audio_stream_pc	3	1
 Entropy_audio_voice_mgr	72	72
 Entropy_d3deng	29	28
-Entropy_d3deng_draw	5	5
+Entropy_d3deng_draw	17	5
 Entropy_d3deng_vram	1	0
-Entropy_e_Draw	12	0
+Entropy_e_Draw	12	6
 Entropy_e_ScratchMem	6	6
 Entropy_e_SimpleAllocator	12	11
 Entropy_e_Text	18	17
@@ -522,22 +522,34 @@ Entropy_d3deng	?text_BeginRender@@YAXXZ	99.5000	99.5000	1	b9c9cf6aa411	0x25c8b0	
 Entropy_d3deng	?text_EndRender@@YAXXZ	100.0000	100.0000	1	8313d407527e	0x25c990	100.0000	absent
 Entropy_d3deng	?text_RenderStr@@YAXPADHUxcolor@@HH@Z	100.0000	100.0000	1	6ee121eea89e	0x25c8d0	100.0000	absent
 Entropy_d3deng_draw	??0xcolor@@QAE@ABU0@@Z	100.0000	100.0000	1	cpp:83ae8a9353ec	0x25250	100.0000	
+Entropy_d3deng_draw	?draw_Begin@@YAXW4draw_primitive@@I@Z	41.6848	41.6848	1	23017bedfba0	0x26c3a0	41.6848	
+Entropy_d3deng_draw	?draw_ClearL2W@@YAXXZ	74.4286	74.4286	1	340e44140c4f	0x26dac0	74.4286	
 Entropy_d3deng_draw	?draw_Color@@YAXMMMM@Z	100.0000	100.0000	2	b951ff6a2411	0x26de10	100.0000	
 Entropy_d3deng_draw	?draw_Color@@YAXUxcolor@@@Z	100.0000	100.0000	1	b951ff6a2411	0x26ddd0	100.0000	
+Entropy_d3deng_draw	?draw_Colors@@YAXPBUxcolor@@HH@Z	63.0000	63.0000	1	b245bbda25c1	0x26e150	63.0000	
+Entropy_d3deng_draw	?draw_End@@YAXXZ	0.0000	0.0000	1	55204b93814f	0x26d9a0	0.0000	
+Entropy_d3deng_draw	?draw_Execute@@YAXPBFH@Z	78.1786	78.1786	1	12b3d269646c	0x26e550	78.1786	
+Entropy_d3deng_draw	?draw_Index@@YAXH@Z	35.7908	35.7908	1	71debe5c671f	0x26e1e0	35.7908	
+Entropy_d3deng_draw	?draw_SetL2W@@YAXABVmatrix4@@@Z	78.5938	78.5938	1	a9243bf126ae	0x26d9c0	78.5938	
+Entropy_d3deng_draw	?draw_SetZBias@@YAXH@Z	98.3333	98.3333	1	ad8da9340d13	0x26c120	98.3333	
 Entropy_d3deng_draw	?draw_UV@@YAXABUvector2@@@Z	100.0000	100.0000	1	cc9b11130bbe	0x26dce0	100.0000	
 Entropy_d3deng_draw	?draw_UV@@YAXMM@Z	100.0000	100.0000	1	cc9b11130bbe	0x26dd10	100.0000	
+Entropy_d3deng_draw	?draw_UVs@@YAXPBUvector2@@HH@Z	51.8000	51.8000	1	e1e343c34fb3	0x26e100	51.8000	
+Entropy_d3deng_draw	?draw_Vertex@@YAXABUvector3@@@Z	70.5067	70.5067	1	bfd8f1d48859	0x26de80	70.5067	
+Entropy_d3deng_draw	?draw_Vertex@@YAXMMM@Z	64.7297	64.7297	1	bfd8f1d48859	0x26dfc0	64.7297	
+Entropy_d3deng_draw	?draw_Verts@@YAXPBUvector3@@HH@Z	62.5000	62.5000	1	14c4c352b3cb	0x26e180	62.5000	
 Entropy_d3deng_vram	?vram_Register@@YAHABVxbitmap@@@Z	0.0000	0.0000	1	200c196550e9	0x274c70	0.0000	
-Entropy_e_Draw	?draw_Axis@@YAXM@Z	99.4805	99.4805	1	53d91fc90530	0x26ab60	99.4805	
+Entropy_e_Draw	?draw_Axis@@YAXM@Z	100.0000	100.0000	1	53d91fc90530	0x26ab60	100.0000	
 Entropy_e_Draw	?draw_BBox@@YAXABUbbox@@Uxcolor@@@Z	0.0000	0.0000	1	3129fd2f1121	0x269cf0	0.0000	
-Entropy_e_Draw	?draw_Frustum@@YAXABVview@@Uxcolor@@M@Z	61.5722	61.5722	1	bccbab1362d6	0x26a920	61.5722	
-Entropy_e_Draw	?draw_GouraudRect@@YAXABUirect@@ABUxcolor@@111H@Z	99.6864	99.6864	1	129d5a7e1766	0x26b4f0	99.6864	
-Entropy_e_Draw	?draw_Grid@@YAXABUvector3@@00Uxcolor@@H@Z	99.7407	99.7407	1	c18af233fdad	0x26ac40	99.7407	
+Entropy_e_Draw	?draw_Frustum@@YAXABVview@@Uxcolor@@M@Z	61.7389	61.7389	1	bccbab1362d6	0x26a920	61.7389	
+Entropy_e_Draw	?draw_GouraudRect@@YAXABUirect@@ABUxcolor@@111H@Z	100.0000	100.0000	1	129d5a7e1766	0x26b4f0	100.0000	
+Entropy_e_Draw	?draw_Grid@@YAXABUvector3@@00Uxcolor@@H@Z	99.9630	99.9630	1	c18af233fdad	0x26ac40	99.9630	
 Entropy_e_Draw	?draw_Label@@YAXABUvector3@@Uxcolor@@PBDZZ	95.4050	95.4050	1	a8478fd92553	0x26ae20	95.4050	
-Entropy_e_Draw	?draw_Line@@YAXABUvector3@@0Uxcolor@@I@Z	99.0476	99.0476	1	6f214e29c3ac	0x269ca0	99.0476	
-Entropy_e_Draw	?draw_NGon@@YAXPBUvector3@@HUxcolor@@H@Z	99.4156	99.4156	1	7898b4a0210b	0x26a280	99.4156	
-Entropy_e_Draw	?draw_Point@@YAXABUvector3@@Uxcolor@@@Z	99.6067	99.6067	1	3510407527d2	0x26a810	99.6067	
-Entropy_e_Draw	?draw_Rect@@YAXABUirect@@Uxcolor@@H@Z	99.5225	99.5225	1	2bc88905163f	0x26b290	99.5225	
-Entropy_e_Draw	?draw_Rect@@YAXABUrect@@Uxcolor@@H@Z	99.4099	99.4099	1	2bc88905163f	0x26b080	99.4099	
+Entropy_e_Draw	?draw_Line@@YAXABUvector3@@0Uxcolor@@I@Z	100.0000	100.0000	1	6f214e29c3ac	0x269ca0	100.0000	
+Entropy_e_Draw	?draw_NGon@@YAXPBUvector3@@HUxcolor@@H@Z	100.0000	100.0000	1	7898b4a0210b	0x26a280	100.0000	
+Entropy_e_Draw	?draw_Point@@YAXABUvector3@@Uxcolor@@@Z	99.9438	99.9438	1	3510407527d2	0x26a810	99.9438	
+Entropy_e_Draw	?draw_Rect@@YAXABUirect@@Uxcolor@@H@Z	100.0000	100.0000	1	2bc88905163f	0x26b290	100.0000	
+Entropy_e_Draw	?draw_Rect@@YAXABUrect@@Uxcolor@@H@Z	100.0000	100.0000	1	2bc88905163f	0x26b080	100.0000	
 Entropy_e_Draw	?draw_SolidBBox@@YAXABUbbox@@Uxcolor@@@Z	0.0000	0.0000	1	103d116043ed	0x269df0	0.0000	
 Entropy_e_ScratchMem	?smem_ActivateSection@@YAXXZ	100.0000	100.0000	1	cf722cd1da78	0x2712a0	100.0000	
 Entropy_e_ScratchMem	?smem_ChangeSize@@YAXH@Z	100.0000	100.0000	1	6ee9ce450759	0x2713d0	100.0000	
@@ -774,8 +786,8 @@ MiscUtils_Guid	?guid_ToString@@YA?AVxstring@@_K@Z	100.0000	100.0000	1	4399447a9f
 ObjectMgr_Collider	?AddVerts@bbox@@QAEAAU1@PBUvector3@@H@Z	100.0000	100.0000	1	cpp:2bc838a797d1	0x484a0	100.0000	
 OccluderMgr_OccluderMgr	?Clear@occluder_mgr@@AAEXXZ	82.7692	82.7692	1	61810f861266	0x1a7e00	82.7692	
 OccluderMgr_OccluderMgr	?IsBBoxCompletelyInsidePlanes@occluder_mgr@@AAEHABUoccluder@1@ABUbbox@@@Z	77.8250	77.8250	1	47a464f431cd	0x1a8f30	77.8250	
-OccluderMgr_OccluderMgr	?RenderAllOccluders@occluder_mgr@@QAEXXZ	99.5398	99.5398	1	3e5c50ff638c	0x1a8170	99.5398	
-OccluderMgr_OccluderMgr	?RenderUsableOccluders@occluder_mgr@@QAEXXZ	96.9256	96.9256	1	8b27e835ab9c	0x1a82d0	96.9256	
+OccluderMgr_OccluderMgr	?RenderAllOccluders@occluder_mgr@@QAEXXZ	99.9381	99.9381	1	3e5c50ff638c	0x1a8170	99.9381	
+OccluderMgr_OccluderMgr	?RenderUsableOccluders@occluder_mgr@@QAEXXZ	97.2975	97.2975	1	8b27e835ab9c	0x1a82d0	97.2975	
 OccluderMgr_OccluderMgr	?UseOccluders@occluder_mgr@@QAEXH@Z	99.6667	99.6667	1	f7a033cc2e29	0x1a7e40	99.6667	
 Parsing_BinIn	??0bin_in@@QAE@XZ	100.0000	100.0000	1	ef1448b68308	0x23fb10	100.0000	
 Parsing_BinIn	??1bin_in@@QAE@XZ	100.0000	100.0000	1	1e03d89169d3	0x23fb50	100.0000	

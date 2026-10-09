@@ -29,7 +29,7 @@ FORBIDDEN_SUFFIXES = frozenset("""
     .zip .7z .rar .tar .gz .bz2 .xz .iso .bin .cue .img .cab
     .png .jpg .jpeg .gif .bmp .ico .tga .dds .xbmp .psd
     .wav .mp3 .ogg .aif .aiff .flac .bik .avi .mp4 .wmv
-    .pak .wad .arc .rez .vpk
+    .pak .wad .arc .rez .vpk .asm .s .disasm .dis .lst
 """.split())
 MAGIC = (
     b"MZ", b"\x7fELF", b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08",
@@ -64,6 +64,12 @@ def path_reasons(path: str) -> set[str]:
         reasons.add("original embedded asset include")
     if PurePosixPath(path.lower()).suffix in FORBIDDEN_SUFFIXES:
         reasons.add("binary, archive, or asset extension")
+    if (PurePosixPath(path.lower()).suffix not in {".py", ".cpp", ".hpp", ".h"}
+            and re.search(r"(?:^|\.)(?:asm|disasm|disassembly)(?:\.|$)", PurePosixPath(path.lower()).name)):
+        reasons.add("assembly or disassembly dump")
+    if path.lower().startswith("docs/") or "notes" in PurePosixPath(path.lower()).name or (
+            path.lower().startswith("config/evidence/") and path.lower().endswith(".json")):
+        reasons.add("notes or proof/review/replay dossier")
     if parts and parts[0] in {"build", "orig", "target"}:
         reasons.add("local/generated evidence directory")
     return reasons

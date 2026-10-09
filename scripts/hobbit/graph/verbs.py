@@ -341,7 +341,7 @@ def print_unit_functions(units: list[str], after: dict) -> None:
 
 #: Functions whose MAX an edit lowered while their CUR held: a later
 #: fuzzy syntactic recovery pass looks for a spelling that regains the peak.
-RECOVERY_TODO = REPO / "docs/todos/syntactic-recovery.tsv"
+RECOVERY_TODO = REPO / "build/analysis/syntactic-recovery.tsv"
 
 
 def record_resets(resets: list) -> None:

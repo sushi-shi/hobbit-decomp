@@ -7,27 +7,27 @@ Tooling and source ownership follow local Gruntz and HoMM1. Xbox symbols and
 sibling Entropy source provide evidence, checked against the PC executable.
 Supply your own matching executable and game data. Original binaries, maps,
 media payloads and their download links are excluded from this repository.
-See [reference binaries](docs/reference-binaries.md) for full hashes and setup.
+Full input hashes are in `config/retail/targets.json`.
 
 ## Match status
 
 <!-- match-score:start -->
 
-**Windows `Meridian.exe`: 8.45% matched (MAX)** — 1,406 / 8,576 functions exact (16.4%), weighted by size over 2,416,321 bytes of admitted reconstruction code.
+**Windows `Meridian.exe`: 8.52% matched (MAX)** — 1,412 / 8,576 functions exact (16.5%), weighted by size over 2,416,321 bytes of admitted reconstruction code.
 
 | Score | Functions exact | Weighted | Meaning                                        |
 | :---- | --------------: | -------: | :--------------------------------------------- |
-| CUR   |           1,402 |    8.44% | last measured score                            |
-| MAX   |           1,406 |    8.45% | best result for each function's current source |
-| HIST  |           1,408 |    8.45% | all-time peak across source revisions          |
+| CUR   |           1,408 |    8.51% | last measured score                            |
+| MAX   |           1,412 |    8.52% | best result for each function's current source |
+| HIST  |           1,414 |    8.52% | all-time peak across source revisions          |
 
 MAX by module:
 
 | Module        | Units |   Functions exact MAX | Weighted MAX |
 | :------------ | ----: | --------------------: | -----------: |
-| `xCore`       |    70 | 1,226 / 1,258 (97.5%) |        99.2% |
+| `xCore`       |    70 | 1,232 / 1,270 (97.0%) |        98.2% |
 | `Support`     |    32 |     180 / 280 (64.3%) |        75.5% |
-| `(unmatched)` |     — |      0 / 7,038 (0.0%) |         0.0% |
+| `(unmatched)` |     — |      0 / 7,026 (0.0%) |         0.0% |
 
 Unclassified `.text`: 514,746 bytes outside the scores. Other compared code: 8 spans / 204 bytes, 8 exact; excluded from the function denominator.
 
@@ -35,8 +35,7 @@ Unclassified `.text`: 514,746 bytes outside the scores. Other compared code: 8 s
 <!-- match-score:end -->
 
 Scores satisfy CUR ≤ MAX ≤ HIST. Editing a function resets its MAX to its new
-CUR; HIST retains earlier peaks. See the [matching worklist](docs/matching-worklist.md)
-for source and data tasks.
+CUR; HIST retains earlier peaks.
 
 ## Branches
 
@@ -46,8 +45,7 @@ reconstructs PC no-CD v1.3 (`Meridian.exe`).
 ## Pinned executables
 
 Supply your own copies. Full hashes are pinned in
-[config/retail/targets.json](config/retail/targets.json); see
-[reference binaries](docs/reference-binaries.md) for setup.
+[config/retail/targets.json](config/retail/targets.json).
 
 - `Meridian.exe`: PC no-CD v1.3, the reconstruction target.
 - `default.xbe` and `default.map`: Xbox symbol and source-ownership references.
@@ -75,8 +73,8 @@ The matching workflow does not launch a game.
 
 ## Improve a function
 
-Choose a task from the [matching worklist](docs/matching-worklist.md), inspect
-retail assembly, edit the C++, and rebuild its unit:
+Choose an annotated function in an imported engine unit, inspect the PC bytes,
+edit the C++, and rebuild its unit:
 
 ```sh
 hobbit sema disasm 0x247b00
@@ -88,12 +86,19 @@ hobbit verify readme
 `hobbit verify bank` records CUR, MAX and HIST. `hobbit verify readme`
 regenerates the score tables from the current comparison report without changing the ledger.
 
-## Documentation
+## Matching work
 
-- [Documentation index](docs/README.md) and [matching worklist](docs/matching-worklist.md).
-- [Source mapping](docs/source-mapping.md) and [engine source imports](docs/engine-source-imports.md).
-- [Contributing](CONTRIBUTING.md), [contributor rules](AGENTS.md), and [public repository policy](docs/public-repository.md).
-- [Editor integration](editor/nvim/README.md) and [tooling inheritance](docs/tooling-inheritance.md).
+Import available genuine engine source first, then repair revision differences
+and polish matches. Start with annotated functions in Animation, UI, Draw,
+Resource Manager, Audio, I/O or collision units from `config/units.toml`.
+Unannotated bodies need independently supported PC identities. Recover real
+shared layouts and APIs; keep every relocation in the comparison.
+
+Source code, RVA/DATA annotations and config are the reconstruction record.
+Disassembly, generated claims, comparisons and diagnostics stay in ignored
+`build/`. Do not commit assembly, notes, proof packages or duplicate snapshots.
+See [AGENTS.md](AGENTS.md) for contributor instructions and
+[editor setup](editor/nvim/README.md) for integration.
 
 ## License
 

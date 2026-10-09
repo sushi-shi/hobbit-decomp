@@ -1,7 +1,7 @@
 # image-sha256: 631a05531e382556cab3544d228b72171eff089b81696269b4d89963bced5fa2
 # Initial disassembly-based structural admission. No inferred source names.
 # unknown denotes unresolved bytes, never an ordinary function or zero fill.
-# Provenance/method: scripts/hobbit/evidence/pc_census.py and config/evidence/pc-census.json.
+# Provenance/method: scripts/hobbit/evidence/pc_census.py; diagnostics remain under build/analysis/admitted-census.
 site_rva	target_rva	opcode
 0x1005	0x1a000	232
 0x10b0	0x1a030	233

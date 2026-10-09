@@ -53,7 +53,7 @@ COLLISION_REPORT = BUILD / "gen/enum_value_collisions.tsv"
 PAIR_REPORT = BUILD / "gen/enum_domain_pairs.tsv"
 NAMED_REPORT = BUILD / "gen/named_constant_coverage.tsv"
 BARE_CONSTANTS = BUILD / "gen/bare_constants.tsv"
-LEDGER = REPO / "config/reviews/enum-reuse.tsv"
+LEDGER = REPO / "build/analysis/enum-reuse.tsv"
 
 LEDGER_FIELDS = (
     "source_enum", "members", "decision", "current_enums", "member_reuse",

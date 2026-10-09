@@ -1,18 +1,25 @@
 # Hobbit decompilation
 
-Reconstruct evidence-backed C++ for The Hobbit. The target executable's bytes
+Reconstruct C++ for The Hobbit. The target executable's bytes
 decide behavior, layout, calling conventions, and matching correctness.
 
 ## Public repository
 
 Keep original executables, original maps, game media and acquisition links out
 of every commit. Inputs and generated media belong under ignored `build/`;
-retain full hashes and evidence without download locations. Run
+retain full hashes without download locations. Assembly and disassembly dumps
+are prohibited in the working tree and Git history. Run
 `python3 scripts/check_public_tree.py --staged` before committing and the
-same command without `--staged` before pushing. See
-`docs/public-repository.md` and `docs/reference-binaries.md`.
+same command without `--staged` before pushing.
 Publish verified checkpoints to GitHub periodically as requested by the user;
-keep `CONTRIBUTING.md` and `docs/matching-worklist.md` current.
+keep the README scores current.
+
+Source code, RVA/DATA annotations, and config are the reconstruction record.
+Do not publish proof/review/replay dossiers or duplicate source snapshots.
+Generated diagnostics and assembly stay under ignored `build/`.
+Use the normal Gruntz build/claim/model/delink/compare loop. Do not add
+separate proof, review, replay or freshness gates to comparison or README
+generation. Refresh the changed source through the normal build graph.
 
 ## Tooling and workflow
 
@@ -46,8 +53,7 @@ keep `CONTRIBUTING.md` and `docs/matching-worklist.md` current.
   the user clarified that their prior work processed the map.
 - Area 51 and Tribes: Aerial Assault sources under
   `/home/sheep/Projects/archive/entropy-src/` are sibling-engine references.
-  Check their layouts and behavior against Hobbit. Follow the existing local
-  reference policy in `docs/08-sibling-entropy-source.md`.
+  Check their layouts and behavior against Hobbit. Preserve original source notices.
 - The Kingjoyer SDK supplies community mapping leads. Preserve its revision,
   target-build provenance, and uncertainty; generated stubs and approximate
   layouts are not verified reconstruction claims.
@@ -58,7 +64,7 @@ keep `CONTRIBUTING.md` and `docs/matching-worklist.md` current.
   Xbox SSE versus PC x87 math. Match names using supporting structural
   evidence; do not expect instruction identity across builds.
 
-See `docs/source-mapping.md` for the donor contracts and admission rules.
+The reconstruction record lives in source annotations and machine configuration.
 
 ## Matching loop and scores
 

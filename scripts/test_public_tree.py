@@ -48,6 +48,18 @@ class PublicTreeTests(unittest.TestCase):
         self.commit()
         self.assertIn("binary or asset content", self.findings()["payload.txt"])
 
+    def test_deleted_assembly_dump_and_notes_remain_forbidden(self):
+        names = ("function.asm", "function.asm.inc", "function.disasm.txt",
+                 "src/IMPORT-NOTES.md", "config/evidence/replay.json")
+        for name in names:
+            self.write(name, b"synthetic fixture\n")
+        self.commit()
+        self.git("rm", "--", *names)
+        self.commit()
+        self.assertTrue(set(names).issubset(self.findings()))
+        self.assertEqual(guard.path_reasons("src/xsc_vm_disasm.cpp"), set())
+        self.assertEqual(guard.path_reasons("scripts/hobbit/sema/disasm.py"), set())
+
     def test_every_historical_name_is_checked_for_reused_blob(self):
         self.write("source.cpp", b"synthetic text\n")
         self.commit()

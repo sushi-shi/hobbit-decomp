@@ -48,3 +48,17 @@ __pycache__/
 .ninja_log
 .ninja_deps
 .ninja_lock
+
+# Assembly and disassembly are private generated diagnostics.
+*.[aA][sS][mM]
+*.[sS]
+*.asm.inc
+*.asm.txt
+/docs/imports/
+/config/evidence/*.json
+/docs/
+/config/reviews/
+/config/codex_wall_reviews.tsv
+**/IMPORT-NOTES.md
+/config/evidence/full-source-universe/
+/config/evidence/source-worklist/

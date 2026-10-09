@@ -123,7 +123,7 @@ s32                         m_ZBias;
 // FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_SetZBias( s32 Bias )
+RVA(0x0026c120, 0xa) void draw_SetZBias( s32 Bias )
 {
     ASSERT( (Bias>=0) && (Bias<=16) );
     m_ZBias = Bias;
@@ -666,7 +666,7 @@ void draw_DispatchSprites( void )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_Begin( draw_primitive Primitive, u32 Flags )
+RVA(0x0026c3a0, 0x55a) void draw_Begin( draw_primitive Primitive, u32 Flags )
 {
     ASSERT( m_Initialized );
     ASSERT( !m_bBegin );
@@ -800,7 +800,7 @@ void draw_Begin( draw_primitive Primitive, u32 Flags )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_End( void )
+RVA(0x0026d9a0, 0x1f) void draw_End( void )
 {
     ASSERT( m_bBegin );
 
@@ -817,14 +817,14 @@ void draw_End( void )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_SetL2W( const matrix4& L2W )
+RVA(0x0026d9c0, 0x5d) void draw_SetL2W( const matrix4& L2W )
 {
     m_L2W = L2W;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_ClearL2W( void )
+RVA(0x0026dac0, 0xb8) void draw_ClearL2W( void )
 {
     m_L2W.Identity();
 }
@@ -937,7 +937,7 @@ void draw_Color( f32 R, f32 G, f32 B, f32 A )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_Vertex( const vector3& Vertex )
+RVA(0x0026de80, 0x131) void draw_Vertex( const vector3& Vertex )
 {
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
@@ -975,7 +975,7 @@ void draw_Vertex( const vector3& Vertex )
     }
 }
 
-void draw_Vertex( f32 X, f32 Y, f32 Z )
+RVA(0x0026dfc0, 0x138) void draw_Vertex( f32 X, f32 Y, f32 Z )
 {
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
@@ -1015,7 +1015,7 @@ void draw_Vertex( f32 X, f32 Y, f32 Z )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_UVs( const vector2* pUVs, s32 Count, s32 Stride )
+RVA(0x0026e100, 0x1a) void draw_UVs( const vector2* pUVs, s32 Count, s32 Stride )
 {
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
@@ -1025,7 +1025,7 @@ void draw_UVs( const vector2* pUVs, s32 Count, s32 Stride )
     m_sUVs = Stride;
 }
 
-void draw_Colors( const xcolor*  pColors, s32 Count, s32 Stride )
+RVA(0x0026e150, 0x27) void draw_Colors( const xcolor*  pColors, s32 Count, s32 Stride )
 {
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
@@ -1035,7 +1035,7 @@ void draw_Colors( const xcolor*  pColors, s32 Count, s32 Stride )
     m_sColors = Stride;
 }
 
-void draw_Verts( const vector3* pVerts,  s32 Count, s32 Stride )
+RVA(0x0026e180, 0x27) void draw_Verts( const vector3* pVerts,  s32 Count, s32 Stride )
 {
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
@@ -1047,7 +1047,7 @@ void draw_Verts( const vector3* pVerts,  s32 Count, s32 Stride )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_Index( s32 Index )
+RVA(0x0026e1e0, 0x368) void draw_Index( s32 Index )
 {
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
@@ -1130,7 +1130,7 @@ void draw_Index( s32 Index )
 
 ///////////////////////////////////////////////////////////////////////////
 
-void draw_Execute( const s16* pIndices, s32 NIndices )
+RVA(0x0026e550, 0x47) void draw_Execute( const s16* pIndices, s32 NIndices )
 {
     s32     i;
 

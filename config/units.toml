@@ -9,17 +9,16 @@ msvc_compat = "12.00"
 cpp = ["/nologo", "/c", "/O2", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
 
 # Guid: PC packed user/process/time generator and pooled literal storage.
-# Unit-local /DX_EDITOR branch; evidence: docs/imports/cohort14-guid-pc.json.
+# Unit-local /DX_EDITOR branch.
 cpp-guid-editor = ["/nologo", "/c", "/O2", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC", "/DX_EDITOR"]
 
 cpp-unpooled = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G6", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
 
 # fx_Ctrl: all three original bodies and references match /G5; /G6 differs.
-# Evidence: config/evidence/fx-ctrl.json.
 cpp-unpooled-g5 = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G5", "/MT", "/GX", "/GR", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
 
 # Original key-controller TUs have one-slot vtables without RTTI; /G6 and /GR
-# controls differ. Evidence: config/evidence/fx-key-controllers.json.
+# controls differ.
 cpp-unpooled-g5-no-rtti = ["/nologo", "/c", "/Og", "/Oi", "/Ot", "/Oy", "/Ob1", "/Gs", "/Gy", "/G5", "/MT", "/GX", "/GR-", "/DWIN32", "/D_WINDOWS", "/DTARGET_PC"]
 
 # Provisional C provider build profile; original per-TU settings await polish.
@@ -39,7 +38,6 @@ codec-msvc-release = ["/nologo", "/c", "/Gs", "/Gy", "/G6", "/MT", "/GX", "/GR",
 unit = "Animation_AnimKeyData"
 source = "src/Support/Animation/AnimKeyData.cpp"
 # Distinct physical path literals require natural unpooled $SG storage.
-# Full code/reference controls: config/evidence/animation-keydata.json.
 flags = "cpp-unpooled"
 
 [[unit]]
@@ -269,7 +267,6 @@ flags = "cpp-unpooled"
 
 # Source-first engine imports. Each complete profile is a provisional build
 # hypothesis, not a claim of original PC compiler settings or addresses.
-# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
 
 [[unit]]
 unit = "Animation_AnimDecompress"
@@ -1163,7 +1160,6 @@ flags = "cpp-unpooled"
 
 # Source-first engine imports. Each complete profile is a provisional build
 # hypothesis, not a claim of original PC compiler settings or addresses.
-# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
 
 [[unit]]
 unit = "Loco_Loco"
@@ -1252,7 +1248,6 @@ flags = "cpp-unpooled"
 
 # Source-first engine imports. Each complete profile is a provisional build
 # hypothesis, not a claim of original PC compiler settings or addresses.
-# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
 
 [[unit]]
 unit = "DataVault_DataVault"
@@ -1306,7 +1301,6 @@ flags = "cpp-unpooled"
 
 # Source-first engine imports. Each complete profile is a provisional build
 # hypothesis, not a claim of original PC compiler settings or addresses.
-# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
 
 [[unit]]
 unit = "Locomotion_CharacterPhysics"
@@ -1345,7 +1339,6 @@ flags = "cpp-unpooled"
 
 # Source-first engine imports. Each complete profile is a provisional build
 # hypothesis, not a claim of original PC compiler settings or addresses.
-# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
 
 [[unit]]
 unit = "GameLib_RigidGeomCollision"
@@ -1424,7 +1417,6 @@ flags = "cpp-pcre-import"
 
 # Source-first engine imports. Each complete profile is a provisional build
 # hypothesis, not a claim of original PC compiler settings or addresses.
-# Membership/excluded alternatives: docs/imports/engine-unit-enrollment.json.
 
 [[unit]]
 unit = "Characters_factions"
