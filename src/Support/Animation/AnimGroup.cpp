@@ -430,7 +430,11 @@ void anim_group::GetL2W(const matrix4& L2W, f32 Frame, s32 iAnim, matrix4* pBone
     m_pAnimInfo[iAnim].GetInterpKeys(Frame, pKey);
 
     // Build matrices
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
     ComputeBonesL2W(L2W, pKey, m_nBones, pBoneL2W);
+#else
+    ComputeBonesL2W(L2W, pKey, pBoneL2W);
+#endif
 
     // Free key array
     x_free(pKey);
@@ -539,6 +543,7 @@ s32 anim_group::GetRandomAnimIndex(s32 iStartAnim, s32 iSkipAnim /*= -1*/) const
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 void anim_group::ComputeBonesL2W(
     const matrix4& L2W,
     anim_key* pKey,
@@ -572,9 +577,38 @@ void anim_group::ComputeBonesL2W(
     }
 }
 
+#else
+RVA(0x13cd20, 0x2ce) void anim_group::ComputeBonesL2W(
+    const matrix4& L2W,
+    anim_key* pKey,
+    matrix4* pBoneL2W
+) const {
+    CONTEXT("anim_group::ComputeBonesL2W");
+
+    s32 i;
+
+
+    // Convert all keys to matrices and put into world space
+    for (i = 0; i < m_nBones; i++) {
+        // Setup L2W
+        pKey[i].Setup(pBoneL2W[i]);
+
+        // Concatenate with parent or L2W
+        const matrix4* PM = (m_pBone[i].iParent == -1) ? (&L2W) : (&pBoneL2W[m_pBone[i].iParent]);
+        pBoneL2W[i] = (*PM) * pBoneL2W[i];
+    }
+
+    // Apply bind matrices
+    for (i = 0; i < m_nBones; i++) {
+        pBoneL2W[i] = pBoneL2W[i] * m_pBone[i].BindMatrixInv;
+    }
+}
+
+#endif
+
 //=========================================================================
 
-void anim_group::ComputeBoneL2W(
+RVA(0x13cff0, 0x2df) void anim_group::ComputeBoneL2W(
     s32 iBone,
     const matrix4& L2W,
     anim_key* pKey,

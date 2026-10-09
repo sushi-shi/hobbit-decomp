@@ -100,7 +100,12 @@ void    draw_EnableSatCompensation  ( void );
 void    draw_UV                 ( const vector2& UV );
 void    draw_UV                 ( f32 U, f32 V );
                         
+#if defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
 void    draw_Color              ( const xcolor & Color );
+#else
+// Earlier PC by-value ABI, independently corroborated by Xbox public signature.
+void    draw_Color              ( xcolor Color );
+#endif
 void    draw_Color              ( f32 R, f32 G, f32 B, f32 A = 1.0f );
                         
 void    draw_Vertex             ( const vector3& Vertex );
@@ -169,13 +174,25 @@ void    draw_SpriteUV   ( const vector3& Position,  // Hot spot (3D Center)
 #if !defined( CONFIG_RETAIL ) || defined( TARGET_PC )
 
 // Single call to render a single line
+#if defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
 void    draw_Line       ( const vector3& P0,
                           const vector3& P1,
                                 xcolor   Color = XCOLOR_WHITE );
+#else
+void    draw_Line       ( const vector3& P0,
+                          const vector3& P1,
+                                xcolor   Color = XCOLOR_WHITE,
+                                u32      Flags = 0 );
+#endif
 
 // Renders a wire bbox 
 void    draw_BBox       ( const bbox&    BBox,
                                 xcolor   Color = XCOLOR_WHITE );
+
+#if !defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
+// Earlier Hobbit solid-box method; full PC body and Xbox signature corroborate.
+void draw_SolidBBox( const bbox& BBox, xcolor Color = XCOLOR_WHITE );
+#endif
 
 // Renders a volume given an two end points
 void    draw_Volume     ( const vector3& P0, 
@@ -204,9 +221,14 @@ void    draw_Marker     ( const vector3& Pos,
                                 xcolor   Color = XCOLOR_WHITE );
 
 // Renders always-visible solid rect on screen showing where point is in world
+#if defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
 void    draw_Point      ( const vector3& Pos,
                                 xcolor   Color = XCOLOR_WHITE,
                                 s32      Size  = 2 );
+#else
+void    draw_Point      ( const vector3& Pos,
+                                xcolor   Color = XCOLOR_WHITE );
+#endif
 
 // Renders a wire pyramid extending along the edges of the frustum
 void    draw_Frustum    ( const view&    View,
@@ -241,6 +263,7 @@ void    draw_Rect       ( const irect&   Rect,
                           xbool          DoWire = TRUE);
 
 // Single call to render a single rect
+#if defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
 void    draw_GouraudRect( const irect&   Rect,
                           const xcolor & c1,
                           const xcolor & c2,
@@ -248,6 +271,14 @@ void    draw_GouraudRect( const irect&   Rect,
                           const xcolor & c4,
                           xbool          DoWire = TRUE,
                           xbool          DoAdditive = FALSE);
+#else
+void    draw_GouraudRect( const irect&   Rect,
+                          const xcolor & c1,
+                          const xcolor & c2,
+                          const xcolor & c3,
+                          const xcolor & c4,
+                          xbool          DoWire = TRUE);
+#endif
 
 
 // Single call to set the z buffer to a value (1.0f = far clip, 0 = near clip)

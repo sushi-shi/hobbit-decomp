@@ -92,6 +92,33 @@ def normalize_era_utility(mirror: Path) -> None:
     path.write_bytes(raw)
 
 
+def normalize_era_assert(mirror: Path) -> None:
+    """Parse mirror only: preserve VC6 CRT's constless pointer assertion ABI.
+
+    Local Gruntz/HoMM1 lowercase-header mirrors and dialect adapters are the
+    donor mechanisms. Their writable-string flag does not legalize literal
+    to void* conversions in current Clang. Explicit casts reproduce those
+    VC6-accepted call arguments without altering the original SDK prototype,
+    assertion condition, branch, call, target settings or native inputs.
+    """
+    path = mirror / "assert.h"
+    if not path.exists():
+        return
+    raw = path.read_bytes()
+    old = b"_assert(#exp, __FILE__, __LINE__)"
+    new = b"_assert((void *)#exp, (void *)__FILE__, __LINE__)"
+    if new in raw:
+        if raw.count(new) != 1 or old in raw:
+            raise ValueError("unexpected normalized era CRT assertion macro")
+        return
+    if b"_assert(void *, void *, unsigned)" not in raw or raw.count(old) != 1:
+        raise ValueError("unsupported era CRT assertion prototype/macro")
+    raw = raw.replace(old, new)
+    if path.is_symlink():
+        path.unlink()
+    path.write_bytes(raw)
+
+
 def build_lowercase_mirror(real: Path, mirror: Path) -> Path:
     """Recursive lowercase-symlink mirror of `real`, so <string.h> resolves.
 
@@ -103,6 +130,7 @@ def build_lowercase_mirror(real: Path, mirror: Path) -> Path:
     marker = mirror.parent / (mirror.name + ".src")
     if mirror.is_dir() and marker.is_file() and marker.read_text() == str(real):
         normalize_era_utility(mirror)
+        normalize_era_assert(mirror)
         return mirror
     if mirror.exists():
         shutil.rmtree(mirror)
@@ -117,6 +145,7 @@ def build_lowercase_mirror(real: Path, mirror: Path) -> Path:
     marker.parent.mkdir(parents=True, exist_ok=True)
     marker.write_text(str(real))
     normalize_era_utility(mirror)
+    normalize_era_assert(mirror)
     return mirror
 
 

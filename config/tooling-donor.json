@@ -709,7 +709,7 @@
       "scope": "package",
       "donor_sha256": "c84db13be8d7841b8c93d7f22afab4328c935bf690a70008fff680dd02ee33f5",
       "destination": "scripts/hobbit/graph/compdb.py",
-      "local_sha256": "0198b7388959504e56d43658743d8eafae32a1dd331ba50f28d82bd7b4bfc35d",
+      "local_sha256": "ebd851f817c70b6d2469db29c6958da275e64b1c1c59fa2414ccd6491e14e6ea",
       "status": "adapted_review_required"
     },
     {
@@ -997,7 +997,7 @@
       "scope": "package",
       "donor_sha256": "03795a7b9b1acbae1f3b4a90e4a86cc82d184ffe9796a443a84a53f1a6c3606a",
       "destination": "scripts/hobbit/retail_labels/source.py",
-      "local_sha256": "566ee4db62a3016485a4b94e19e32aac9b7605ddbbbc0fda96dea58a0f4fb931",
+      "local_sha256": "919588953582ed102a1c091bf022aec6ee265dc9b52661f0c903ff6bac5daee5",
       "status": "adapted_review_required"
     },
     {

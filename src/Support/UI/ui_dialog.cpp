@@ -46,20 +46,20 @@ ui_win* ui_dialog_factory( s32 UserID, ui_manager* pManager, ui_manager::dialog_
 //  ui_dialog
 //=========================================================================
 
-ui_dialog::ui_dialog( void )
+RVA(0x2a22e0, 0x7a) ui_dialog::ui_dialog( void )
 {
 }
 
 //=========================================================================
 
-ui_dialog::~ui_dialog( void )
+RVA(0x2a2380, 0x77) ui_dialog::~ui_dialog( void )
 {
     Destroy();
 }
 
 //=========================================================================
 
-xbool ui_dialog::Create( s32                        UserID,
+RVA(0x2a2400, 0x480) xbool ui_dialog::Create( s32                        UserID,
                          ui_manager*                pManager,
                          ui_manager::dialog_tem*    pDialogTem,
                          const irect&               Position,
@@ -235,7 +235,7 @@ const irect& ui_dialog::GetCreatePosition( void ) const
 //=========================================================================
 //=========================================================================
 
-void ui_dialog::OnPadNavigate( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats )
+RVA(0x2a2960, 0x186) void ui_dialog::OnPadNavigate( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats )
 {
     (void)pWin;
     (void)Presses;
@@ -322,7 +322,7 @@ xcolor ui_dialog::GetBackgroundColor( void ) const
 
 //=========================================================================
 
-xbool ui_dialog::GotoControl( s32 iControl )
+RVA(0x2a2b00, 0xc8) xbool ui_dialog::GotoControl( s32 iControl )
 {
     xbool   Success = FALSE;
 
@@ -353,7 +353,7 @@ xbool ui_dialog::GotoControl( s32 iControl )
 
 //=========================================================================
 
-xbool ui_dialog::GotoControl( ui_control* pControl )
+RVA(0x2a2bd0, 0xe6) xbool ui_dialog::GotoControl( ui_control* pControl )
 {
     xbool   Success = FALSE;
 

@@ -895,6 +895,7 @@ void draw_UV( f32 U, f32 V )
 
 ///////////////////////////////////////////////////////////////////////////
 
+#if defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
 void draw_Color( const xcolor& Color )
 {
     ASSERT( m_bBegin );
@@ -903,6 +904,20 @@ void draw_Color( const xcolor& Color )
     m_pColors = NULL;
     m_Color = Color;
 }
+#else
+// Earlier PC by-value method and enabled guard; complete original body retained above.
+RVA(0x0026ddd0, 0x33)
+void draw_Color( xcolor Color )
+{
+    if( !m_bEnabled )
+        return;
+    ASSERT( m_bBegin );
+    ASSERT( m_Primitive != DRAW_SPRITES );
+
+    m_pColors = NULL;
+    m_Color = Color;
+}
+#endif
 
 RVA(0x0026de10, 0x64)
 void draw_Color( f32 R, f32 G, f32 B, f32 A )

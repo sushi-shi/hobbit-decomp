@@ -803,6 +803,7 @@ public:
     s32 GetBoneIndex(const char* pBoneName, xbool FindAnywhere = FALSE) const;
     s32 GetBoneParent(s32 iBone) const;
     void ComputeBoneL2W(s32 iBone, const matrix4& L2W, anim_key* pKey, matrix4& BoneL2W) const;
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
     void ComputeBonesL2W(
         const matrix4& L2W,
         anim_key* pKey,
@@ -810,6 +811,9 @@ public:
         matrix4* BoneL2W,
         xbool bApplyTheBindPose = TRUE
     ) const;
+#else
+    void ComputeBonesL2W(const matrix4& L2W, anim_key* pKey, matrix4* BoneL2W) const;
+#endif
     const matrix4& GetBoneBindInvMatrix(s32 iBone) const;
     vector3 GetEventPos(s32 iBone, const vector3& Offset, anim_key* pKey) const;
 #if defined(HOBBIT_ANIMATION_LATER_LAYOUT)

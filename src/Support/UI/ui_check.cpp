@@ -33,7 +33,7 @@
 //  Factory function
 //=========================================================================
 
-ui_win* ui_check_factory( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
+RVA(0x2a5460, 0x75) ui_win* ui_check_factory( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     ui_check* pcheck = new ui_check;
     pcheck->Create( UserID, pManager, Position, pParent, Flags );
@@ -45,20 +45,20 @@ ui_win* ui_check_factory( s32 UserID, ui_manager* pManager, const irect& Positio
 //  ui_check
 //=========================================================================
 
-ui_check::ui_check( void )
+RVA(0x2a54e0, 0x12) ui_check::ui_check( void )
 {
 }
 
 //=========================================================================
 
-ui_check::~ui_check( void )
+RVA(0x2a5520, 0x4f) ui_check::~ui_check( void )
 {
     Destroy();
 }
 
 //=========================================================================
 
-xbool ui_check::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
+RVA(0x2a5570, 0x40) xbool ui_check::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     xbool   Success;
 

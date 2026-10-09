@@ -42,12 +42,20 @@ template<class T> inline T* rhandle<T>::GetPointer(void) const {
 //==============================================================================
 
 inline rhandle_base::rhandle_base(void) {
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
     SetIndex(-1);
+#else
+    m_Data = (u32)-1;
+#endif
 }
 
 //==============================================================================
 inline rhandle_base::rhandle_base(const char* pResourceName) {
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
     SetIndex(-1);
+#else
+    m_Data = (u32)-1;
+#endif
     g_RscMgr.AddRHandle(*this, pResourceName);
 }
 
@@ -56,7 +64,11 @@ inline rhandle_base::~rhandle_base(void) {}
 
 //==============================================================================
 inline void rhandle_base::Destroy(void) {
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
     SetIndex(-1);
+#else
+    m_Data = (u32)-1;
+#endif
 }
 
 //==============================================================================
@@ -82,14 +94,31 @@ inline xbool rhandle_base::IsLoaded(void) const {
 }
 
 //==============================================================================
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
 inline s16 rhandle_base::GetIndex(void) const {
     return (s16)m_Data;
 }
+#else
+inline s32 rhandle_base::GetIndex(void) const {
+    return (s32)((m_Data & 0x7fffffff) | ((m_Data & 0x40000000) << 1));
+}
+#endif
 
 //==============================================================================
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
 inline void rhandle_base::SetIndex(s16 I) {
     m_Data = I;
 }
+#else
+inline void rhandle_base::SetIndex(s32 I) {
+    m_Data = (m_Data & 0x80000000) | ((u32)I & 0x7fffffff);
+}
+
+inline void rhandle_base::SetLocked(xbool Locked) {
+    if (Locked) m_Data |= 0x80000000;
+    else m_Data &= 0x7fffffff;
+}
+#endif
 
 //==============================================================================
 

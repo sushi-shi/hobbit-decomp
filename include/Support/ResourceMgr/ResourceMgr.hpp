@@ -44,17 +44,32 @@ public:
     void* GetPointer(void) const;
     xbool IsLoaded(void) const;
 
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
     s16 GetIndex(void) const;
+#else
+    s32 GetIndex(void) const;
+#endif
 
     void Destroy(void);
     xbool IsNull(void) const {
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
         return m_Data == -1;
+#else
+        return GetIndex() == -1;
+#endif
     }
 
 protected:
+#if defined(HOBBIT_RESOURCE_LATER_LAYOUT)
     void SetIndex(s16 I);
 
     s32 m_Data;
+#else
+    void SetIndex(s32 I);
+    void SetLocked(xbool Locked);
+
+    u32 m_Data;
+#endif
 
     friend rsc_mgr;
 };

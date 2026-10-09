@@ -1,17 +1,17 @@
 # Reviewed actual native compiler data; source literals and private ordinals are not retail spellings.
 # Reprove defining source/header/profile/object and retire a row if genuine automatic pairing supersedes it.
 rva	size	name	owner	class
-0x31ceac	0x6	$SG58226	UI_ui_win	string
-0x355bd0	0x1e	$SG60611	UI_ui_manager	string
-0x355bf0	0xf	$SG60599	UI_ui_manager	string
-0x355c00	0x13	$SG60588	UI_ui_manager	string
-0x355c64	0x12	$SG58669	UI_ui_dialog	string
-0x355cbc	0x11	$SG58386	UI_ui_frame	string
-0x355d08	0x13	$SG59819	UI_ui_listbox	string
-0x355d4c	0x11	$SG62904	UI_ui_check	string
-0x355d78	0x12	$SG59629	UI_ui_slider	string
-0x355e38	0x13	$SG59671	UI_ui_textbox	string
-0x355e64	0x10	$SG58332	UI_ui_text	string
-0x355e8c	0x11	$SG58332	UI_ui_radio	string
-0x355eb8	0x12	$SG58334	UI_ui_button	string
-0x355f80	0x13	$SG58118	UI_ui_control	string
+0x31ceac	0x6	$SG58230	UI_ui_win	string
+0x355bd0	0x1e	$SG60616	UI_ui_manager	string
+0x355bf0	0xf	$SG60604	UI_ui_manager	string
+0x355c00	0x13	$SG60593	UI_ui_manager	string
+0x355c64	0x12	$SG58673	UI_ui_dialog	string
+0x355cbc	0x11	$SG58390	UI_ui_frame	string
+0x355d08	0x13	$SG59823	UI_ui_listbox	string
+0x355d4c	0x11	$SG62908	UI_ui_check	string
+0x355d78	0x12	$SG62952	UI_ui_slider	string
+0x355e38	0x13	$SG59675	UI_ui_textbox	string
+0x355e64	0x10	$SG58336	UI_ui_text	string
+0x355e8c	0x11	$SG58336	UI_ui_radio	string
+0x355eb8	0x12	$SG58338	UI_ui_button	string
+0x355f80	0x13	$SG58122	UI_ui_control	string

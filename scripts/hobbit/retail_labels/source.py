@@ -608,8 +608,8 @@ def extract_unit(unit: str, source: str, compdb: dict,
                          header_annotation_names() if header_names is None else header_names)
         if cold_headers:
             candidates.update(emitted_executable_names(unit, source))
-        if not candidates:
-            return [], []
+        # Full-source extraction must still compile a macro-free unit.
+        # No emitted header candidates means no claims, not verified IR.
 
     problems: list[str] = []
     cl_flags = compdb.get(os.path.realpath(str(src_path)))
@@ -624,6 +624,8 @@ def extract_unit(unit: str, source: str, compdb: dict,
     if ir is None:
         return rows, [f"{unit}: clang produced no IR - every RVA() label of "
                       f"this TU would silently vanish (FATAL)"]
+    if header_only and not candidates:
+        return [], problems
     ir_funcs, ir_datas = ir_claims(ir)
     for rva, name, size in ir_funcs:
         if not header_only or name in candidates:

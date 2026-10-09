@@ -29,7 +29,7 @@
 //  Factory function
 //=========================================================================
 
-ui_win* ui_button_factory( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
+RVA(0x2a7870, 0x75) ui_win* ui_button_factory( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     ui_button* pButton = new ui_button;
     pButton->Create( UserID, pManager, Position, pParent, Flags );
@@ -41,20 +41,20 @@ ui_win* ui_button_factory( s32 UserID, ui_manager* pManager, const irect& Positi
 //  ui_button
 //=========================================================================
 
-ui_button::ui_button( void )
+RVA(0x2a78f0, 0x12) ui_button::ui_button( void )
 {
 }
 
 //=========================================================================
 
-ui_button::~ui_button( void )
+RVA(0x2a7930, 0x4f) ui_button::~ui_button( void )
 {
     Destroy();
 }
 
 //=========================================================================
 
-xbool ui_button::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
+RVA(0x2a7980, 0x40) xbool ui_button::Create( s32 UserID, ui_manager* pManager, const irect& Position, ui_win* pParent, s32 Flags )
 {
     xbool   Success;
 
