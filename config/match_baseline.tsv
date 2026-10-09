@@ -40,13 +40,13 @@ CollisionMgr_CollisionPrimatives	1	1
 CollisionMgr_PolyCache	1	1
 Decals_DecalMgr_StaticDecals	1	1
 Entropy_audio_channel_mgr	18	18
-Entropy_audio_hardware_pc	22	17
+Entropy_audio_hardware_pc	23	17
 Entropy_audio_io_request	2	2
 Entropy_audio_mgr	46	46
 Entropy_audio_package	18	18
 Entropy_audio_ram_mgr	2	2
-Entropy_audio_stream_mgr	35	32
-Entropy_audio_stream_pc	1	1
+Entropy_audio_stream_mgr	36	36
+Entropy_audio_stream_pc	2	1
 Entropy_audio_voice_mgr	72	72
 Entropy_d3deng	29	28
 Entropy_d3deng_draw	3	3
@@ -62,8 +62,8 @@ Entropy_io_device	18	18
 Entropy_io_device_dvd	4	4
 Entropy_io_device_dvd_pc	8	8
 Entropy_io_dfs	2	1
-Entropy_io_filesystem	14	12
-Entropy_io_mgr	10	8
+Entropy_io_filesystem	27	22
+Entropy_io_mgr	10	9
 Entropy_io_request	3	3
 GameLib_RigidGeomCollision	1	1
 Geometry_RenderInterface	2	2
@@ -258,6 +258,7 @@ Entropy_audio_hardware_pc	?StartChannel@audio_hardware@@QAEXPAUchannel@@@Z	100.0
 Entropy_audio_hardware_pc	?Unlock@audio_hardware@@QAEXXZ	100.0000	100.0000	1	9d9860b148e0	0x27be20	100.0000	
 Entropy_audio_hardware_pc	?Update@audio_hardware@@QAEXXZ	100.0000	100.0000	1	0ab5b33dab7d	0x27be50	100.0000	
 Entropy_audio_hardware_pc	?UpdatePosition@@YAHPAUchannel@@@Z	98.7234	98.7234	1	62ad76d275e1	0x27c050	98.7234	
+Entropy_audio_hardware_pc	?UpdateStream@audio_hardware@@QAEXPAUchannel@@@Z	99.7222	99.7222	1	fd46b438ac27	0x27b230	99.7222	
 Entropy_audio_io_request	??0audio_io_request@@QAE@XZ	100.0000	100.0000	1	0bbf3ae65b5b	0x282380	100.0000	
 Entropy_audio_io_request	?SetRequest@audio_io_request@@QAEXW4transfer_type@1@PAX1HW4request_priority@1@P6AXPAV1@@Z@Z	100.0000	100.0000	1	ae5c685fd88a	0x2823b0	100.0000	
 Entropy_audio_mgr	??0audio_mgr@@QAE@XZ	100.0000	100.0000	2	29095bfb2617	0x257d90	100.0000	
@@ -328,10 +329,11 @@ Entropy_audio_ram_mgr	?AudioServiceCurrentRequest@@YAXXZ	100.0000	100.0000	1	0ae
 Entropy_audio_ram_mgr	?AudioServiceQueue@@YAXXZ	100.0000	100.0000	1	d64b4985a4c9	0x27c290	100.0000	
 Entropy_audio_stream_mgr	??0audio_stream_mgr@@QAE@XZ	100.0000	100.0000	1	70f1438b8c44	0x277750	100.0000	
 Entropy_audio_stream_mgr	??1audio_stream_mgr@@QAE@XZ	100.0000	100.0000	1	054ac53a6e1e	0x2777b0	100.0000	
-Entropy_audio_stream_mgr	?AcquireStream@audio_stream_mgr@@QAEPAUaudio_stream@@IIPAUchannel@@0@Z	0.5179	0.5179	1	b15f6dee42a9	0x2777c0	0.5179	
+Entropy_audio_stream_mgr	?AcquireStream@audio_stream_mgr@@QAEPAUaudio_stream@@IIPAUchannel@@0@Z	100.0000	100.0000	2	bc6bf1ccb724	0x2777c0	100.0000	
+Entropy_audio_stream_mgr	?ReadStream@audio_stream_mgr@@QAEHPAUaudio_stream@@P6AXPAVio_request@@@Z@Z	100.0000	100.0000	1	9775c3d6d875	0x277a80	100.0000	
 Entropy_audio_stream_mgr	?ReleaseStream@audio_stream_mgr@@QAEXPAUaudio_stream@@@Z	100.0000	100.0000	1	e2e982256c32	0x277970	100.0000	
-Entropy_audio_stream_mgr	?Update@audio_stream_mgr@@QAEXXZ	99.9048	99.9048	2	f7b98eab014a	0x277bb0	99.9048	
-Entropy_audio_stream_mgr	?WarmStream@audio_stream_mgr@@QAEHPAUaudio_stream@@P6AXPAVio_request@@@Z@Z	87.1406	87.1406	1	c9aa43b3483e	0x277990	87.1406	
+Entropy_audio_stream_mgr	?Update@audio_stream_mgr@@QAEXXZ	100.0000	100.0000	2	f7b98eab014a	0x277bb0	100.0000	
+Entropy_audio_stream_mgr	?WarmStream@audio_stream_mgr@@QAEHPAUaudio_stream@@P6AXPAVio_request@@@Z@Z	100.0000	100.0000	2	cc279b1d1eb4	0x277990	100.0000	
 Entropy_audio_stream_mgr	?audio_stream_warm_callback@@YAXPAVio_request@@PAUaudio_stream@@H@Z	100.0000	100.0000	1	9551e1007b29	0x277720	100.0000	
 Entropy_audio_stream_mgr	?read_callback_0_0@@YAXPAVio_request@@@Z	100.0000	100.0000	1	71c35bbb7314	0x2773a0	100.0000	
 Entropy_audio_stream_mgr	?read_callback_0_1@@YAXPAVio_request@@@Z	100.0000	100.0000	1	d849c97cb16a	0x277480	100.0000	
@@ -361,6 +363,7 @@ Entropy_audio_stream_mgr	?warm_callback_5_0@@YAXPAVio_request@@@Z	100.0000	100.0
 Entropy_audio_stream_mgr	?warm_callback_5_1@@YAXPAVio_request@@@Z	100.0000	100.0000	1	34ee6fc2a62c	0x2776e0	100.0000	
 Entropy_audio_stream_mgr	?warm_callback_6_0@@YAXPAVio_request@@@Z	100.0000	100.0000	1	48c77d932415	0x277620	100.0000	
 Entropy_audio_stream_mgr	?warm_callback_6_1@@YAXPAVio_request@@@Z	100.0000	100.0000	1	702e723b4df2	0x277700	100.0000	
+Entropy_audio_stream_pc	?SetRequest@audio_stream_mgr@@QAEXPAUaudio_stream@@P6AXPAVio_request@@@Z@Z	93.6000	93.6000	1	a95e9e99ba44	0x27a940	93.6000	
 Entropy_audio_stream_pc	?audio_stream_read_callback@@YAXPAVio_request@@PAUaudio_stream@@H@Z	100.0000	100.0000	1	e953ad793a46	0x27a7b0	100.0000	
 Entropy_audio_voice_mgr	?AcquireVoice@audio_voice_mgr@@QAEPAUvoice@@HM@Z	100.0000	100.0000	1	119e7d0c6964	0x278450	100.0000	
 Entropy_audio_voice_mgr	?AppendElementToVoice@audio_voice_mgr@@AAEXPAUelement@@PAUvoice@@@Z	100.0000	100.0000	1	177bb36a63e9	0x279730	100.0000	
@@ -622,6 +625,7 @@ Entropy_io_device_dvd_pc	?PhysicalRead@io_device_dvd@@EAEHPAUio_device_file@@PAX
 Entropy_io_device_dvd_pc	?ReadCallback@@YAXHPAX@Z	100.0000	100.0000	1	4bbacebc799e	0x287da0	100.0000	
 Entropy_io_dfs	?dfs_DumpFileListing@@YAXPBUdfs_header@@PBD@Z	100.0000	100.0000	1	fcb78953ecf5	0x280510	100.0000	
 Entropy_io_dfs	?dfs_InitHeaderFromRawPtr@@YAPAUdfs_header@@PAX@Z	85.7750	85.7750	1	63ef7070f349	0x2804b0	85.7750	
+Entropy_io_filesystem	??0io_dfs_data@io_fs@@QAE@XZ	100.0000	100.0000	1	cpp:21768c972b11	0x276e90	100.0000	
 Entropy_io_filesystem	??0io_fs@@QAE@XZ	100.0000	100.0000	1	a408d4913ec1	0x2754c0	100.0000	
 Entropy_io_filesystem	??1io_dfs_data@io_fs@@QAE@XZ	100.0000	100.0000	1	cpp:e98acb687b66	0x276ec0	100.0000	
 Entropy_io_filesystem	??1io_fs@@QAE@XZ	100.0000	100.0000	1	71e054984e20	0x275560	100.0000	
@@ -630,18 +634,30 @@ Entropy_io_filesystem	?AcquireFile@io_fs@@AAEPAUio_open_file@@XZ	100.0000	100.00
 Entropy_io_filesystem	?Close@io_fs@@QAEXPAUio_open_file@@@Z	100.0000	100.0000	1	9108f3450daf	0x276860	100.0000	
 Entropy_io_filesystem	?CompareFile@io_fs@@AAEHPBDAAPAUio_device_file@@AAI2HH@Z	100.0000	100.0000	1	4165e7c13883	0x2763a0	100.0000	
 Entropy_io_filesystem	?FindFile@io_fs@@AAEHPBDAAPAUio_device_file@@AAI2@Z	99.9359	99.9359	1	c1b980f4cb9c	0x276570	99.9359	
+Entropy_io_filesystem	?Init@io_fs@@QAEHXZ	100.0000	100.0000	1	6dd7d038a28b	0x2755f0	100.0000	
 Entropy_io_filesystem	?InvalidateCaches@io_fs@@QAEXXZ	100.0000	100.0000	1	96de68223293	0x276280	100.0000	
+Entropy_io_filesystem	?Kill@io_fs@@QAEXXZ	99.9265	99.9265	1	ef8a0555c87e	0x275840	99.9265	
 Entropy_io_filesystem	?Open@io_fs@@QAEPAUio_open_file@@PBD0@Z	80.2472	80.2472	1	deec72ca1ef2	0x276660	80.2472	
 Entropy_io_filesystem	?ReleaseCache@io_fs@@AAEXPAVio_cache@@@Z	100.0000	100.0000	1	8b50076e43ce	0x276390	100.0000	
 Entropy_io_filesystem	?ReleaseFile@io_fs@@AAEXPAUio_open_file@@@Z	100.0000	100.0000	1	ecd56e79f70e	0x2761f0	100.0000	
 Entropy_io_filesystem	?SearchDFS@io_fs@@AAEHPBDAAPAUio_device_file@@AAI2HH@Z	100.0000	100.0000	1	39c15dd6a91c	0x2764c0	100.0000	
+Entropy_io_filesystem	?SetCapacity@?$xarray@Uio_dfs_data@io_fs@@@@QAEXH@Z	100.0000	100.0000	1	cpp:21768c972b11	0x276c30	100.0000	
 Entropy_io_filesystem	?SetRetries@io_fs@@QAEXH@Z	100.0000	100.0000	1	05e3f741417d	0x276250	100.0000	
+Entropy_io_filesystem	?io_close@@YAXPAI@Z	100.0000	100.0000	1	6f65cb977126	0x275490	100.0000	
+Entropy_io_filesystem	?io_eof@@YAHPAI@Z	100.0000	100.0000	1	a7fdaf507179	0x2757f0	100.0000	
+Entropy_io_filesystem	?io_flush@@YAHPAI@Z	100.0000	100.0000	1	5a9493e323bc	0x2757d0	100.0000	
+Entropy_io_filesystem	?io_length@@YAHPAI@Z	100.0000	100.0000	1	6144e7da0fc3	0x275820	100.0000	
+Entropy_io_filesystem	?io_open@@YAPAIPBD0@Z	100.0000	100.0000	1	5689837d9319	0x2756e0	100.0000	
+Entropy_io_filesystem	?io_read@@YAHPAIPAEH@Z	99.6429	99.6429	1	cf71c5dcbba3	0x275700	99.6429	
+Entropy_io_filesystem	?io_seek@@YAHPAIHH@Z	100.0000	100.0000	1	e0c76b6a7b82	0x275760	100.0000	
+Entropy_io_filesystem	?io_tell@@YAHPAI@Z	100.0000	100.0000	1	0bf8a7feb315	0x2757b0	100.0000	
+Entropy_io_filesystem	?io_write@@YAHPAIPBEH@Z	99.6429	99.6429	1	9d42977f4d51	0x275730	99.6429	
 Entropy_io_mgr	??0io_mgr@@QAE@XZ	100.0000	100.0000	1	01bfa241bb28	0x277030	100.0000	
 Entropy_io_mgr	??1io_mgr@@QAE@XZ	100.0000	100.0000	1	9b42ab3a391e	0x277050	100.0000	
 Entropy_io_mgr	?CloseDeviceFile@io_mgr@@QAEXPAUio_device_file@@@Z	100.0000	100.0000	1	32eeb049f56f	0x2771a0	100.0000	
 Entropy_io_mgr	?GetDeviceQueueStatus@io_mgr@@QBEHH@Z	100.0000	100.0000	1	6f6436d9013d	0x2771b0	100.0000	
-Entropy_io_mgr	?Init@io_mgr@@QAEHXZ	99.7826	99.7826	1	61e9c08fb7ae	0x277060	99.7826	
-Entropy_io_mgr	?Kill@io_mgr@@QAEHXZ	99.7619	99.7619	1	558dcafd41ea	0x277110	99.7619	
+Entropy_io_mgr	?Init@io_mgr@@QAEHXZ	99.8913	99.8913	1	61e9c08fb7ae	0x277060	99.8913	
+Entropy_io_mgr	?Kill@io_mgr@@QAEHXZ	100.0000	100.0000	1	558dcafd41ea	0x277110	100.0000	
 Entropy_io_mgr	?OpenDeviceFile@io_mgr@@QAEPAUio_device_file@@PBDH@Z	100.0000	100.0000	1	cd552dc661f6	0x277180	100.0000	
 Entropy_io_mgr	?QueueRequest@io_mgr@@QAEHPAVio_request@@@Z	100.0000	100.0000	1	8121aca8049f	0x277150	100.0000	
 Entropy_io_mgr	?SetDevicePathPrefix@io_mgr@@QAEXPBDH@Z	100.0000	100.0000	1	ff26175adc60	0x2771e0	100.0000	

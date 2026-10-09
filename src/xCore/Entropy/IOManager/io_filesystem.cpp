@@ -11,13 +11,21 @@
 
 DATA(0x3f86f0)
 static open_fn*     old_Open            = NULL;     // old filesystem functions
+DATA(0x3f86f4)
 static close_fn*    old_Close           = NULL;
+DATA(0x3f86f8)
 static read_fn*     old_Read            = NULL;
+DATA(0x3f86fc)
 static write_fn*    old_Write           = NULL;
+DATA(0x3f8700)
 static seek_fn*     old_Seek            = NULL;
+DATA(0x3f8704)
 static tell_fn*     old_Tell            = NULL;
+DATA(0x3f8708)
 static flush_fn*    old_Flush           = NULL;
+DATA(0x3f870c)
 static eof_fn*      old_EOF             = NULL;
+DATA(0x3f8710)
 static length_fn*   old_Length          = NULL;
 
 DATA(0x3f8714)
@@ -25,11 +33,186 @@ static xbool s_Initialized = FALSE;
 DATA(0x3f8718)
 static s32 s_MountedCount = 0;
 
+// Actual naturally emitted generic instantiation and implicit entry constructor.
+RVA_COMPGEN(0x276c30, 0x164, ?SetCapacity@?$xarray@Uio_dfs_data@io_fs@@@@QAEXH@Z)
+RVA_COMPGEN(0x276e90, 0x23, ??0io_dfs_data@io_fs@@QAE@XZ)
+
 // Natural implicit entry destructor; no authored destructor body.
 RVA_COMPGEN(0x00276ec0, 0x56, ??1io_dfs_data@io_fs@@QAE@XZ)
 
 DATA(0x003f72c0)
 io_fs g_IOFSMgr;
+
+RVA(0x2756e0, 0x15)
+static X_FILE* io_open( const char* pFileName, const char* pMode )
+{
+    return (X_FILE*)g_IOFSMgr.Open( pFileName, pMode );
+}
+
+//==============================================================================
+
+RVA(0x275490, 0x30)
+void io_close( X_FILE* pFile )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Close );
+        old_Close( ((io_open_file*)pFile)->PassThrough );
+        g_IOFSMgr.ReleaseFile( (io_open_file*)pFile );
+    }
+    else
+    {
+        g_IOFSMgr.Close( (io_open_file*)pFile );
+    }
+}
+
+//==============================================================================
+
+RVA(0x275700, 0x2b)
+static s32 io_read( X_FILE* pFile, byte* pBuffer, s32 Bytes )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Read );
+        return old_Read( ((io_open_file*)pFile)->PassThrough, pBuffer, Bytes );
+    }
+    else
+    {
+        return g_IOFSMgr.Read( (io_open_file*)pFile, pBuffer, Bytes );
+    }
+}
+
+//==============================================================================
+
+RVA(0x275730, 0x2b)
+static s32 io_write( X_FILE* pFile, const byte* pBuffer, s32 Bytes )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Write );
+        return old_Write( ((io_open_file*)pFile)->PassThrough, pBuffer, Bytes );
+    }
+    else
+    {
+        return g_IOFSMgr.Write( (io_open_file*)pFile, pBuffer, Bytes );
+    }
+}
+
+//==============================================================================
+
+RVA(0x275760, 0x48)
+static s32 io_seek( X_FILE* pFile, s32 Offset, s32 Origin )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Seek );
+        return old_Seek( ((io_open_file*)pFile)->PassThrough, Offset, Origin );
+    }
+    else
+    {
+        // (s32) cast is temporary warning fix
+        s32 Position = (s32)((io_open_file*)pFile)->Position;
+        s32 Length   = ((io_open_file*)pFile)->Length;
+        s32 Result   = 0;
+
+        switch( Origin )
+        {
+            case X_SEEK_SET: 
+                Position = Offset;   
+                break;
+
+            case X_SEEK_CUR: 
+                Position += Offset; 
+                break;
+
+            case X_SEEK_END: 
+                Position = Length + Offset;
+                break;
+
+            default:
+                ASSERT( 0 );
+                Result = -1;
+                break;
+        }
+
+        if( Position < 0 )
+        {
+            Result = -1;
+        }
+        else
+        {
+            ((io_open_file*)pFile)->Position = Position;
+        }
+
+        return Result;
+    }
+}
+
+//==============================================================================
+
+RVA(0x2757b0, 0x18)
+static s32 io_tell( X_FILE* pFile )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Tell );
+        return old_Tell( ((io_open_file*)pFile)->PassThrough );
+    }
+    else
+    {
+        // (s32) cast is temporary warning fix
+        return (s32)((io_open_file*)pFile)->Position;
+    }
+}
+
+//==============================================================================
+
+RVA(0x2757d0, 0x18)
+static s32 io_flush( X_FILE* pFile )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Flush );
+        return old_Flush( ((io_open_file*)pFile)->PassThrough );
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//==============================================================================
+
+RVA(0x2757f0, 0x26)
+static xbool io_eof( X_FILE* pFile )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_EOF );
+        return old_EOF( ((io_open_file*)pFile)->PassThrough );
+    }
+    else
+    {
+        return ((io_open_file*)pFile)->Position >= ((io_open_file*)pFile)->Length;    
+    }
+}
+
+//==============================================================================
+
+RVA(0x275820, 0x19)
+static s32 io_length( X_FILE* pFile )
+{
+    if( ((io_open_file*)pFile)->PassThrough )
+    {
+        ASSERT( old_Length );
+        return old_Length( ((io_open_file*)pFile)->PassThrough );
+    }
+    else
+    {
+        return ((io_open_file*)pFile)->Length;
+    }
+}
+
 
 RVA(0x2754c0, 0x95)
 io_fs::io_fs( void )
@@ -45,6 +228,123 @@ io_fs::io_fs( void )
 RVA(0x275560, 0x8e)
 io_fs::~io_fs( void )
 {
+}
+
+//==============================================================================
+
+
+RVA(0x2755f0, 0xe3)
+xbool io_fs::Init( void )
+{
+    io_open_file* pOpenFile;
+    s32           i;
+
+    // Can't do this multiple times...
+    ASSERT( !s_Initialized );
+
+    // Its MINE! MINE! MINE!
+    m_Mutex.Enter();
+
+    // Initialize the free list.
+    m_FreeFiles = m_Files;
+    
+    // Set up the file handles
+    for( i=0, pOpenFile=m_Files ; i<MAX_FILES ; i++, pOpenFile++ )
+    {
+        // Nuke it.
+        x_memset( pOpenFile, 0, sizeof(io_open_file) );
+
+        // Build the list...
+        pOpenFile->pNext = pOpenFile+1;
+    }
+
+    // Back up and terminate the list
+    (--pOpenFile)->pNext = NULL;
+
+    // Initialize the caches...
+    for( i=0 ; i<NUM_CACHES ; i++ )
+    {
+        m_Caches[ i ].Init();
+    }
+
+    // Read old IOHooks
+    x_GetFileIOHooks(  old_Open,
+                       old_Close,
+                       old_Read,
+                       old_Write,
+                       old_Seek,
+                       old_Tell,
+                       old_Flush,
+                       old_EOF,
+                       old_Length );
+
+#if defined(TARGET_GCN) || defined(TARGET_PS2) || defined(TARGET_XBOX) || ( defined(TARGET_PC) && !defined(X_EDITOR) )
+    // Set new IOHooks
+    x_SetFileIOHooks(  io_open,
+                       io_close,
+                       io_read,
+                       io_write,
+                       io_seek,
+                       io_tell,
+                       io_flush,
+                       io_eof,
+                       io_length );
+#endif
+
+
+    // Set Initial Capacity of m_DFS now to reduce memory fragmentation
+    m_DFS.SetCapacity( 16 );
+
+    // All good now!
+    s_Initialized = TRUE;
+
+    // Ok, you can have it now!
+    m_Mutex.Exit();
+
+    return s_Initialized;
+}
+
+//==============================================================================
+
+RVA(0x275840, 0xc2)
+void io_fs::Kill( void )
+{
+    ASSERT( s_Initialized );
+
+    // Unmount all the currently mounted file systems
+    while( m_DFS.GetCount() > 0 )
+    {
+        UnmountFileSystem( m_DFS[0].PathName );
+    }
+
+    // Earlier PC releases DFS storage after unmounting the last filesystem.
+    m_DFS.Clear();
+
+    // Snag that bad boy!
+    m_Mutex.Enter();
+
+    // Restore old IOHooks
+    x_SetFileIOHooks(  old_Open,
+                       old_Close,
+                       old_Read,
+                       old_Write,
+                       old_Seek,
+                       old_Tell,
+                       old_Flush,
+                       old_EOF,
+                       old_Length );
+    
+    // Nuke the caches.
+    for( s32 i=0 ; i<NUM_CACHES ; i++ )
+    {
+        m_Caches[ i ].Kill();
+    }
+
+    // Let it go.
+    m_Mutex.Exit();
+    
+    // Clear initialized
+    s_Initialized = FALSE;
 }
 
 //==============================================================================

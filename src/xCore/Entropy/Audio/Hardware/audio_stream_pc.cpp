@@ -14,6 +14,32 @@
 
 //------------------------------------------------------------------------------
 
+#if !defined(HOBBIT_AUDIO_LATER_STREAMS)
+// Descriptive private helper name; actual complete11B pointer operation.
+static u8* StreamBufferAtOffset(u8* pBuffer,s32 Offset)
+{
+    return pBuffer+Offset;
+}
+// Complete earlier deferred copy body; distinct from the genuine short callback.
+// Original name unknown; source grouping supported by adjacent actual PC file paths.
+void pc_CopyCompletedStreamBuffer(io_request* pRequest,audio_stream* pStream,s32 WriteBufferIndex)
+{
+    s32 Count=pStream->Type;
+    for(s32 i=0;i<Count;i++)
+    {
+        channel* pChannel=pStream->pChannel[i];
+        if(!pChannel->Hardware.InUse || !pChannel->Hardware.pdsBuffer) return;
+        s32 Length=pRequest->GetLength()/Count;
+        g_AudioHardware.DecodeADPCMBuffer(pChannel->Hardware.pdsBuffer,
+            StreamBufferAtOffset((u8*)pRequest->GetBuffer(),Length*i),Length,
+            WriteBufferIndex*0x9000,0x9000);
+    }
+    pStream->ARAMWriteBuffer^=1;
+    pStream->CompletedCopies++;
+    pStream->ReadState=0;
+}
+#endif
+
 RVA(0x27a7b0, 0x14)
 void audio_stream_read_callback( io_request* pRequest, audio_stream* pStream, s32 ReadBufferIndex )
 {
@@ -178,6 +204,22 @@ void audio_stream_mgr::Kill( void )
 
 //------------------------------------------------------------------------------
 
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_STREAMS)
+RVA(0x0027a940, 81)
+void audio_stream_mgr::SetRequest( audio_stream* pStream, io_request::callback_fn* pCallback )
+{
+    // Set the request.
+    pStream->pIoRequest->SetRequest( pStream->FileHandle, 
+                                     (void*)pStream->MainRAM[pStream->ARAMWriteBuffer], 
+                                     pStream->FileHandle->Offset+pStream->WaveformOffset+pStream->WaveformCursor,
+                                     pStream->ReadBufferSize,
+                                     io_request::HIGH_PRIORITY,
+                                     FALSE,
+                                     0,
+                                     0,
+                                     pCallback );
+}
+#else
 void audio_stream_mgr::SetRequest( audio_stream* pStream, io_request::callback_fn* pCallback )
 {
     // Set the request.
@@ -191,3 +233,5 @@ void audio_stream_mgr::SetRequest( audio_stream* pStream, io_request::callback_f
                                      0,
                                      pCallback );
 }
+#endif
+

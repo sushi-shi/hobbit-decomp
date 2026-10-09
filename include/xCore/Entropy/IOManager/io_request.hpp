@@ -34,6 +34,8 @@ public:
     // Genuine source accessors using the independently proved PC fields.
     status GetStatus() { return m_Status; }
     int GetLength() { return m_Length; }
+    // Genuine complete sibling inline API; existing PC request field +0x10.
+    void* GetBuffer() { return m_pBuffer; }
     io_request();
     ~io_request();
     void SetRequest(

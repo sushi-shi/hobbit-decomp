@@ -2124,3 +2124,66 @@ void audio_hardware::InitChannelStreamed(channel* pChannel)
     s_ChannelsInUse++;
 }
 #endif
+
+#if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+// Descriptive helper spelling, independently decoded ADPCM behavior; no PC annotation.
+// Completed-copy function ownership/declaration remains unreconstructed.
+static void pc_UpdateStreamADPCM(channel* pChannel)
+{
+    if(!pChannel->StreamData.StreamControl) return;
+    audio_stream* pStream=pChannel->StreamData.pStream;
+    if(!pStream->FileHandle) return;
+    if(pStream->ReadState>=2)
+        pc_CopyCompletedStreamBuffer(pStream->pIoRequest,pStream,pStream->ReadState-2);
+    s32 Count=pStream->Type;
+    s32 Transitions=0;
+    s32 Finished=0;
+    u32 Segment=0;
+    for(s32 i=0;i<Count;i++)
+    {
+        channel* pOther=pStream->pChannel[i];
+        LPDIRECTSOUNDBUFFER pBuffer=pOther->Hardware.pdsBuffer;
+        if(!pBuffer) { Finished++; continue; }
+        pBuffer->AddRef();
+        u32 Previous=pOther->EndPosition;
+        pBuffer->GetCurrentPosition((DWORD*)&pOther->EndPosition,NULL);
+        DWORD Status;
+        pBuffer->GetStatus(&Status);
+        if(pOther->EndPosition<Previous && Previous>0x20000)
+            pOther->CurrBufferPosition+=0x40000;
+        u32 Position=g_AudioHardware.GetSamplesPlayed(pOther);
+        pOther->PrevBufferPosition=Position;
+        Segment=Position>>16;
+        if(Segment!=pOther->MidPoint) Transitions++;
+        if(Position>=pOther->Sample.pHotSample->nSamples) Finished++;
+        pBuffer->Release();
+    }
+    if(Count==Transitions)
+    {
+        for(s32 i=0;i<Count;i++) pStream->pChannel[i]->MidPoint=Segment;
+        if(pStream->WaveformCursor>=pStream->WaveformLength)
+        {
+            if(!pStream->StreamDone)
+            {
+                // Real PC diagnostic literal; supplied from pinned bytes at seal time.
+                x_DebugMsg("Stream %x should be done\n",pStream);
+                pStream->StreamDone=TRUE;
+            }
+            g_AudioHardware.DecodeADPCMBuffer(pStream->pChannel[0]->Hardware.pdsBuffer,NULL,0,pStream->ARAMWriteBuffer*0x9000,0x9000);
+        }
+        else g_AudioStreamMgr.ReadStream(pStream,NULL);
+    }
+    if(Count==Finished)
+        for(s32 i=0;i<Count;i++)
+            if(pStream->pChannel[i]->Hardware.pdsBuffer)
+                pStream->pChannel[i]->Hardware.pdsBuffer->Stop();
+}
+RVA(0x0027b230, 0x2f)
+void audio_hardware::UpdateStream(channel* pChannel)
+{
+    if(pChannel && pChannel->Type==COLD_SAMPLE &&
+       (pChannel->State==STATE_RUNNING || pChannel->State==STATE_STARTING) &&
+       pChannel->Sample.pHotSample->CompressionType==ADPCM)
+        pc_UpdateStreamADPCM(pChannel);
+}
+#endif

@@ -9,6 +9,9 @@
 #include <xCore/Entropy/Audio/audio_channel_mgr.hpp>
 #include <xCore/Entropy/IOManager/io_request.hpp>
 
+// Descriptive reconstructed name; complete real PC copy body, original spelling unknown.
+extern void pc_CopyCompletedStreamBuffer(io_request* pRequest, audio_stream* pStream, s32 WriteBufferIndex);
+
 extern void audio_stream_read_callback( io_request* pRequest, audio_stream* pStream, s32 ReadBufferIndex );
 
 class audio_stream_mgr

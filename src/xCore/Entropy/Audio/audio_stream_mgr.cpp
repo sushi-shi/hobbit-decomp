@@ -377,6 +377,88 @@ audio_stream_mgr::~audio_stream_mgr( void )
 //------------------------------------------------------------------------------
 
 RVA(0x002777c0, 0x1a7)
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_STREAMS)
+audio_stream* audio_stream_mgr::AcquireStream( u32 WaveformOffset, u32 WaveformLength, channel* pLeft, channel* pRight )
+{
+    CONTEXT( "audio_stream_mgr::AcquireStream" );
+
+    audio_stream* pStream = NULL;
+    xbool bStreamAvailable = FALSE;
+    s32 CompressionType = pLeft->pElement->Sample.pColdSample->CompressionType;
+    voice* pVoice = NULL;
+    if( pLeft->pElement )
+        pVoice = pLeft->pElement->pVoice;
+
+    for( s32 i=0 ; i<7 ; i++ )
+    {
+        if( m_AudioStreams[i].Type == INACTIVE )
+        {
+            bStreamAvailable = TRUE;
+            io_request::status Status = m_AudioStreams[i].pIoRequest->GetStatus();
+            if( (Status != io_request::QUEUED) &&
+                (Status != io_request::PENDING) &&
+                (Status != io_request::IN_PROGRESS) &&
+                (m_AudioStreams[i].FileHandle == NULL) )
+            {
+                pStream = &m_AudioStreams[i];
+                break;
+            }
+        }
+    }
+
+    if( !bStreamAvailable )
+    {
+        x_DebugMsg( "AcquireStream: Failed to acquire a stream for '%s'!!!!\n", pVoice->pDescriptorName );
+    }
+
+    if( pStream )
+    {
+        if( pRight )
+        {
+            pStream->Type = STEREO_STREAM;
+            switch( CompressionType )
+            {
+                case ADPCM: pStream->ReadBufferSize = 0x12000; break;
+                case MP3:   pStream->ReadBufferSize = MP3_BUFFER_SIZE; break;
+                default:    break;
+            }
+        }
+        else
+        {
+            pStream->Type = MONO_STREAM;
+            switch( CompressionType )
+            {
+                case ADPCM: pStream->ReadBufferSize = 0x9000; break;
+                case MP3:   pStream->ReadBufferSize = MP3_BUFFER_SIZE; break;
+                default:    break;
+            }
+        }
+
+        pStream->ARAMWriteBuffer = 0;
+        pStream->bOpenStream = FALSE;
+        pStream->bStartStream = FALSE;
+        pStream->bStopStream = FALSE;
+        pStream->CompressionType = (compression_types)CompressionType;
+        pStream->ReadState = 0;
+        pStream->CursorMP3 = 0;
+        pStream->HandleMP3 = NULL;
+        pStream->StreamDone = FALSE;
+        pStream->FileHandle = NULL;
+        pStream->WaveformOffset = WaveformOffset;
+        pStream->WaveformLength = WaveformLength;
+        pStream->WaveformCursor = 0;
+        pStream->CompletedCopies = 0;
+        pStream->pChannel[LEFT_CHANNEL] = pLeft;
+        pStream->pChannel[RIGHT_CHANNEL] = pRight;
+    }
+
+    if( bStreamAvailable && (pStream == NULL) )
+        pStream = COOLING_STREAM;
+
+    return pStream;
+}
+
+#else
 audio_stream* audio_stream_mgr::AcquireStream( u32 WaveformOffset, u32 WaveformLength, channel* pLeft, channel* pRight )
 {
     CONTEXT( "audio_stream_mgr::AcquireStream" );
@@ -502,6 +584,8 @@ audio_stream* audio_stream_mgr::AcquireStream( u32 WaveformOffset, u32 WaveformL
     return pStream;
 }
 
+#endif
+
 //------------------------------------------------------------------------------
 
 #if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_STREAMS)
@@ -528,6 +612,26 @@ void audio_stream_mgr::ReleaseStream( audio_stream* pStream )
 //------------------------------------------------------------------------------
 
 RVA(0x00277990, 0xed)
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_STREAMS)
+xbool audio_stream_mgr::WarmStream( audio_stream* pStream, io_request::callback_fn* pCallback )
+{
+    CONTEXT( "audio_stream_mgr::WarmStream" );
+    pStream->CompletedCopies = 0;
+    io_request::status status = pStream->pIoRequest->GetStatus();
+    if( (pStream->Type != INACTIVE) && (status == io_request::NOT_QUEUED || status == io_request::COMPLETED || status == io_request::FAILED) )
+    {
+        pStream->WaveformCursor = 0;
+        pStream->ARAMWriteBuffer = 0;
+        if( pCallback == NULL )
+            pCallback = warm_callbacks[ pStream->Index ][ pStream->ARAMWriteBuffer ];
+        return ReadStream( pStream, pCallback );
+    }
+    x_DebugMsg( "Couldn't warm stream - bad things will happen" );
+    pStream->bStopStream = TRUE;
+    return FALSE;
+}
+
+#else
 xbool audio_stream_mgr::WarmStream( audio_stream* pStream, io_request::callback_fn* pCallback )
 {
     CONTEXT( "audio_stream_mgr::WarmStream" );
@@ -569,8 +673,36 @@ xbool audio_stream_mgr::WarmStream( audio_stream* pStream, io_request::callback_
     return Result;
 }
 
+#endif
+
 //------------------------------------------------------------------------------
 
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_STREAMS)
+RVA(0x00277a80, 0x123)
+xbool audio_stream_mgr::ReadStream( audio_stream* pStream, io_request::callback_fn* pCallback )
+{
+    CONTEXT( "audio_stream_mgr::ReadStream" );
+    xbool Result = FALSE;
+    if( pStream->StreamDone )
+        return FALSE;
+    io_request::status status = pStream->pIoRequest->GetStatus();
+    if( (pStream->Type != INACTIVE) && (status == io_request::NOT_QUEUED || (status == io_request::FAILED || (status == io_request::COMPLETED && pStream->ReadState == 0))) )
+    {
+        if( pCallback == NULL )
+            pCallback = read_callbacks[ pStream->Index ][ pStream->ARAMWriteBuffer ];
+        SetRequest( pStream, pCallback );
+        pStream->WaveformCursor += pStream->ReadBufferSize;
+        if( pStream->WaveformCursor >= pStream->WaveformLength )
+            pStream->StreamDone = TRUE;
+        m_ActiveReadBuffer ^= 1;
+        pStream->ReadState = 1;
+        g_IoMgr.QueueRequest( pStream->pIoRequest );
+        Result = TRUE;
+    }
+    return Result;
+}
+
+#else
 xbool audio_stream_mgr::ReadStream( audio_stream* pStream, io_request::callback_fn* pCallback )
 {
     CONTEXT( "audio_stream_mgr::ReadStream" );
@@ -644,6 +776,8 @@ xbool audio_stream_mgr::ReadStream( audio_stream* pStream, io_request::callback_
 */
     return Result;
 }
+
+#endif
 
 //------------------------------------------------------------------------------
 
