@@ -3817,6 +3817,44 @@ void audio_voice_mgr::InitSingleElement( element* pElement )
 //------------------------------------------------------------------------------
 
 RVA(0x00279980, 0xfe)
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
+void audio_voice_mgr::InstantiateStreamSample ( audio_stream* pStream, s32 WhichChannel )
+{
+    CONTEXT( "audio_voice_mgr::InstantiateStreamSample" );
+
+    channel* pLeftChannel = pStream->pChannel[LEFT_CHANNEL];
+    audio_package* pPackage = pLeftChannel->pElement->pVoice->pPackage;
+
+    switch( WhichChannel )
+    {
+        case LEFT_CHANNEL:
+        {
+            hot_sample* pSource = pLeftChannel->Sample.pHotSample;
+            pStream->Samples[LEFT_CHANNEL].Sample = *pSource;
+            s32 HeaderSize = pPackage->m_Header.HeaderSizes[pSource->CompressionType];
+            x_memset( &pStream->Samples[LEFT_CHANNEL].Header, 0, sizeof(compression_header) );
+            x_memcpy( &pStream->Samples[LEFT_CHANNEL].Header, pSource, HeaderSize );
+            pStream->pChannel[LEFT_CHANNEL]->Sample.pHotSample = &pStream->Samples[LEFT_CHANNEL].Sample;
+            break;
+        }
+
+        case RIGHT_CHANNEL:
+        {
+            hot_sample* pSource = pLeftChannel->Sample.pHotSample;
+            pStream->Samples[RIGHT_CHANNEL].Sample = *pSource;
+            s32 HeaderSize = pPackage->m_Header.HeaderSizes[pSource->CompressionType];
+            x_memset( &pStream->Samples[RIGHT_CHANNEL].Header, 0, sizeof(compression_header) );
+            x_memcpy( &pStream->Samples[RIGHT_CHANNEL].Header, pSource, HeaderSize );
+            pStream->pChannel[RIGHT_CHANNEL]->Sample.pHotSample = &pStream->Samples[RIGHT_CHANNEL].Sample;
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+#else
 void audio_voice_mgr::InstantiateStreamSample ( audio_stream* pStream, s32 WhichChannel )
 {
     CONTEXT( "audio_voice_mgr::InstantiateStreamSample" );
@@ -3865,6 +3903,8 @@ void audio_voice_mgr::InstantiateStreamSample ( audio_stream* pStream, s32 Which
             break;
     }
 }
+
+#endif
 
 //------------------------------------------------------------------------------
 

@@ -9,6 +9,22 @@
 // await revision recovery; full prior and later originals remain retained.
 #if defined(TARGET_PC) && !defined(HOBBIT_IO_LATER_FILESYSTEM)
 
+DATA(0x3f86f0)
+static open_fn*     old_Open            = NULL;     // old filesystem functions
+static close_fn*    old_Close           = NULL;
+static read_fn*     old_Read            = NULL;
+static write_fn*    old_Write           = NULL;
+static seek_fn*     old_Seek            = NULL;
+static tell_fn*     old_Tell            = NULL;
+static flush_fn*    old_Flush           = NULL;
+static eof_fn*      old_EOF             = NULL;
+static length_fn*   old_Length          = NULL;
+
+DATA(0x3f8714)
+static xbool s_Initialized = FALSE;
+DATA(0x3f8718)
+static s32 s_MountedCount = 0;
+
 // Natural implicit entry destructor; no authored destructor body.
 RVA_COMPGEN(0x00276ec0, 0x56, ??1io_dfs_data@io_fs@@QAE@XZ)
 
@@ -389,6 +405,103 @@ xbool io_fs::FindFile( const char* pPathName, io_device_file* &DeviceFile, u32 &
 
     // Tell the world.
     return Result;
+}
+
+
+// Complete earlier-PC Open behavior; full later method remains in retained reference.
+RVA(0x276660, 0x1f2)
+io_open_file* io_fs::Open( const char* pPathName, const char* pMode )
+{
+    io_open_file* pOpenFile = NULL;
+    xbool bRead = FALSE;
+    xbool bWrite = FALSE;
+    xbool bAppend = FALSE;
+    m_Mutex.Enter();
+    const char* pModeLocal = pMode;
+    while( *pModeLocal )
+    {
+        if( (*pModeLocal == 'r') || (*pModeLocal == 'R') ) bRead = TRUE;
+        if( (*pModeLocal == 'w') || (*pModeLocal == 'W') ) bWrite = TRUE;
+        if( (*pModeLocal == 'a') || (*pModeLocal == 'A') ) bAppend = TRUE;
+        ++pModeLocal;
+    }
+    if( !s_Initialized )
+        return NULL;
+    if( bWrite )
+    {
+        pOpenFile = AcquireFile();
+        if( old_Open )
+        {
+            pOpenFile->PassThrough = old_Open( pPathName, pMode );
+            if( pOpenFile->PassThrough )
+            {
+                pOpenFile->bRead = FALSE;
+                pOpenFile->bWrite = FALSE;
+                pOpenFile->bAppend = FALSE;
+                pOpenFile->pDeviceFile = NULL;
+                pOpenFile->Offset = 0;
+                pOpenFile->Length = 0;
+                pOpenFile->Position = 0;
+                pOpenFile->Mode = 0;
+                pOpenFile->pNext = NULL;
+                m_Mutex.Exit();
+                return pOpenFile;
+            }
+        }
+        ReleaseFile( pOpenFile );
+        m_Mutex.Exit();
+        return NULL;
+    }
+    if( s_MountedCount )
+    {
+        u32 Offset;
+        u32 Length;
+        io_device_file* pDeviceFile;
+        if( FindFile( pPathName, pDeviceFile, Offset, Length ) )
+        {
+            pOpenFile = AcquireFile();
+            if( pOpenFile )
+            {
+                pOpenFile->bRead = bRead;
+                pOpenFile->bWrite = FALSE;
+                pOpenFile->bAppend = bAppend;
+                pOpenFile->PassThrough = NULL;
+                pOpenFile->pDeviceFile = pDeviceFile;
+                pOpenFile->Offset = Offset;
+                pOpenFile->Length = Length;
+                pOpenFile->Position = 0;
+                pOpenFile->Mode = 0;
+                pOpenFile->pNext = NULL;
+                x_strncpy( pOpenFile->Filename, pPathName, 256 );
+            }
+        }
+    }
+    if( !pOpenFile )
+    {
+        io_device_file* pDeviceFile = g_IoMgr.OpenDeviceFile( pPathName, 0 );
+        if( pDeviceFile )
+        {
+            pOpenFile = AcquireFile();
+            if( pOpenFile )
+            {
+                pOpenFile->bRead = bRead;
+                pOpenFile->bWrite = FALSE;
+                pOpenFile->bAppend = bAppend;
+                pOpenFile->PassThrough = NULL;
+                pOpenFile->pDeviceFile = pDeviceFile;
+                pOpenFile->Offset = 0;
+                pOpenFile->Length = pDeviceFile->Length;
+                pOpenFile->Position = 0;
+                pOpenFile->Mode = 0;
+                pOpenFile->pNext = NULL;
+                x_strncpy( pOpenFile->Filename, pPathName, 256 );
+            }
+            else
+                g_IoMgr.CloseDeviceFile( pDeviceFile );
+        }
+    }
+    m_Mutex.Exit();
+    return pOpenFile;
 }
 
 RVA(0x276860, 0x4c)

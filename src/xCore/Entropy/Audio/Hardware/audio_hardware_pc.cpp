@@ -2083,3 +2083,44 @@ void audio_hardware::ResumeChannel(channel* pChannel)
     pChannel->Hardware.IsStarted=TRUE;
 }
 #endif
+
+#if !defined(HOBBIT_AUDIO_LATER_IAL_IMPLEMENTATION)
+// Earlier PC DirectSound body; complete later IAL source remains above, inactive.
+RVA(0x0027bcc0, 0x136)
+void audio_hardware::InitChannelStreamed(channel* pChannel)
+{
+    hot_sample* pSample=pChannel->Sample.pHotSample;
+    s32 SampleBytes=pSample->nSamples*2;
+    LPDIRECTSOUNDBUFFER pBuffer=pChannel->Hardware.pdsBuffer;
+    pChannel->ReleasePosition=0;
+    pChannel->EndPosition=0;
+    pChannel->CurrBufferPosition=0;
+    pChannel->PrevBufferPosition=0;
+    pChannel->MidPoint=(u32)-1;
+    pChannel->Dirty=0;
+    pChannel->Hardware.IsLooped=(pSample->LoopEnd!=0);
+    WAVEFORMATEX Format;
+    ZeroMemory(&Format,sizeof(Format));
+    pChannel->StartPosition=0x20000;
+    pChannel->Hardware.IsStarted=FALSE;
+    Format.nSamplesPerSec=pSample->SampleRate;
+    Format.wFormatTag=WAVE_FORMAT_PCM;
+    Format.nChannels=1;
+    Format.nAvgBytesPerSec=Format.nSamplesPerSec*2;
+    Format.wBitsPerSample=16;
+    Format.nBlockAlign=2;
+    DSBUFFERDESC Desc;
+    ZeroMemory(&Desc,sizeof(Desc));
+    Desc.guid3DAlgorithm=DS3DALG_DEFAULT;
+    Desc.lpwfxFormat=&Format;
+    Desc.dwBufferBytes=0x40000;
+    Desc.dwSize=sizeof(Desc);
+    Desc.dwFlags=DSBCAPS_CTRLPAN|DSBCAPS_CTRLVOLUME|DSBCAPS_GETCURRENTPOSITION2|DSBCAPS_LOCDEFER;
+    s_pDirectSound->CreateSoundBuffer(&Desc,&pBuffer,NULL);
+    pBuffer->SetCurrentPosition(0);
+    if(SampleBytes<0x20000)
+        pChannel->Hardware.IsLooped=FALSE;
+    pChannel->Hardware.pdsBuffer=pBuffer;
+    s_ChannelsInUse++;
+}
+#endif
