@@ -252,6 +252,7 @@ audio_stream_mgr::~audio_stream_mgr( void )
 
 //------------------------------------------------------------------------------
 
+RVA(0x002777c0, 0x1a7)
 audio_stream* audio_stream_mgr::AcquireStream( u32 WaveformOffset, u32 WaveformLength, channel* pLeft, channel* pRight )
 {
     CONTEXT( "audio_stream_mgr::AcquireStream" );
@@ -402,6 +403,7 @@ void audio_stream_mgr::ReleaseStream( audio_stream* pStream )
 
 //------------------------------------------------------------------------------
 
+RVA(0x00277990, 0xed)
 xbool audio_stream_mgr::WarmStream( audio_stream* pStream, io_request::callback_fn* pCallback )
 {
     CONTEXT( "audio_stream_mgr::WarmStream" );
@@ -522,6 +524,71 @@ xbool audio_stream_mgr::ReadStream( audio_stream* pStream, io_request::callback_
 //------------------------------------------------------------------------------
 
 RVA(0x00277bb0, 0x138)
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_STREAMS)
+void audio_stream_mgr::Update( void )
+{
+    audio_stream* pStream = g_AudioStreamMgr.m_AudioStreams;
+    for( s32 i = 0; i < 7; i++, pStream++ )
+    {
+        if( pStream->bOpenStream )
+        {
+            pStream->bOpenStream = FALSE;
+            if( pStream->pChannel[0]->pElement &&
+                pStream->pChannel[0]->pElement->pVoice &&
+                pStream->pChannel[0]->pElement->pVoice->pPackage )
+            {
+                pStream->FileHandle = g_IOFSMgr.Open( pStream->pChannel[0]->pElement->pVoice->pPackage->m_Filename, "rb" );
+                g_AudioStreamMgr.WarmStream( pStream, NULL );
+            }
+        }
+        if( pStream->bStartStream && pStream->Type != INACTIVE )
+        {
+            pStream->bStartStream = FALSE;
+            switch( pStream->Type )
+            {
+                case MONO_STREAM:
+                    if( pStream->pChannel[LEFT_CHANNEL] )
+                        pStream->pChannel[LEFT_CHANNEL]->pElement->State = ELEMENT_LOADED;
+                    break;
+                case STEREO_STREAM:
+                    if( pStream->pChannel[LEFT_CHANNEL] )
+                        pStream->pChannel[LEFT_CHANNEL]->pElement->State = ELEMENT_LOADED;
+                    if( pStream->pChannel[RIGHT_CHANNEL] )
+                        pStream->pChannel[RIGHT_CHANNEL]->pElement->State = ELEMENT_LOADED;
+                    break;
+            }
+        }
+        else if( pStream->bStopStream )
+        {
+            s32 Status = (s32)pStream->pIoRequest->GetStatus();
+            if( Status != io_request::QUEUED && Status != io_request::PENDING && Status != io_request::IN_PROGRESS )
+            {
+                pStream->bStopStream = FALSE;
+                if( pStream->FileHandle )
+                {
+                    g_IOFSMgr.Close( pStream->FileHandle );
+                    pStream->FileHandle = NULL;
+                }
+                pStream->Type = INACTIVE;
+                pStream->ReadState = 0;
+            }
+        }
+        else if( pStream->Type != INACTIVE )
+        {
+            switch( pStream->Type )
+            {
+                case MONO_STREAM:
+                    g_AudioHardware.UpdateStream( pStream->pChannel[LEFT_CHANNEL] );
+                    break;
+                case STEREO_STREAM:
+                    g_AudioHardware.UpdateStream( pStream->pChannel[RIGHT_CHANNEL] );
+                    g_AudioHardware.UpdateStream( pStream->pChannel[LEFT_CHANNEL] );
+                    break;
+            }
+        }
+    }
+}
+#else
 void audio_stream_mgr::Update( void )
 {
     audio_stream* pStream  = g_AudioStreamMgr.m_AudioStreams;
@@ -760,6 +827,7 @@ void audio_stream_mgr::Update( void )
         }
     }
 }
+#endif
 
 #if !defined(TARGET_PC) || defined(HOBBIT_AUDIO_LATER_STREAMS)
 xbool audio_stream_mgr::ReserveStreams( s32 nStreams )

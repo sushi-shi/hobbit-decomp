@@ -2834,6 +2834,185 @@ inline void audio_voice_mgr::UpdateStatePausing( voice* pVoice, f32 Time )
 
 //------------------------------------------------------------------------------
 
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
+inline voice* audio_voice_mgr::UpdateCheckStreams( voice* pVoice )
+{
+    CONTEXT( "audio_voice_mgr::UpdateCheckStreams" );
+
+    element* pHead;
+    element* pElement;
+
+    // For every element in the list...
+    pHead    = (element*)&pVoice->Elements;
+    pElement = pHead->Link.pNext;
+    while( pHead != pElement )
+    {
+        {
+
+            // Element need to warm up?
+            ASSERT( VALID_ELEMENT( pElement ) );
+            if( pElement->State == ELEMENT_NEEDS_TO_LOAD )
+            {
+                ASSERT( pElement->Type == COLD_SAMPLE );
+                
+                // Time to warm it up?
+                if( (pVoice->CursorTime + 1.5f) >= pElement->DeltaTime )
+                {
+                    audio_stream* pStream        = NULL;
+                    element*      pLeftElement   = NULL;
+                    element*      pRightElement  = NULL;
+                    channel*      pLeftChannel   = NULL;
+                    channel*      pRightChannel  = NULL;
+                    
+                    // Attempt to aquire a hardware channel.
+                    if( pElement->pChannel == NULL )
+                    {
+                        pLeftElement = pElement;
+                        pLeftElement->Params.Priority = 255;
+
+                        if( g_AudioChannelMgr.Acquire( pLeftElement ) )
+                        {
+                            // Get left channel
+                            pLeftChannel = pLeftElement->pChannel;
+
+                            if( (pRightElement = pElement->pStereoElement) != NULL )
+                            {
+                                pRightElement->Params.Priority = 255;
+                                if( g_AudioChannelMgr.Acquire( pRightElement ) )
+                                {
+                                    // Get right channel
+                                    pRightChannel = pRightElement->pChannel;
+
+                                    // Mark it processed
+                                }
+                                else
+                                {
+                                    g_AudioChannelMgr.Release( pLeftElement->pChannel );
+                                    pLeftElement->pChannel = NULL;
+                                    return NULL;
+                                    // Should NEVER get here!
+                                    ASSERT( 0 );
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return NULL;
+                            BREAK;
+                            // Should NEVER get here!
+                            ASSERT( 0 );
+                        }
+                    }
+                    else
+                    {
+                        pLeftElement = pElement;
+                        pLeftChannel = pLeftElement->pChannel;
+                        if( (pRightElement = pElement->pStereoElement) != NULL )
+                            pRightChannel = pRightElement->pChannel;
+                    }
+
+                    // Try to aquire a stream.
+                    pStream = g_AudioStreamMgr.AcquireStream( pElement->Sample.pColdSample->WaveformOffset,
+                                                            pElement->Sample.pColdSample->WaveformLength,
+                                                            pLeftChannel, pRightChannel );
+
+                    if( pStream == COOLING_STREAM )
+                    {
+                        // Its cooling, so just chill out for a bit...
+                    }
+                    else if( pStream == NULL )
+                    {
+                        // Nuke the voice, put it in the freelist if the stream can't be started.
+                        // TODO: Fix this so it just removes the elements.
+                        FreeVoice( pVoice, TRUE );
+                        return NULL;
+                    }
+                    else
+                    {
+                        // AHA! A stream is available!!!
+                        ASSERT( pStream->pChannel[ LEFT_CHANNEL ] );
+                        
+                            // Instantiate the sample.
+                            InstantiateStreamSample( pStream, LEFT_CHANNEL );
+
+                            // Mark left as loading, set the aram
+                            pLeftElement->State                        = ELEMENT_LOADING;
+                            pLeftChannel->StreamData.pStream           = pStream;
+                            pLeftChannel->StreamData.StreamControl     = TRUE;
+                            pLeftChannel->StreamData.bStopLoop         = TRUE;
+                            pLeftChannel->Sample.pHotSample->AudioRam  = pStream->ARAM[LEFT_CHANNEL][0];
+                            pLeftChannel->Sample.pHotSample->LoopStart = 0;
+                            pLeftChannel->Sample.pHotSample->LoopEnd   = 0x40000;
+
+                            // Init the channel.
+                            g_AudioHardware.InitChannelStreamed( pLeftChannel );
+                        
+
+                        /// Stereo?
+                        if( pRightElement )
+                        {
+                            // Right channel will be the control.
+                            // *** This important cause the right channel is operated on   ***
+                            // *** last in the update.  The last channel to be operated on *** 
+                            // *** MUST be the control!!!!                                 *** 
+                            pLeftChannel->StreamData.StreamControl = FALSE;
+
+                            // Instantiate the sample.
+                            ASSERT( pStream->pChannel[RIGHT_CHANNEL] );
+                            
+                                InstantiateStreamSample( pStream, RIGHT_CHANNEL );
+
+                                // Mark right channel as loading, set the aram
+                                pRightElement->State                        = ELEMENT_LOADING;
+                                pRightChannel->StreamData.pStream           = pStream;
+                                pRightChannel->StreamData.StreamControl     = TRUE;
+                                pRightChannel->StreamData.bStopLoop         = TRUE;
+                                pRightChannel->Sample.pHotSample->AudioRam  = pStream->ARAM[RIGHT_CHANNEL][0]; 
+                                pRightChannel->Sample.pHotSample->LoopStart = 0;
+                                pRightChannel->Sample.pHotSample->LoopEnd   = 0x40000;
+
+                                // Init the channel.
+                                g_AudioHardware.InitChannelStreamed( pRightChannel );
+                            
+                        }
+
+                        // Warm it up!
+                        pStream->bOpenStream = TRUE;
+                    }
+                }
+            }
+            // Finished loading?
+            else if( pElement->State == ELEMENT_LOADED )
+            {
+                // Start loading the the second buffer.
+                ASSERT( pElement->pChannel->StreamData.pStream );
+                if( !pElement->pChannel->StreamData.pStream )
+                {
+                    FreeVoice( pVoice, TRUE );
+                    return NULL;
+                }
+
+                // Mark it as ready.
+                pElement->State = ELEMENT_READY;
+
+                // Stereo? If so, mark stereo element as ready.
+                if( pElement->pStereoElement )
+                    pElement->pStereoElement->State = ELEMENT_READY;
+
+                // Element has changed.
+                pVoice->Dirty |= VOICE_DB_ELEMENT_CHANGE;
+
+            }
+        }
+
+        // Walk the list.
+        pElement = pElement->Link.pNext;
+    }
+    
+    // Its all good!
+    return pVoice;
+}
+#else
 inline voice* audio_voice_mgr::UpdateCheckStreams( voice* pVoice )
 {
     CONTEXT( "audio_voice_mgr::UpdateCheckStreams" );
@@ -3026,10 +3205,111 @@ inline voice* audio_voice_mgr::UpdateCheckStreams( voice* pVoice )
     // Its all good!
     return pVoice;
 }
+#endif
 
 //------------------------------------------------------------------------------
 
 RVA(0x00279140, 0x3b6)
+#if defined(TARGET_PC) && !defined(HOBBIT_AUDIO_LATER_VOICE_ALGORITHMS)
+void audio_voice_mgr::Update( f32 DeltaTime )
+{
+    CONTEXT( "audio_voice_mgr::Update" );
+
+    voice*   pHeadVoice;
+    voice*   pVoice;
+    voice*   pNextVoice;
+
+    // Snag mutex.
+    Lock();
+
+    // Get head/tail of active voices, first active voice
+    pHeadVoice = UsedVoices();
+    pVoice     = pHeadVoice->Link.pNext;
+
+    // For each active voice...
+    while( pVoice != pHeadVoice )
+    {
+        // Get next voice.
+        ASSERT( VALID_VOICE(pVoice) );
+        pNextVoice = pVoice->Link.pNext;
+
+        // Earlier PC checks the stream loop directly, including an empty list.
+        pVoice = UpdateCheckStreams( pVoice );
+
+        // What to do?
+        if( pVoice )
+        {
+            switch( pVoice->State )
+            {
+                case STATE_NOT_STARTED:
+#ifdef UPDATE_STATE_LOGGING
+                    LOG_MESSAGE( UPDATE_STATE_LOGGING, "pVoice: %08x, State: STATE_NOT_STARTED", pVoice );
+#endif
+                    break;
+ 
+                case STATE_STARTING:
+#ifdef UPDATE_STATE_LOGGING
+                    LOG_MESSAGE( UPDATE_STATE_LOGGING, "pVoice: %08x, State: STATE_STARTING", pVoice );
+#endif
+                    pVoice = UpdateStateStarting( pVoice );
+                    if( pVoice )
+                    {
+                        pVoice->StartTime  = g_AudioMgr.m_Time;
+                        pVoice = UpdateStateRunning( pVoice, 0.0f );
+                    }
+                    break;
+ 
+                case STATE_RESUMING:
+#ifdef UPDATE_STATE_LOGGING
+                    LOG_MESSAGE( UPDATE_STATE_LOGGING, "pVoice: %08x, State: STATE_RESUMING", pVoice );
+#endif
+                    pVoice = UpdateStateResuming( pVoice );
+                    if( pVoice )
+                    {
+                        pVoice->StartTime = g_AudioMgr.m_Time-pVoice->StopTime;
+                        pVoice = UpdateStateRunning( pVoice, 0.0f );
+                    }
+                    break;
+ 
+                case STATE_RUNNING:
+#ifdef UPDATE_STATE_LOGGING
+                    LOG_MESSAGE( UPDATE_STATE_LOGGING, "pVoice: %08x, State: STATE_RUNNING", pVoice );
+#endif
+                    // Update the voices cursor time.
+                    pVoice->CursorTime += DeltaTime;
+                    pVoice = UpdateStateRunning( pVoice, DeltaTime );
+                    break;
+ 
+                case STATE_PAUSING:
+#ifdef UPDATE_STATE_LOGGING
+                    LOG_MESSAGE( UPDATE_STATE_LOGGING, "pVoice: %08x, State: STATE_PAUSING", pVoice );
+#endif
+                    UpdateStatePausing( pVoice, g_AudioMgr.m_Time );
+                    break;
+ 
+                case STATE_PAUSED:
+#ifdef UPDATE_STATE_LOGGING
+                    LOG_MESSAGE( UPDATE_STATE_LOGGING, "pVoice: %08x, State: STATE_PAUSED", pVoice );
+#endif
+                    break;
+            }
+        }
+    
+        // Only if voice is still around and running...
+        if( pVoice && (pVoice->State == STATE_RUNNING) )
+        {
+            // Attempt to start any pending elements...
+            UpdateStartPending( pVoice );
+        }
+
+        // Walk the list.
+        pVoice = pNextVoice;
+    }
+
+    // Release it.
+    Unlock();
+}
+#else
 void audio_voice_mgr::Update( f32 DeltaTime )
 {
     CONTEXT( "audio_voice_mgr::Update" );
@@ -3136,6 +3416,7 @@ void audio_voice_mgr::Update( f32 DeltaTime )
     // Release it.
     Unlock();
 }
+#endif
 
 
 //------------------------------------------------------------------------------
@@ -3535,6 +3816,7 @@ void audio_voice_mgr::InitSingleElement( element* pElement )
 
 //------------------------------------------------------------------------------
 
+RVA(0x00279980, 0xfe)
 void audio_voice_mgr::InstantiateStreamSample ( audio_stream* pStream, s32 WhichChannel )
 {
     CONTEXT( "audio_voice_mgr::InstantiateStreamSample" );
