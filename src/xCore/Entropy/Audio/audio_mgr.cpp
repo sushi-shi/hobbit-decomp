@@ -2202,6 +2202,7 @@ voice_id audio_mgr::Play( const char*    pIdentifier,
 
 //------------------------------------------------------------------------------
 
+RVA(0x259a10, 0x9f)
 xbool audio_mgr::Segue( voice_id VoiceID, voice_id VoiceToQ )
 {
     // Error check.
@@ -2226,6 +2227,7 @@ xbool audio_mgr::Segue( voice_id VoiceID, voice_id VoiceToQ )
 
 //------------------------------------------------------------------------------
 
+RVA(0x259ab0, 0x56)
 xbool audio_mgr::SetReleaseTime( voice_id VoiceID, f32 Time )
 {
     // Error check.
@@ -2438,6 +2440,7 @@ void audio_mgr::DisplayPackages()
 
 //------------------------------------------------------------------------------
 
+RVA(0x259db0, 0x5b)
 xbool audio_mgr::Start( voice_id VoiceID )
 {
     // Error check.
@@ -2632,6 +2635,7 @@ xbool audio_mgr::SetPosition( voice_id VoiceID, const vector3& Position )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25a2f0, 0x62)
 xbool audio_mgr::SetFalloff( voice_id VoiceID, f32 Near, f32 Far )
 {
     // Error check.
@@ -2692,6 +2696,7 @@ xbool audio_mgr::HasLipSync( voice_id VoiceID )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25a480, 0x63)
 f32 audio_mgr::GetLipSync( voice_id VoiceID )
 {
     // Error check.

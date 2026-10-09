@@ -139,18 +139,21 @@ void SwapEndian(f32& V) {
     *((u32*)(&V)) = I;
 }
 
+RVA(0x0013c8d0, 0x11)
 void SwapEndian(u16& V) {
     u16 I = *((u16*)(&V));
     I = (I >> 8) | (I << 8);
     *((u16*)(&V)) = I;
 }
 
+RVA(0x0013c8f0, 0x11)
 void SwapEndian(s16& V) {
     u16 I = *((u16*)(&V));
     I = (I >> 8) | (I << 8);
     *((u16*)(&V)) = I;
 }
 
+RVA(0x0013c910, 0x2f)
 void SwapEndian(s32& V) {
     u32 I = *((u32*)(&V));
     I = (I >> 24) | (I << 24) | ((I & 0x00FF0000) >> 8) | ((I & 0x0000FF00) << 8);
@@ -188,6 +191,7 @@ void SwapEndian(f32* pF, s32 nFloats) {
     }
 }
 
+RVA(0x0013c9d0, 0x10)
 void SwapEndian(vector3& V) {
     SwapEndian((f32*)&V, 3);
 }
@@ -196,6 +200,7 @@ void SwapEndian(quaternion& V) {
     SwapEndian((f32*)&V, 4);
 }
 
+RVA(0x0013c9f0, 0x10)
 void SwapEndian(matrix4& V) {
     SwapEndian((f32*)&V, 16);
 }
@@ -680,6 +685,7 @@ void anim_group::DumpFrames(s32 iAnim, const char* pFilename) {
 
 //=========================================================================
 
+RVA(0x0013d680, 0x40)
 xbool anim_group::Save(const char* pFileName, xbool bForGCN) {
     X_FILE* fp = x_fopen(pFileName, "wb");
     if (!fp) {
@@ -717,6 +723,7 @@ xbool anim_group::Load(const char* pFileName) {
 
 //=========================================================================
 
+RVA(0x0013d7a0, 0xfc)
 xbool anim_group::Save(X_FILE* fp, xbool bForGCN) {
     anim_group AG;
     AG.CopyFrom(*this);
@@ -891,6 +898,7 @@ xbool anim_group::Load(X_FILE* fp, const char* pFileName) {
 
 //=========================================================================
 
+RVA(0x0013dba0, 0x172)
 void anim_group::CopyFrom(anim_group& AG) {
 
     // Convert ptrs to indices and copy structure over
@@ -946,6 +954,7 @@ void anim_group::SetupOffsetsAndPtrs(xbool UseIndices) {
 
 //=========================================================================
 
+RVA(0x0013ddc0, 0x664)
 void anim_group::SetupForSaving(xbool bSetupIndices, xbool bToggleEndian) {
     s32 i;
 
@@ -1027,24 +1036,22 @@ void anim_group::SetupForSaving(xbool bSetupIndices, xbool bToggleEndian) {
         //
         for( i=0; i<m_nAnims; i++ )
         {
-            anim_info& AnimInfo = m_pAnimInfo[i];
-
-            SwapEndian(AnimInfo.m_nFrames);
-            SwapEndian(AnimInfo.m_nEvents);
-            SwapEndian(AnimInfo.m_iEvent);
-            SwapEndian(AnimInfo.m_nProps);
-            SwapEndian(AnimInfo.m_iProp);
-            SwapEndian(AnimInfo.m_Flags);
-            SwapEndian(AnimInfo.m_FPS);
-            SwapEndian(AnimInfo.m_HandleAngle);
-            SwapEndian(AnimInfo.m_TotalYaw);
-            SwapEndian(AnimInfo.m_TotalMoveDir);
-            SwapEndian(AnimInfo.m_TotalTranslation);
-            SwapEndian(AnimInfo.m_AnimKeys.m_nFrames);
-            SwapEndian(AnimInfo.m_AnimKeys.m_nBones);
-            SwapEndian(AnimInfo.m_AnimKeys.m_nProps);
-            SwapEndian(AnimInfo.m_AnimKeys.m_nKeyBlocks);
-            SwapEndian(AnimInfo.m_AnimKeys.m_iKeyBlock);
+            SwapEndian(m_pAnimInfo[i].m_nFrames);
+            SwapEndian(m_pAnimInfo[i].m_nEvents);
+            SwapEndian(m_pAnimInfo[i].m_iEvent);
+            SwapEndian(m_pAnimInfo[i].m_nProps);
+            SwapEndian(m_pAnimInfo[i].m_iProp);
+            SwapEndian(m_pAnimInfo[i].m_Flags);
+            SwapEndian(m_pAnimInfo[i].m_FPS);
+            SwapEndian(m_pAnimInfo[i].m_HandleAngle);
+            SwapEndian(m_pAnimInfo[i].m_TotalYaw);
+            SwapEndian(m_pAnimInfo[i].m_TotalMoveDir);
+            SwapEndian(m_pAnimInfo[i].m_TotalTranslation);
+            SwapEndian(m_pAnimInfo[i].m_AnimKeys.m_nFrames);
+            SwapEndian(m_pAnimInfo[i].m_AnimKeys.m_nBones);
+            SwapEndian(m_pAnimInfo[i].m_AnimKeys.m_nProps);
+            SwapEndian(m_pAnimInfo[i].m_AnimKeys.m_nKeyBlocks);
+            SwapEndian(m_pAnimInfo[i].m_AnimKeys.m_iKeyBlock);
         }
 
         //
