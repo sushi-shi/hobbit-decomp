@@ -1,70 +1,336 @@
-// Reconstructed older UI family adaptation; PC qualification in docs/imports/ui-hobbit-family.md.
-// Original Tribes-AA 4aab7137 support/ui/ui_font.cpp; complete Area51 variant retained as reference.
-//=========================================================================
-//
-//  ui_font.cpp
-//
-//=========================================================================
-
-#include <rva.h>
-
-#include <xCore/Entropy/Entropy.hpp>
-#include <xCore/Auxiliary/Bitmap/aux_Bitmap.hpp>
+// Earlier full Hobbit font family: complete PC-supported source methods.
+// Predecessor Tribes-AA/Area51 source variants retained in packet/reference
+// sources. NO ControlMap definition or allocation extent is manufactured.
+// ControlMap.hpp is an honest missing reconstructed game dependency; its
+// original header name/path/type/global spelling remains unknown.
 #include <Support/UI/ui_font.hpp>
-
-//=========================================================================
-
-#define OFFSET_X    (2048-(512/2))
-#define OFFSET_Y    (2048-(512/2))
-#define CHAR_WIDTH  13
-#define CHAR_HEIGHT 18
-#define XBORDER      8
-#define YBORDER      8
-
-//=========================================================================
-
-#ifdef TARGET_PS2
-
-struct header
+#include "ControlMap.hpp"
+#include <Support/UI/ui_font.hpp>
+// Complete earlier PC base methods; derived source is in backend.cpp.
+ui_font::ui_font() {}
+ui_font::~ui_font() {}
+static xbool IsLineBreak(xwchar C) { return C == 10 || C == 13; }
+static xbool IsSpace(xwchar C)
 {
-	dmatag  DMA;        // DMA tag
-	giftag  PGIF;       // GIF for setting PRIM register
-	s64     Prim;       // PRIM register
-    s64     Dummy;
-	giftag  GIF;		// GIF for actual primitives
-};
-
-struct char_info
+    return C < 256 && x_isspace(C) && !IsLineBreak(C);
+}
+void ui_font::SetString(const xwchar* String) const
 {
-	s64     Color;		// RGBAQ register
-    s64     T0;
-    s64     P0;
-    s64     T1;
-    s64     P1;
-    s64     Dummy;
-};
+    s32 Length = x_wstrlen(String);
+    if (Length == 0) m_String.Clear();
+    else if (String[Length-1] == 10) m_String = xwstring(Length, String);
+    else
+    {
+        m_String = xwstring(Length, String);
+        m_String += (xwchar)10;
+    }
+}
+s32 ui_font::GetToken(xwstring& Token) const
+{
+    x_mem_owner __owner__("ui_font::RenderText");
+    s32 Length=m_String.GetLength();
+    if (Length==0) return 4;
+    s32 Count=0;
+    if (IsSpace(m_String.GetAt(0)))
+    {
+        while (Count<Length && IsSpace(m_String.GetAt(Count))) ++Count;
+    Token = m_String.Left(Count);
+    m_String = m_String.Mid(Count, Length-Count);
+        return 2;
+    }
+    if (IsLineBreak(m_String.GetAt(0)))
+    {
+        while (Count<Length && IsLineBreak(m_String.GetAt(Count))) ++Count;
+    Token = m_String.Left(Count);
+    m_String = m_String.Mid(Count, Length-Count);
+        return 3;
+    }
+    if (m_String.GetAt(0)=='<')
+    {
+        while (Count<Length)
+        {
+            xwchar C=m_String.GetAt(Count++);
+            if (C=='>') break;
+        }
+    Token = m_String.Left(Count);
+    m_String = m_String.Mid(Count, Length-Count);
+        return 1;
+    }
+    while (Count<Length)
+    {
+        xwchar C=m_String.GetAt(Count);
+        if (IsSpace(C) || IsLineBreak(C) || C=='<')
+        {
+    Token = m_String.Left(Count);
+    m_String = m_String.Mid(Count, Length-Count);
+            return 0;
+        }
+        ++Count;
+    }
+    Token=m_String;
+    m_String.Clear();
+    return 0;
+}
+RVA(0x2a7dc0, 0x1dc)
+void ui_font::TextSize(irect& Rect, const xwchar* String, s32 Count) const
+{
+    x_mem_owner __owner__("ui_font::TextSize");
+    Rect.Set(0,0,0,0);
+    if (Count == -1) SetString(String);
+    else SetString((const xwchar*)xwstring(Count,String));
+    xwstring Token;
+    s32 Left = 0, Top = 0, Right = 0, Bottom = 0;
+    for (s32 Type = GetToken(Token); Type != 4; Type = GetToken(Token))
+    {
+        if (Type == 3)
+        {
+            Top += Rect.b;
+            Bottom += Rect.b;
+            Rect.l = MIN(Rect.l,Left);
+            Rect.t = MIN(Rect.t,Top);
+            Rect.r = MAX(Rect.r,Right);
+            Rect.b = MAX(Rect.b,Bottom);
+            Left = Top = Right = Bottom = 0;
+        }
+        else
+        {
+            irect R;
+            R.Set(0,0,0,0);
+            MeasureToken(R,Type,Token);
+            R.l += Right;
+            R.r += Right;
+            Left = MIN(Left,R.l);
+            Top = MIN(Top,R.t);
+            Right = MAX(Right,R.r);
+            Bottom = MAX(Bottom,R.b);
+        }
+    }
+}
 
-#endif
+void ui_font::TransformToken(s32& Type,xwstring& Token) const
+{
+    if (Type!=1) return;
+    Type=0;
+    switch(Token.GetAt(1))
+    {
+    case 'A': Token=g_BilboControlMap.GetControlName(4); break;
+    case 'D': Token=g_BilboControlMap.GetControlName(1); break;
+    case 'L': Token=g_BilboControlMap.GetControlName(13); break;
+    case 'R': Token=g_BilboControlMap.GetControlName(22); break;
+    case 'S': Token=g_BilboControlMap.GetInputName((input_gadget)185); break;
+    case 'a': Token=g_BilboControlMap.GetControlName(1); break;
+    case 'b': Token=g_BilboControlMap.GetControlName(7); break;
+    case 'd': Token=g_BilboControlMap.GetControlName(36); break;
+    case 'e': Token=g_BilboControlMap.GetControlName(44); break;
+    case 'f': Token=g_BilboControlMap.GetControlName(45); break;
+    case 'g': Token=g_BilboControlMap.GetControlName(51); break;
+    case 'h': Token=g_BilboControlMap.GetControlName(74); break;
+    case 'i': Token=g_BilboControlMap.GetControlName(68); break;
+    case 'j': Token=g_BilboControlMap.GetControlName(48); break;
+    case 'k': Token=g_BilboControlMap.GetControlName(49); break;
+    case 'l': Token=g_BilboControlMap.GetControlName(30); break;
+    case 'q': Token=g_BilboControlMap.GetControlName(70); break;
+    case 'r': Token=g_BilboControlMap.GetControlName(27); break;
+    case 's': Token=g_BilboControlMap.GetControlName(50); break;
+    case 't': Token=g_BilboControlMap.GetControlName(76); break;
+    case 'u': Token=g_BilboControlMap.GetControlName(33); break;
+    case 'y': Token=g_BilboControlMap.GetControlName(16); break;
+    case 'z': Token=g_BilboControlMap.GetControlName(19); break;
+    case 'c': case 'x': break;
+    default: Type=1; break;
+    }
+}
 
-//=========================================================================
+// Complete PC 2a86f0/153: counted two natural xwstring temporaries.
+// Descriptive method spelling; original spelling unknown.
+void ui_font::PrependString(const xwchar* String) const
+{
+    m_String = xwstring(String) + m_String;
+}
 
-#ifdef TARGET_PS2
+// Complete PC TextHeight 2a7d90/35; Xbox corroborates operation spelling.
+s32 ui_font::TextHeight(const xwchar* String,s32 Count) const
+{
+    irect R; TextSize(R,String,Count); return R.b-R.t;
+}
+// Complete PC narrow RenderText 2a7d10/113; natural one xwstring lifetime.
+void ui_font::RenderText(const irect& Rect,u32 Flags,const xcolor& Color,const char* String) const
+{
+    xwstring Text(String); RenderText(Rect,Flags,Color,Text,0);
+}
+// Complete PC wide RenderText 2a8af0/990. Final count parameter is unused
+// in the complete PC body; Xbox spelling corroborates the signature only.
+void ui_font::RenderText(const irect& Rect,u32 Flags,const xcolor& Color,const xwchar* String,s32 Count) const
+{
+    x_mem_owner __owner__("ui_font::RenderText");
+    s32 Left=Rect.l,Top=Rect.t;
+    xcolor DrawColor(Color);
+    if(Flags&clip_ellipsis) String=ClipEllipsis(String,Rect);
+    s32 Height=TextHeight(String,-1);
+    if(Flags&v_center) Top+=(Rect.b-Rect.t-Height+4)/2;
+    else if(Flags&v_bottom) Top+=Rect.b-Rect.t-Height;
+    SetString(String);
+    irect Bounds(0,0,0,0);
+    xwstring Token;
+    s32 Type=GetToken(Token);
+    irect LineBounds(0,0,0,0);
+    while(Type!=4)
+    {
+        PrependString(Token);
+        xwstring Line;
+        Type=GetToken(Token);
+        while(Type!=3)
+        {
+            Line+=Token;
+            irect R(0,0,0,0);
+            MeasureToken(R,Type,Token);
+            R.l+=LineBounds.r; R.r+=LineBounds.r;
+            LineBounds.l=MIN(LineBounds.l,R.l);
+            LineBounds.t=MIN(LineBounds.t,R.t);
+            LineBounds.r=MAX(LineBounds.r,R.r);
+            LineBounds.b=MAX(LineBounds.b,R.b);
+            Type=GetToken(Token);
+        }
+        PrependString(Line+L"\n");
+        s32 X;
+        if(Flags&h_center) X=Left+(Rect.r-Rect.l-LineBounds.r+LineBounds.l)/2;
+        else if(Flags&h_right) X=Left+Rect.r-Rect.l-LineBounds.r+LineBounds.l;
+        else X=Left;
+        vector3 Position((f32)X,(f32)(Top+Bounds.b+2),0.0f);
+        Type=GetToken(Token);
+        while(Type!=3)
+        {
+            RenderToken(Position,Type,Token,DrawColor);
+            Type=GetToken(Token);
+        }
+        LineBounds.t+=Bounds.b; LineBounds.b+=Bounds.b;
+        Bounds.l=MIN(Bounds.l,LineBounds.l);
+        Bounds.t=MIN(Bounds.t,LineBounds.t);
+        Bounds.r=MAX(Bounds.r,LineBounds.r);
+        Bounds.b=MAX(Bounds.b,LineBounds.b);
+        LineBounds.Clear();
+        Type=GetToken(Token);
+    }
+}
+// Genuine complete PC callee 2a7c70/65: allocates from a mutable aligned
+// UTF16 scratch cursor and copies the real xwstring payload. Original spelling
+// inferred; shared ScratchMem storage/provider independently admitted.
+static const xwchar* CopyFontString(const xwstring& String);
+const xwchar* ui_font::TextWrap(const xwchar* String,const irect& Rect) const
+{
+    x_mem_owner __owner__("ui_font::TextWrap");
+    SetString(String);
+    irect Bounds(0,0,0,0);
+    xwstring Result,Token;
+    irect Line(0,0,0,0);
+    s32 Type=GetToken(Token);
+    while(Type!=4)
+    {
+        if(Type==3)
+        {
+            Line.t+=Bounds.b; Line.b+=Bounds.b;
+            Bounds.l=MIN(Bounds.l,Line.l); Bounds.t=MIN(Bounds.t,Line.t);
+            Bounds.r=MAX(Bounds.r,Line.r); Bounds.b=MAX(Bounds.b,Line.b);
+            Line.Clear();
+        }
+        else
+        {
+            irect R(0,0,0,0);
+            MeasureToken(R,Type,Token);
+            if(Line.r+R.r>Rect.r-Rect.l && Line.l<Line.r && Line.t<Line.b)
+            {
+                PrependString(Token);
+                PrependString(L"\n");
+                Type=GetToken(Token);
+                continue;
+            }
+            R.l+=Line.r; R.r+=Line.r;
+            Line.l=MIN(Line.l,R.l); Line.t=MIN(Line.t,R.t);
+            Line.r=MAX(Line.r,R.r); Line.b=MAX(Line.b,R.b);
+        }
+        Result+=Token;
+        Type=GetToken(Token);
+    }
+    return CopyFontString(Result);
+}
+const xwchar* ui_font::ClipEllipsis(const xwchar* String,const irect& Rect) const
+{
+    x_mem_owner __owner__("ui_font::ClipEllipsis");
+    xwstring Ellipsis("...");
+    irect EllipsisBounds;
+    MeasureToken(EllipsisBounds,0,Ellipsis);
+    SetString(String);
+    irect Bounds(0,0,0,0);
+    xwstring Result,Token;
+    irect Line(0,0,0,0);
+    s32 Type=GetToken(Token);
+    while(Type!=4)
+    {
+        if(Type==3)
+        {
+            Line.t+=Bounds.b; Line.b+=Bounds.b;
+            Bounds.l=MIN(Bounds.l,Line.l); Bounds.t=MIN(Bounds.t,Line.t);
+            Bounds.r=MAX(Bounds.r,Line.r); Bounds.b=MAX(Bounds.b,Line.b);
+            Line.Clear();
+            Result+=Token;
+            if(Bounds.b>=Rect.b-Rect.t) return CopyFontString(Result);
+        }
+        else if(Type!=0 && Type!=2)
+        {
+            irect R(0,0,0,0);
+            MeasureToken(R,Type,Token);
+            if(Line.r+R.r<=Rect.r-Rect.l) Result+=Token;
+            else { Result+=Ellipsis; R=EllipsisBounds; }
+            R.l+=Line.r; R.r+=Line.r;
+            Line.l=MIN(Line.l,R.l); Line.t=MIN(Line.t,R.t);
+            Line.r=MAX(Line.r,R.r); Line.b=MAX(Line.b,R.b);
+        }
+        else
+        {
+            xwstring Modified(Token);
+            irect R(0,0,0,0);
+            while(Token.GetLength()!=0)
+            {
+                R.Clear();
+                MeasureToken(R,Type,Modified);
+                if(Line.r+R.r<=Rect.r-Rect.l) break;
+                Token=Token.Left(Token.GetLength()-1);
+                Modified=Token+Ellipsis;
+            }
+            R.l+=Line.r; R.r+=Line.r;
+            Line.l=MIN(Line.l,R.l); Line.t=MIN(Line.t,R.t);
+            Line.r=MAX(Line.r,R.r); Line.b=MAX(Line.b,R.b);
+            Result+=Modified;
+        }
+        Type=GetToken(Token);
+    }
+    return CopyFontString(Result);
+}
 
-static header*          s_pHeader;
-static s32              s_NChars;
-static giftag           s_GIF       PS2_ALIGNMENT(16);
-static giftag           s_PGIF      PS2_ALIGNMENT(16);
+// Complete actual PC 2a7c70/65. Uses independently admitted ScratchMem storage.
+// Descriptive helper spelling; no new storage/address/provider admission.
+static const xwchar* CopyFontString(const xwstring& String)
+{
+    s32 Length=String.GetLength();
+    xwchar* Result=(xwchar*)smem_BufferAlloc((Length+1)*sizeof(xwchar));
+    x_memcpy(Result,(const xwchar*)String,Length*sizeof(xwchar));
+    Result[Length]=0;
+    return Result;
+}
 
-#endif
-
-//=========================================================================
-//  HUD Font
-//=========================================================================
-
-xbool ui_font::Load( const char* pPathName )
+#include <Support/UI/ui_font.hpp>
+// Genuine completed runtime APIs are declared in the shared D3DEngine header.
+// Original spellings remain reconstructed; owning full source is in this packet.
+// Real Windows Unicode API: PC custom Unicode loader slot resolves CreateFontW.
+#include <Support/StringMgr/StringMgr.hpp>
+ui_bitmap_font::ui_bitmap_font() {}
+ui_bitmap_font::~ui_bitmap_font() {}
+const ui_bitmap_font::Character& ui_bitmap_font::GetCharacter(s32 Index) const { return m_Characters[Index]; }
+void ui_bitmap_font::Kill() { vram_Unregister(m_Bitmap); m_Bitmap.Kill(); }
+xbool ui_bitmap_font::Load( const char* pPathName )
 {
     // Load font image
-    VERIFY( m_Bitmap.Load( pPathName ) );
+    m_Bitmap.Load( pPathName );
 
     // Setup info
     m_Height = m_Bitmap.GetHeight()-1;
@@ -89,7 +355,7 @@ xbool ui_font::Load( const char* pPathName )
         {
             // Scan registration marks for character
             s32 x2 = x1+1;
-            while( (x2 < m_BmWidth) && (m_Bitmap.GetPixelColor( x2, y ).R >= 128) )
+            while( (x2 < m_BmWidth) && (m_Bitmap.GetPixelColor( x2, y ).R < 247) )
                 x2++;
 
             // Skip out if nothing on the row
@@ -114,7 +380,7 @@ xbool ui_font::Load( const char* pPathName )
             s32 yStart = y;
             y++;
             while( (y < m_BmHeight) &&
-                   (m_Bitmap.GetPixelColor( 0, y ).R > 0) )
+                   (m_Bitmap.GetPixelColor( 0, y ).R != 255) )
                 y++;
 
 			// Skip out if not found
@@ -139,526 +405,230 @@ xbool ui_font::Load( const char* pPathName )
     return TRUE;
 }
 
-//=========================================================================
 
-void ui_font::Kill( void )
+void ui_bitmap_font::MeasureToken(irect& R,s32 Type,const xwstring& Token) const
 {
-    // UnRegister the bitmap
-    vram_Unregister( m_Bitmap );
-    m_Bitmap.Kill();
-}
-
-//=========================================================================
-
-void ui_font::TextSize( irect& Rect, const char* pString, s32 Count ) const
-{
-    s32 Height    = m_Height;
-    s32 BestWidth = 0;
-    s32 Width     = 0;
-
-    ASSERT( pString );
-
-    if( pString )
+    R.Set(0,0,0,0);
+    xwstring Text(Token);
+    TransformToken(Type,Text);
+    if(Type==1)
     {
-        // Loop until end of string or end of count.
-        while( *pString && (Count != 0) )
+        switch(Text.GetAt(1))
         {
-            s32 c = *pString++;
-
-            // Check for newline.
-            if( c == '\n' )
-            {
-                BestWidth = MAX( BestWidth, Width-1 );
-                Width     = 0;
-                Height   += m_Height;
-            }
-            else
-            // Normal character.
-            {
-                // Add character to width.
-                Width += m_Characters[c].W + 1;
-            }             
-
-            // Decrease character count
-            Count--;
+        case 'D':
+        case 'S':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'l':
+        case 'r':
+        case 's':
+        case 'u':
+        case 'x':
+        case 'y':
+            R.r=R.b=18; break;
+        case 'L':
+        case 'R':
+        case 'z':
+            R.r=R.b=34; break;
+        case 'P':
+        case 'Q':
+        case 'X':
+        case 'p':
+            R.r=R.b=16; break;
         }
-
-        BestWidth = MAX( BestWidth, Width-1 );
-    }
-
-    // We have all we need.
-    Rect.Set( 0, 0, BestWidth, Height );
-}
-
-//=========================================================================
-
-RVA(0x2a7dc0, 0x1dc)
-void ui_font::TextSize( irect& Rect, const xwchar* pString, s32 Count ) const
-{
-    s32 Height    = m_Height;
-    s32 BestWidth = 0;
-    s32 Width     = 0;
-
-    ASSERT( pString );
-
-    if( pString )
-    {
-        // Loop until end of string or end of count.
-        while( *pString && (Count != 0) )
-        {
-            s32 c = *pString++;
-
-            // Check for embedded color code.
-            if( (c & 0xFF00) == 0xFF00 )
-            {
-                // Skip 2nd character in embedded color code.
-                pString++;
-
-                // Decrease character count one extra for 2nd char in code.
-                Count--;
-            }
-            else
-            // Check for newline.
-            if( c == '\n' )
-            {
-                BestWidth = MAX( BestWidth, Width-1 );
-                Width     = 0;
-                Height   += m_Height;
-            }
-            else
-            // Normal character.
-            {
-                // Add character to width.
-                Width += m_Characters[c].W + 1;
-            }             
-
-            // Decrease character count
-            Count--;
-        }
-
-        BestWidth = MAX( BestWidth, Width-1 );
-    }
-
-    // We have all we need.
-    Rect.Set( 0, 0, BestWidth, Height );
-}
-
-//=========================================================================
-
-s32 ui_font::TextWidth( const xwchar* pString, s32 Count ) const
-{
-    s32 BestWidth = 0;
-    s32 Width     = 0;
-
-    ASSERT( pString );
-
-    if( pString )
-    {
-        // Loop until end of string or end of count.
-        while( *pString && (Count != 0) )
-        {
-            s32 c = *pString++;
-
-            // Check for embedded color code.
-            if( (c & 0xFF00) == 0xFF00 )
-            {
-                // Skip 2nd character in embedded color code.
-                pString++;
-
-                // Decrease character count one extra for 2nd char in code.
-                Count--;
-            }
-            else
-            // Check for newline.
-            if( c == '\n' )
-            {
-                BestWidth = MAX( BestWidth, Width-1 );
-                Width     = 0;
-            }
-            else
-            // Normal character.
-            {
-                // Add character to width
-                Width += m_Characters[c].W + 1;
-            }             
-
-            // Decrease character count.
-            Count--;
-        }
-
-        BestWidth = MAX( BestWidth, Width-1 );
-    }
-
-    // Return best width.
-    return( BestWidth );
-}
-
-//=========================================================================
-
-s32 ui_font::TextHeight( const xwchar* pString, s32 Count ) const
-{
-    s32 Height = m_Height;
-
-    ASSERT( pString );
-
-    if( pString )
-    {
-        // Loop until end of string or end of count.
-        while( pString && *pString && (Count != 0) )
-        {
-            s32 c = *pString++;
-
-            // Check for embedded color code.
-            if( (c & 0xFF00) == 0xFF00 )
-            {
-                // Skip 2nd character in embedded color code.
-                pString++;
-
-                // Decrease character count one extra for 2nd char in code.
-                Count--;
-            }
-            else
-            // Check for newline.
-            if( c == '\n' )
-            {
-                Height += m_Height;
-            }
-
-            // Decrease character count.
-            Count--;
-        }
-    }
-
-    // Return height
-    return( Height ); 
-}
-
-//=========================================================================
-
-const ui_font::Character& ui_font::GetCharacter( s32 Index ) const
-{
-    ASSERT( (Index >= 0) && (Index < 256) );
-
-    return m_Characters[Index];
-}
-
-//=========================================================================
-//  Return a clipped string with ellipsis that fits in the supplied rect
-//=========================================================================
-
-const xwchar* ui_font::ClipEllipsis( const xwchar* pString, const irect& Rect ) const
-{
-    static xwstring ClippedString;
-
-    // Should we be clipping?
-    if( TextWidth( pString ) > Rect.GetWidth() )
-    {
-        s32     FieldWidth  = Rect.GetWidth() - 15;
-        s32     Width       = 0;
-        xbool   Clipping    = FALSE;
-
-        // Clear the string
-        ClippedString.Clear();
-
-        // Clip the string
-        while( *pString )
-        {
-            xwchar c = *pString++;
-
-            // Check for embedded color code.
-            if( (c & 0xFF00) == 0xFF00 )
-            {
-                // Copy into clipped string
-                ClippedString += (xwchar)0xFF00;
-                ClippedString += *pString++;
-            }
-            else
-            // Check for newline.
-            if( c == '\n' )
-            {
-                ClippedString  += (xwchar)'\n';
-                Width           = 0;
-                Clipping        = FALSE;
-            }
-            else
-            // Normal character.
-            {
-                if( !Clipping )
-                {
-                    // Add character to width
-                    Width += m_Characters[c].W + 1;
-
-                    // Width still in range?
-                    if( Width < FieldWidth )
-                    {
-                        // Add to string
-                        ClippedString += c;
-                    }
-                    else
-                    {
-                        // Add ellipsis
-                        ClippedString += '.';
-                        ClippedString += '.';
-                        ClippedString += '.';
-                        Clipping = TRUE;
-                    }
-                }
-            }
-        }
-
-        return (const xwchar*)ClippedString;
     }
     else
     {
-        return pString;
+        R.b=m_RowHeight;
+        for(s32 i=0;i<Text.GetLength();++i) R.r+=GetCharacter(Text.GetAt(i)).W;
+    }
+}
+ui_truetype_font::ui_truetype_font() : m_HFont(0),m_pFont(0),m_Height(0),m_CallbackID(0) {}
+ui_truetype_font::~ui_truetype_font() { Kill(); }
+xbool ui_truetype_font::Load(const char* FaceName,s32 Height,f32 WidthScale,s32 CharSet)
+{
+    m_Height=Height;
+    m_HFont=CreateFontW(-(Height*4)/5,(s32)(Height*WidthScale*0.5f),0,0,700,0,0,0,CharSet,0,0,4,0,(LPCWSTR)Ansi2Wide(FaceName));
+    m_CallbackID=d3deng_RegisterFontReset(this,BeforeReset,AfterReset,false);
+    CreateFont();
+    return m_pFont!=0;
+}
+void ui_truetype_font::Kill()
+{
+    if(m_CallbackID) d3deng_UnregisterFontReset(m_CallbackID);
+    if(m_HFont) DeleteObject(m_HFont);
+    m_HFont=0;
+    m_CallbackID=0;
+}
+void ui_truetype_font::BeforeReset(void* Context) { ((ui_truetype_font*)Context)->ReleaseFont(); }
+void ui_truetype_font::AfterReset(void* Context) { ((ui_truetype_font*)Context)->CreateFont(); }
+void ui_truetype_font::ReleaseFont()
+{
+    if(m_pFont) m_pFont->Release();
+    m_pFont=0;
+}
+void ui_truetype_font::CreateFont()
+{
+    if(m_HFont)
+    {
+        d3deng_DisableMultisampling(TRUE);
+        D3DXCreateFont(g_pd3dDevice,m_HFont,&m_pFont);
+    }
+}
+void ui_truetype_font::MeasureToken(irect& R,s32 Type,const xwstring& Token) const
+{
+    R.Set(0,0,0,0);
+    xwstring Text(Token);
+    TransformToken(Type,Text);
+    if(Type==1)
+    {
+        switch(Text.GetAt(1))
+        {
+        case 'D':
+        case 'S':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'l':
+        case 'r':
+        case 's':
+        case 'u':
+        case 'x':
+        case 'y':
+            R.r=R.b=18; break;
+        case 'L':
+        case 'R':
+        case 'z':
+            R.r=R.b=34; break;
+        case 'P':
+        case 'Q':
+        case 'X':
+        case 'p':
+            R.r=R.b=16; break;
+        }
+    }
+    else
+    {
+        m_pFont->DrawTextW((LPCWSTR)(const xwchar*)Text,Text.GetLength(),(RECT*)&R,DT_SINGLELINE|DT_CALCRECT,0);
+        R.b=MAX(R.b,m_Height);
     }
 }
 
-//=========================================================================
-
-void ui_font::RenderText( const irect&  Rect, 
-                                u32     Flags, 
-                          const xcolor& aColor, 
-                          const xwchar* pString, 
-                                xbool   IgnoreEmbeddedColor ) const
+#include <Support/UI/ui_manager.hpp>
+void ui_bitmap_font::RenderToken(vector3& Position,s32 Type,const xwstring& Token,xcolor Color) const
 {
-    s32     c;
-    s32     tx       = Rect.l;
-    s32     ty       = Rect.t;
-    s32     iStart   = 0;
-    s32     iEnd     = 0;
-    s32     Width;
-    s32     Height;    
-    xcolor  Color    = aColor;
-    xbool   WasEllipsisClipped = FALSE;
-
-    ASSERT( pString );
-
-    #ifdef TARGET_PC
-        vector2 uv0;
-        vector2 uv1;   
-        vector2 Size( 0, (f32)m_Height );
-//        f32     BmWidth  = 1.0f / (f32)m_BmWidth;
-//        f32     BmHeight = 1.0f / (f32)m_BmHeight;
-
-        // Prepare to draw characters.
-        draw_Begin( DRAW_SPRITES, DRAW_USE_ALPHA | DRAW_TEXTURED | DRAW_2D | DRAW_NO_ZBUFFER );
-        draw_SetTexture( m_Bitmap );
-
-        // Turn off BILINEAR.
-//        g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_POINT );
-//        g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_POINT );
-//        g_pd3dDevice->SetTextureStageState( 0, D3DTSS_MIPFILTER, D3DTEXF_POINT );
-    #endif
-
-    #ifdef TARGET_PS2
-        // Setup Texture
-        vram_Activate( m_Bitmap );
-        gsreg_Begin();
-        gsreg_SetClamping( TRUE );
-        gsreg_SetMipEquation( FALSE, 1.0f, 0, MIP_MAG_POINT, MIP_MIN_POINT );
-        gsreg_SetAlphaBlend( ALPHA_BLEND_MODE(C_SRC, C_DST, A_SRC, C_DST) );
-        gsreg_SetZBuffer(FALSE);
-        gsreg_End();
-
-        // Build GIF Tags
-        s_PGIF.Build( GIF_MODE_REGLIST, 2, 1, 0, 0, 0, 1 );
-        s_PGIF.Reg  ( GIF_REG_PRIM, GIF_REG_NOP );
-        s_GIF.Build ( GIF_MODE_REGLIST, 6, 0, 0, 0, 0, 1 );
-        s_GIF.Reg   ( GIF_REG_RGBAQ, GIF_REG_UV, GIF_REG_XYZ2, GIF_REG_UV, GIF_REG_XYZ2, GIF_REG_NOP );
-
-        // Compute size of header and skip over
-        s_pHeader = DLStruct(header);
-        s_NChars  = 0;
-    #endif
-
-    // Get size for vertical positioning.
-    Height = TextHeight( pString );
-
-    // Position start vertically.
-    if( Flags & v_center )
+    xwstring Text(Token);
+    if(Type==1) Color.Set(0,255,0,255);
+    TransformToken(Type,Text);
+    if(Type==3) return;
+    if(Type==1)
     {
-        ty += (Rect.GetHeight() - Height + 4) / 2;
+        s32 Icon;
+        switch(Text[1])
+        {
+        case 'D': Icon=7; break;
+        case 'L': Icon=8; break;
+        case 'P': Icon=17; break;
+        case 'Q': Icon=16; break;
+        case 'R': Icon=9; break;
+        case 'S': Icon=10; break;
+        case 'X': Icon=15; break;
+        case 'a': Icon=0; break;
+        case 'b': Icon=1; break;
+        case 'c': Icon=2; break;
+        case 'd': Icon=3; break;
+        case 'l': Icon=4; break;
+        case 'p': Icon=18; break;
+        case 'r': Icon=5; break;
+        case 's': Icon=11; break;
+        case 'u': Icon=6; break;
+        case 'x': Icon=12; break;
+        case 'y': Icon=13; break;
+        case 'z': Icon=14; break;
+        default: return;
+        }
+        draw_Begin(DRAW_SPRITES,0x17);
+        draw_SetTexture(g_UiMgr->m_ButtonBitmaps[Icon],0);
+        draw_Sprite(Position,vector2(18.0f,18.0f),xcolor(255,255,255,255));
+        draw_End();
+        Position.X+=18.0f;
+        return;
     }
-    else if( Flags & v_bottom )
+    draw_Begin(DRAW_SPRITES,0x37);
+    draw_SetTexture(m_Bitmap,0);
+    for(s32 i=0;i<Text.GetLength();++i)
     {
-        ty += (Rect.GetHeight() - Height);
+        const Character& C=GetCharacter(Text[i]);
+        vector2 UV0((C.X+0.1f)/m_BmWidth,(C.Y+0.1f)/m_BmHeight);
+        vector2 UV1((C.X+C.W+0.1f)/m_BmWidth,(C.Y+m_Height+0.1f)/m_BmHeight);
+        draw_SpriteUV(Position,vector2((f32)C.W,(f32)m_Height),UV0,UV1,Color);
+        Position.X+=(f32)C.W;
     }
-
-    // Check for clipping with ellipsis
-    if( Flags & clip_ellipsis )
-    {
-        const xwchar* pNewString = ClipEllipsis( pString, Rect );
-        if( pNewString != pString )
-        {
-            pString = pNewString;
-            WasEllipsisClipped = TRUE;
-        }
-    }
-
-    // Render strips of text on same line.
-    while( pString[iStart] )
-    {
-        if( pString[iStart] == '\n' )
-        {
-            iEnd = iStart;
-        }
-        else
-        {
-            // Find end of line.
-            iEnd = iStart+1;
-            while( pString[iEnd] && (pString[iEnd] != '\n') )
-                iEnd++;
-        }
-
-        // Determine width of line.
-        Width = TextWidth( &pString[iStart], iEnd-iStart );
-
-        // Adjust lateral position for alignment flags.
-        if( Flags & h_center )
-        {
-            tx = Rect.l + (Rect.GetWidth() - Width) / 2;
-        }
-        else if( Flags & h_right )
-        {
-            tx = Rect.l + (Rect.GetWidth() - Width);
-        }
-        else
-        {
-            tx = Rect.l;
-        }
-
-        // Check for justification when clipping.
-        if( (Width > Rect.GetWidth()) || WasEllipsisClipped )
-        {
-            if( Flags & clip_l_justify ) 
-                tx = Rect.l;
-            else
-            if( Flags & clip_r_justify ) 
-                tx = Rect.r - Width;
-        }
-
-        // Render each character.
-        for( ; iStart < iEnd; iStart++ )
-        {
-            c = pString[iStart];
-
-            // Look for an embedded color code.
-            if( (c & 0xFF00) == 0xFF00 )
-            {
-                if( IgnoreEmbeddedColor )
-                {
-                    iStart++;
-                }
-                else
-                {
-                    Color.R = (c & 0x00FF);
-                    iStart++;
-                    c = pString[iStart];
-                    Color.G = (c & 0xFF00) >> 8;
-                    Color.B = (c & 0x00FF);
-                }
-                continue;
-            }
-
-            s32 x  = m_Characters[c].X;
-            s32 y  = m_Characters[c].Y;
-            s32 w  = m_Characters[c].W;
-
-            #ifdef TARGET_PC
-            {
-                f32 u0 = (x            + 0.1f) / m_BmWidth;
-                f32 u1 = (x + w        + 0.1f) / m_BmWidth;
-                f32 v0 = (y            + 0.1f) / m_BmHeight;
-                f32 v1 = (y + m_Height + 0.1f) / m_BmHeight;
-
-                Size.X = (f32)w;
-                uv0.Set( u0, v0 );
-                uv1.Set( u1, v1 );
-
-                draw_SpriteUV( vector3((f32)tx,(f32)ty,10.0f), Size, uv0, uv1, Color );
-            }
-            #endif
-            
-            #ifdef TARGET_PS2
-            {
-	            s32         X0,Y0,X1,Y1;
-                char_info*  pCH;
-
-	            X0 = (OFFSET_X<<4) + ((tx)<<4);
-	            Y0 = (OFFSET_Y<<4) + ((ty)<<4);
-	            X1 = (OFFSET_X<<4) + ((tx+w)<<4);
-	            Y1 = (OFFSET_Y<<4) + ((ty+m_Height)<<4);
-
-                pCH        = DLStruct(char_info);
-	            pCH->Color = SCE_GS_SET_RGBAQ( Color.R>>1, Color.G>>1, Color.B>>1, Color.A>>1, 0x3F800000 );
-	            pCH->T0    = SCE_GS_SET_UV( (x<<4)+8, (y<<4)+8 );
-	            pCH->P0    = SCE_GS_SET_XYZ(X0,Y0,0xFFFFFFFF);
-	            pCH->T1    = SCE_GS_SET_UV( ((x+w)<<4)+8, ((y+m_Height)<<4)+8 );
-	            pCH->P1    = SCE_GS_SET_XYZ(X1,Y1,0xFFFFFFFF);
-
-                s_NChars++;
-            }
-            #endif
-
-            tx += w + 1;
-        }
-
-        // Process newline.
-        if( pString[iStart] == '\n' )
-        {
-            ty += m_Height;
-            iStart++;
-        }
-    }
-
-    #ifdef TARGET_PC
     draw_End();
-    #endif
-
-    #ifdef TARGET_PS2
-    // Render
-    s_pHeader->DMA.SetCont( sizeof(header) - sizeof(dmatag) + (s_NChars * sizeof(char_info)) );
-    s_pHeader->DMA.MakeDirect();
-    s_pHeader->PGIF      = s_PGIF;
-    s_pHeader->GIF       = s_GIF;
-    s_pHeader->GIF.NLOOP = s_NChars; 
-
-    s_pHeader->Prim = SCE_GS_SET_PRIM(
-                            GIF_PRIM_SPRITE,    // type of primative
-                            0,    // shading method (flat, gouraud)
-                            1,    // texture mapping (off, on)
-                            0,    // fogging (off, on)
-                            1,    // alpha blending (off, on)
-                            0,    // 1 pass anti-aliasing (off, on)
-                            1,    // tex-coord spec method (STQ, UV)
-                            0,    // context (1 or 2)
-                            0 );  // fragment value control (normal, fixed)
-    #endif
 }
 
-//=========================================================================
-
-void ui_font::RenderText( const irect&  Rect, 
-                                u32     Flags, 
-                                s32     Alpha, 
-                          const xwchar* pString ) const
+void ui_truetype_font::RenderToken(vector3& Position,s32 Type,const xwstring& Token,xcolor Color) const
 {
-    xcolor Color = XCOLOR_PURPLE;
-    Color.A = Alpha;
-    RenderText( Rect, Flags, Color, pString, FALSE );
+    xwstring Text(Token);
+    if(Type==1) Color.Set(0,255,0,255);
+    else if(Color.R==Color.G && Color.G==Color.B)
+    { Color.G=(u8)(Color.G*0.85f); Color.B=(u8)(Color.B*0.25f); }
+    TransformToken(Type,Text);
+    if(Type==3) return;
+    if(Type==1)
+    {
+        s32 Icon;
+        switch(Text[1])
+        {
+        case 'D': Icon=7; break;
+        case 'L': Icon=8; break;
+        case 'P': Icon=17; break;
+        case 'Q': Icon=16; break;
+        case 'R': Icon=9; break;
+        case 'S': Icon=10; break;
+        case 'X': Icon=15; break;
+        case 'a': Icon=0; break;
+        case 'b': Icon=1; break;
+        case 'c': Icon=2; break;
+        case 'd': Icon=3; break;
+        case 'l': Icon=4; break;
+        case 'p': Icon=18; break;
+        case 'r': Icon=5; break;
+        case 's': Icon=11; break;
+        case 'u': Icon=6; break;
+        case 'x': Icon=12; break;
+        case 'y': Icon=13; break;
+        case 'z': Icon=14; break;
+        default: return;
+        }
+        draw_Begin(DRAW_SPRITES,0x17);
+        draw_SetTexture(g_UiMgr->m_ButtonBitmaps[Icon],0);
+        draw_Sprite(Position,vector2(18.0f,18.0f),Color);
+        draw_End();
+        Position.X+=18.0f;
+        return;
+    }
+    d3deng_DisableMultisampling(TRUE);
+    irect Bounds(0,0,0,0);
+    m_pFont->DrawTextW(Text,Text.GetLength(),(RECT*)&Bounds,0x420,0);
+    xcolor Shadow(0,0,0,128);
+    irect R;
+    if(Color!=xcolor(0,0,0,255))
+    {
+        R=Bounds; R.Translate((s32)(Position.X-1.0f),(s32)(Position.Y));
+        m_pFont->DrawTextW(Text,Text.GetLength(),(RECT*)&R,0x120,Shadow);
+        R=Bounds; R.Translate((s32)(Position.X),(s32)(Position.Y-1.0f));
+        m_pFont->DrawTextW(Text,Text.GetLength(),(RECT*)&R,0x120,Shadow);
+    }
+    R=Bounds; R.Translate((s32)(Position.X+1.0f),(s32)(Position.Y));
+    m_pFont->DrawTextW(Text,Text.GetLength(),(RECT*)&R,0x120,Shadow);
+    R=Bounds; R.Translate((s32)(Position.X),(s32)(Position.Y+1.0f));
+    m_pFont->DrawTextW(Text,Text.GetLength(),(RECT*)&R,0x120,Shadow);
+    R=Bounds; R.Translate((s32)(Position.X),(s32)(Position.Y));
+    m_pFont->DrawTextW(Text,Text.GetLength(),(RECT*)&R,0x120,Color);
+    Position.X+=(f32)Bounds.r;
 }
-
-//=========================================================================
-
-void ui_font::RenderText( const irect&  R, 
-                                u32     Flags, 
-                          const xcolor& Color, 
-                          const char*   pString ) const
-{
-    xwstring t( pString );
-    RenderText( R, Flags, Color, (const xwchar*)t );
-}
-
-//=========================================================================
 

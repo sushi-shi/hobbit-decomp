@@ -31,7 +31,7 @@
 # [units]	unit	n_functions	matched
 Animation_AnimDecompress	18	18
 Animation_AnimEvent	36	35
-Animation_AnimGroup	9	9
+Animation_AnimGroup	10	10
 Animation_AnimInfo	3	3
 Animation_AnimKeyData	7	7
 Animation_CharAnimPlayer	2	2
@@ -42,7 +42,7 @@ Decals_DecalMgr_StaticDecals	1	1
 Entropy_audio_channel_mgr	17	17
 Entropy_audio_hardware_pc	16	13
 Entropy_audio_io_request	2	2
-Entropy_audio_mgr	30	30
+Entropy_audio_mgr	36	36
 Entropy_audio_package	18	18
 Entropy_audio_ram_mgr	2	2
 Entropy_audio_stream_mgr	20	20
@@ -85,7 +85,7 @@ UI_ui_dialog	2	1
 UI_ui_dlg_list	1	0
 UI_ui_font	1	0
 UI_ui_frame	1	0
-UI_ui_manager	19	8
+UI_ui_manager	19	11
 UI_ui_radio	1	0
 UI_ui_slider	1	0
 UI_ui_text	1	0
@@ -187,6 +187,7 @@ Animation_AnimGroup	?GetEventNames@anim_group@@QBEXAAV?$xarray@Vxstring@@@@@Z	10
 Animation_AnimGroup	?GetFileName@anim_group@@QBEPBDXZ	100.0000	100.0000	1	f17fdf10a18d	0x13ca60	100.0000	
 Animation_AnimGroup	?GetPropNames@anim_group@@QBEXAAV?$xarray@Vxstring@@@@@Z	100.0000	100.0000	1	159b3646cb5f	0x13e880	100.0000	
 Animation_AnimGroup	?SetupOffsetsAndPtrs@anim_group@@QAEXH@Z	100.0000	100.0000	1	cb8c886911b0	0x13dd20	100.0000	
+Animation_AnimGroup	?SwapEndian@@YAXPAMH@Z	100.0000	100.0000	1	811632c8b19e	0x13c980	100.0000	
 Animation_AnimInfo	??1anim_info@@QAE@XZ	100.0000	100.0000	1	d764f11d7a5d	0x144b20	100.0000	
 Animation_AnimInfo	?GetPropChannel@anim_info@@QBEHPBD@Z	100.0000	100.0000	1	64e26bebbfcb	0x144b30	100.0000	
 Animation_AnimInfo	?IsEventTypeActive@anim_info@@QBEHHM@Z	100.0000	100.0000	1	efde13fd3c43	0x144bf0	100.0000	
@@ -260,9 +261,15 @@ Entropy_audio_mgr	?ComputeFalloff@audio_mgr@@AAEMMH@Z	100.0000	100.0000	1	fb3ef6
 Entropy_audio_mgr	?DecodeParameters@@YAXPAUuncompressed_parameters@@PAG@Z	100.0000	100.0000	1	caae43ccac1c	0x25ac70	100.0000	
 Entropy_audio_mgr	?EnableAudio@@YAXH@Z	100.0000	100.0000	1	ddb115bf75fe	0x257d30	100.0000	
 Entropy_audio_mgr	?FindDescriptorByName@audio_mgr@@QAEPAGPBDPAPAVaudio_package@@PAHAAPAD@Z	100.0000	100.0000	1	5434234e5260	0x25aac0	100.0000	
+Entropy_audio_mgr	?FindPackageByName@audio_mgr@@AAEPAVaudio_package@@PBD@Z	100.0000	100.0000	1	88f6d4646f6c	0x25a610	100.0000	
 Entropy_audio_mgr	?GetEar@audio_mgr@@QAEXAAVmatrix4@@AAM1@Z	100.0000	100.0000	1	601a51b88b48	0x258410	100.0000	
 Entropy_audio_mgr	?GetElementParameters@audio_mgr@@AAEXPAUuncompressed_parameters@@PAGPAUvoice@@@Z	100.0000	100.0000	1	ec8f7b247732	0x25aee0	100.0000	
+Entropy_audio_mgr	?GetLengthSeconds@audio_mgr@@QAEMH@Z	100.0000	100.0000	1	0be4c88e1946	0x258020	100.0000	
+Entropy_audio_mgr	?GetLengthSeconds@audio_mgr@@QAEMPBD@Z	100.0000	100.0000	1	0be4c88e1946	0x257fa0	100.0000	
+Entropy_audio_mgr	?GetMusicIntensity@audio_mgr@@QAEHPBDAAPAUmusic_intensity@@@Z	100.0000	100.0000	1	1795cb489dcb	0x25a670	100.0000	
+Entropy_audio_mgr	?GetMusicType@audio_mgr@@QAEPADPBD@Z	100.0000	100.0000	1	edaedf22eb3b	0x25a650	100.0000	
 Entropy_audio_mgr	?GetSpeakerAngles@audio_mgr@@AAEXAAH0000@Z	100.0000	100.0000	1	37b7fee85e8f	0x25b6b0	100.0000	
+Entropy_audio_mgr	?GetUserData@audio_mgr@@QAEIPBD@Z	100.0000	100.0000	1	42e119481c40	0x25b000	100.0000	
 Entropy_audio_mgr	?GetVoiceParameters@audio_mgr@@AAEXPAUuncompressed_parameters@@PAGPAVaudio_package@@@Z	100.0000	100.0000	1	6c3488d033cd	0x25abf0	100.0000	
 Entropy_audio_mgr	?IsValidVoiceId@audio_mgr@@QAEHH@Z	100.0000	100.0000	1	75762e67db30	0x259f30	100.0000	
 Entropy_audio_mgr	?Normalize@vector4@@QAEHXZ	100.0000	100.0000	1	cpp:e8e6601d7e8e	0x25b6f0	100.0000	
@@ -857,31 +864,31 @@ UI_ui_control	?Render@ui_control@@UAEXHH@Z	99.9277	99.9277	1	474aafa46f3d	0x2aa7
 UI_ui_dialog	?GetCreatePosition@ui_dialog@@UBEABUirect@@XZ	100.0000	100.0000	1	3afe87ac04b7	0x2a2950	100.0000	
 UI_ui_dialog	?Render@ui_dialog@@UAEXHH@Z	0.0000	0.0000	1	74eb8281b963	0x2a2880	0.0000	
 UI_ui_dlg_list	?Render@ui_dlg_list@@UAEXHH@Z	99.8901	99.8901	1	426798389f7e	0x2a6360	99.8901	
-UI_ui_font	?TextSize@ui_font@@QBEXAAUirect@@PBGH@Z	18.9722	18.9722	1	7e5ce7e9286d	0x2a7dc0	18.9722	
+UI_ui_font	?TextSize@ui_font@@QBEXAAUirect@@PBGH@Z	18.9722	18.9722	1	7e5ce7e9286d	0x2a7dc0	18.9722	absent
 UI_ui_frame	?Render@ui_frame@@UAEXHH@Z	65.2746	65.2746	1	a6a29470f015	0x2a37d0	65.2746	
-UI_ui_manager	?AddHighlight@ui_manager@@QAEXHAAUirect@@H@Z	99.8125	99.8125	1	64fb2a8b3165	0x2a0430	99.8125	
-UI_ui_manager	?CreateWin@ui_manager@@QAEPAVui_win@@HPBDABUirect@@PAV2@H@Z	99.9216	99.9216	1	6b822d220e3a	0x29fe40	99.9216	
-UI_ui_manager	?DisableUserInput@ui_manager@@QAEXXZ	99.9429	99.9429	1	a31955e844bc	0x2a0f10	99.9429	
+UI_ui_manager	?AddHighlight@ui_manager@@QAEXHAAUirect@@H@Z	99.8438	99.8438	1	64fb2a8b3165	0x2a0430	99.8438	
+UI_ui_manager	?CreateWin@ui_manager@@QAEPAVui_win@@HPBDABUirect@@PAV2@H@Z	100.0000	100.0000	1	6b822d220e3a	0x29fe40	100.0000	
+UI_ui_manager	?DisableUserInput@ui_manager@@QAEXXZ	100.0000	100.0000	1	a31955e844bc	0x2a0f10	100.0000	
 UI_ui_manager	?EnableUser@ui_manager@@QAEXHH@Z	100.0000	100.0000	1	94d5d25b0ad7	0x2a0420	100.0000	
 UI_ui_manager	?EndDialog@ui_manager@@QAEXHH@Z	100.0000	100.0000	1	8d81e25f2582	0x2a16c0	100.0000	
 UI_ui_manager	?EndUsersDialogs@ui_manager@@QAEXH@Z	100.0000	100.0000	1	afe8ad536a71	0x2a1760	100.0000	
-UI_ui_manager	?FindFont@ui_manager@@QBEHPBD@Z	99.9167	99.9167	1	90292524a48b	0x29fa60	99.9167	
+UI_ui_manager	?FindFont@ui_manager@@QBEHPBD@Z	100.0000	100.0000	1	90292524a48b	0x29fa60	100.0000	
 UI_ui_manager	?GetNumUserDialogs@ui_manager@@QAEHH@Z	100.0000	100.0000	1	b3645a2d5eef	0x2a1790	100.0000	
 UI_ui_manager	?GetTopmostDialog@ui_manager@@QAEPAVui_dialog@@H@Z	100.0000	100.0000	1	967f4dfbec06	0x2a17a0	100.0000	
 UI_ui_manager	?GetUser@ui_manager@@QBEPAUuser@1@H@Z	100.0000	100.0000	1	76bcbdd0215c	0x2a0380	100.0000	
 UI_ui_manager	?GetWindowAtXY@ui_manager@@QAEPAVui_win@@PAUuser@1@HH@Z	100.0000	100.0000	1	38d7077b32d0	0x2a04d0	100.0000	
-UI_ui_manager	?PopClipWindow@ui_manager@@QAEXXZ	99.8472	99.8472	1	fb6d55c8abbf	0x2a1990	99.8472	
-UI_ui_manager	?ProcessInput@ui_manager@@QAEHM@Z	99.7333	99.7333	1	c24febf5d7bc	0x2a0490	99.7333	
-UI_ui_manager	?PushClipWindow@ui_manager@@QAEXABUirect@@@Z	99.8759	99.8759	1	3c3c0692841d	0x2a17c0	99.8759	
-UI_ui_manager	?RegisterDialogClass@ui_manager@@QAEHPBDPAUdialog_tem@1@P6APAVui_win@@HPAV1@1ABUirect@@PAV3@HPAX@Z@Z	99.8200	99.8200	1	87f06cb2dbf7	0x2a13b0	99.8200	
-UI_ui_manager	?RegisterWinClass@ui_manager@@QAEHPBDP6APAVui_win@@HPAV1@ABUirect@@PAV2@H@Z@Z	99.8125	99.8125	1	a9725be95e8b	0x29fdd0	99.8125	
+UI_ui_manager	?PopClipWindow@ui_manager@@QAEXXZ	99.9306	99.9306	1	fb6d55c8abbf	0x2a1990	99.9306	
+UI_ui_manager	?ProcessInput@ui_manager@@QAEHM@Z	99.8333	99.8333	1	c24febf5d7bc	0x2a0490	99.8333	
+UI_ui_manager	?PushClipWindow@ui_manager@@QAEXABUirect@@@Z	99.9635	99.9635	1	3c3c0692841d	0x2a17c0	99.9635	
+UI_ui_manager	?RegisterDialogClass@ui_manager@@QAEHPBDPAUdialog_tem@1@P6APAVui_win@@HPAV1@1ABUirect@@PAV3@HPAX@Z@Z	99.9000	99.9000	1	87f06cb2dbf7	0x2a13b0	99.9000	
+UI_ui_manager	?RegisterWinClass@ui_manager@@QAEHPBDP6APAVui_win@@HPAV1@ABUirect@@PAV2@H@Z@Z	99.8958	99.8958	1	a9725be95e8b	0x29fdd0	99.8958	
 UI_ui_manager	?SetCursorPos@ui_manager@@QAEXHHH@Z	99.9333	99.9333	1	6febbe36959e	0x2a03c0	99.9333	
 UI_ui_manager	?SetUserBackground@ui_manager@@QAEXHH@Z	100.0000	100.0000	1	cbbf1964ac08	0x2a0410	100.0000	
-UI_ui_manager	?TextSize@ui_manager@@QBEXHAAUirect@@PBGH@Z	99.9167	99.9167	1	ace5415e6e50	0x29fc80	99.9167	
+UI_ui_manager	?TextSize@ui_manager@@QBEXHAAUirect@@PBGH@Z	99.9167	99.5833	1	ace5415e6e50	0x29fc80	99.9167	
 UI_ui_radio	?Render@ui_radio@@UAEXHH@Z	60.3152	60.3152	1	803d0d9cb66b	0x2a7650	60.3152	
 UI_ui_slider	?Render@ui_slider@@UAEXHH@Z	88.8937	88.8937	1	83e8950aadc6	0x2a5ac0	88.8937	
 UI_ui_text	?Render@ui_text@@UAEXHH@Z	96.4179	96.4179	1	8f26a75a0c04	0x2a72a0	96.4179	
-UI_ui_textbox	?Render@ui_textbox@@UAEXHH@Z	83.2141	83.2141	1	359edc580ddb	0x2a6840	83.2141	
+UI_ui_textbox	?Render@ui_textbox@@UAEXHH@Z	84.0394	84.0394	1	359edc580ddb	0x2a6840	84.0394	
 UI_ui_win	?Create@ui_win@@QAEHHPAVui_manager@@ABUirect@@PAV1@H@Z	100.0000	100.0000	1	f4d6bd34e358	0x2a2f20	100.0000	
 UI_ui_win	?Destroy@ui_win@@UAEXXZ	100.0000	100.0000	1	ba608422a782	0x2a3050	100.0000	
 UI_ui_win	?GetControlID@ui_win@@QBEHXZ	100.0000	100.0000	1	cfb81b0f6eab	0x2a32d0	100.0000	

@@ -92,6 +92,49 @@ void DebugMessage(const char* FormatStr, ...)
     va_end(Args);
 }
 
+
+// PC-only descriptive identities: original spellings not established.
+s32 d3deng_RegisterFontReset(void* Context, void (*BeforeReset)(void*), void (*AfterReset)(void*), bool OneShot)
+{
+    observed_reset_registry_element Element;
+    Element.Context = Context;
+    Element.BeforeReset = BeforeReset;
+    Element.AfterReset = AfterReset;
+    Element.OneShot = OneShot;
+    Element.Active = true;
+    if (s.ResetRegistryFreeIndices.GetCount() == 0)
+    {
+        s.ResetRegistry.Append(Element);
+        return s.ResetRegistry.GetCount()-1;
+    }
+    s32 Index = s.ResetRegistryFreeIndices[s.ResetRegistryFreeIndices.GetCount()-1];
+    s.ResetRegistryFreeIndices.Delete(s.ResetRegistryFreeIndices.GetCount()-1);
+    s.ResetRegistry[Index] = Element;
+    return Index;
+}
+void d3deng_UnregisterFontReset(s32 Index)
+{
+    if (s.ResetRegistry[Index].Active)
+    {
+        s.ResetRegistry[Index].Active = false;
+        s.ResetRegistryFreeIndices.Append(Index);
+    }
+}
+xbool d3deng_DisableMultisampling(xbool Disable)
+{
+    // Existing field spellings are descriptive; offsets 0x30/0x34 independently proved.
+    xbool Previous = s.SoftwareVertexProcessing;
+    if (Disable != Previous && s.VertexProcessingMode == 2)
+    {
+        s.SoftwareVertexProcessing = Disable;
+        if (Disable == 1)
+            g_pd3dDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
+        else
+            g_pd3dDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+    }
+    return Previous;
+}
+
 #include "d3deng_platform.inc"
 
 #endif

@@ -107,7 +107,8 @@ void ui_textbox::SetLabel( const xwstring& Text )
     irect r = m_Position;
     r.r -= 19;
     r.Deflate( 4, 4 );
-    xwstring Wrapped = m_pManager->WordWrapString( 0, r, Text );
+    xwstring Wrapped;
+    m_pManager->WordWrapString( 0, r, Text, Wrapped );
 
     m_Label  = Wrapped;
     m_pManager->TextSize( 0, m_TextRect, (const xwchar*)m_Label, -1 );

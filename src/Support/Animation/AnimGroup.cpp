@@ -176,6 +176,7 @@ template<class T> void SwapEndian(T*& V) {
     *((u32*)(&V)) = I;
 }
 
+RVA(0x0013c980, 0x44)
 void SwapEndian(f32* pF, s32 nFloats) {
     s32 i;
     u32* pI = (u32*)pF;
@@ -903,12 +904,14 @@ void anim_group::CopyFrom(anim_group& AG) {
     AG.SetupOffsetsAndPtrs(FALSE);
 
     // Allocate and copy new arrays
-    m_pUncompressedData = (byte*)x_malloc(m_UncompressedDataSize);
-    m_pCompressedData = (byte*)x_malloc(m_CompressedDataSize);
+    m_pUncompressedData = (byte*)x_malloc_fn(m_UncompressedDataSize, "C:\\projects\\meridian\\Support\\Animation\\AnimGroup.cpp", 642);
+    m_pCompressedData = (byte*)x_malloc_fn(m_CompressedDataSize, "C:\\projects\\meridian\\Support\\Animation\\AnimGroup.cpp", 643);
     ASSERT(m_pUncompressedData && m_pCompressedData);
     x_memcpy(m_pUncompressedData, AG.m_pUncompressedData, m_UncompressedDataSize);
     x_memcpy(m_pCompressedData, AG.m_pCompressedData, m_CompressedDataSize);
-    x_memcpy(m_pEvent, AG.m_pEvent, sizeof(anim_event) * m_nEvents);
+    for (s32 i = 0; i < AG.m_nEvents; i++) {
+        m_pEvent[i] = AG.m_pEvent[i];
+    }
 
     SetupOffsetsAndPtrs(FALSE);
 }
@@ -1006,7 +1009,6 @@ void anim_group::SetupForSaving(xbool bSetupIndices, xbool bToggleEndian) {
     //
     if (bToggleEndian) {
         ASSERT(FALSE);
-        /*
         //
         // Bones
         //
@@ -1027,32 +1029,22 @@ void anim_group::SetupForSaving(xbool bSetupIndices, xbool bToggleEndian) {
         {
             anim_info& AnimInfo = m_pAnimInfo[i];
 
-            SwapEndian( AnimInfo.m_nAnims );
-            SwapEndian( AnimInfo.m_AnimsWeight );
-            SwapEndian( AnimInfo.m_Weight );
-            SwapEndian( AnimInfo.m_BlendTime );
-            SwapEndian( AnimInfo.m_nChainFramesMin );
-            SwapEndian( AnimInfo.m_nChainFramesMax );
-            SwapEndian( AnimInfo.m_iChainAnim );
-            SwapEndian( AnimInfo.m_iChainFrame );
-            SwapEndian( AnimInfo.m_nFrames );
-            SwapEndian( AnimInfo.m_iLoopFrame );
-            SwapEndian( AnimInfo.m_EndFrameOffset );
-            SwapEndian( AnimInfo.m_nEvents );
-            SwapEndian( AnimInfo.m_iEvent );
-            SwapEndian( AnimInfo.m_nProps );
-            SwapEndian( AnimInfo.m_iProp );
-            SwapEndian( AnimInfo.m_Flags );
-            SwapEndian( AnimInfo.m_FPS );
-            SwapEndian( AnimInfo.m_HandleAngle );
-            SwapEndian( AnimInfo.m_TotalYaw );
-            SwapEndian( AnimInfo.m_TotalMoveDir );
-            SwapEndian( AnimInfo.m_TotalTranslation );
-            SwapEndian( AnimInfo.m_AnimKeys.m_nFrames );
-            SwapEndian( AnimInfo.m_AnimKeys.m_nBones );
-            SwapEndian( AnimInfo.m_AnimKeys.m_nProps );
-            SwapEndian( AnimInfo.m_AnimKeys.m_nKeyBlocks );
-            SwapEndian( AnimInfo.m_AnimKeys.m_iKeyBlock );
+            SwapEndian(AnimInfo.m_nFrames);
+            SwapEndian(AnimInfo.m_nEvents);
+            SwapEndian(AnimInfo.m_iEvent);
+            SwapEndian(AnimInfo.m_nProps);
+            SwapEndian(AnimInfo.m_iProp);
+            SwapEndian(AnimInfo.m_Flags);
+            SwapEndian(AnimInfo.m_FPS);
+            SwapEndian(AnimInfo.m_HandleAngle);
+            SwapEndian(AnimInfo.m_TotalYaw);
+            SwapEndian(AnimInfo.m_TotalMoveDir);
+            SwapEndian(AnimInfo.m_TotalTranslation);
+            SwapEndian(AnimInfo.m_AnimKeys.m_nFrames);
+            SwapEndian(AnimInfo.m_AnimKeys.m_nBones);
+            SwapEndian(AnimInfo.m_AnimKeys.m_nProps);
+            SwapEndian(AnimInfo.m_AnimKeys.m_nKeyBlocks);
+            SwapEndian(AnimInfo.m_AnimKeys.m_iKeyBlock);
         }
 
         //
@@ -1085,7 +1077,6 @@ void anim_group::SetupForSaving(xbool bSetupIndices, xbool bToggleEndian) {
             SwapEndian( m_pKeyBlock[i].DecompressedDataSize );
             SwapEndian( m_pKeyBlock[i].nFrames );
         }
-        */
     }
 
     if (bSetupIndices) {

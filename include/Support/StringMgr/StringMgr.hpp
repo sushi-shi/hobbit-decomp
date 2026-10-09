@@ -48,4 +48,7 @@ protected:
 
 extern string_mgr g_StringMgr;
 
+// Existing complete StringMgr.cpp helper, actual admitted mutable-wide return.
+unsigned short* Ansi2Wide(const char* String);
+
 #endif

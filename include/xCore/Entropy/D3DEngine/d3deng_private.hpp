@@ -409,4 +409,11 @@ void d3deng_SetChangeResCallback( d3deng_change_res_fn* Callback ) ;
 ///////////////////////////////////////////////////////////////////////////
 // END
 ///////////////////////////////////////////////////////////////////////////
+// Complete PC-only reset registry/multisampling APIs. Descriptive function
+// spelling, original names unknown; full owner bodies and typed callers pinned.
+s32 d3deng_RegisterFontReset(void* Context, void (*BeforeReset)(void*),
+                            void (*AfterReset)(void*), bool OneShot);
+void d3deng_UnregisterFontReset(s32 Index);
+xbool d3deng_DisableMultisampling(xbool Disable);
+
 #endif

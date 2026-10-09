@@ -274,7 +274,7 @@ public:
     s32             FindFont            ( const char* pName ) const;
     void            RenderText          ( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const   char* pString ) const;
     void            RenderText          ( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const xwchar* pString ) const;
-    void            RenderText          ( s32 iFont, const irect& Position, s32 Flags,       s32     Alpha, const xwchar* pString ) const;
+    void            RenderText_Wrap     ( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const xwstring& String );
     void            TextSize            ( s32 iFont, irect& Rect, const xwchar* pString, s32 Count ) const;
     s32             GetLineHeight       ( s32 iFont ) const;
 
@@ -322,8 +322,7 @@ public:
     void            Update              ( f32 DeltaTime );
     void            Render              ( void );
 
-    const xwstring& WordWrapString      ( s32 iFont, const irect& r, const char* pString );
-    const xwstring& WordWrapString      ( s32 iFont, const irect& r, const xwstring& String );
+    void            WordWrapString      ( s32 iFont, const irect& r, const xwstring& String, xwstring& Wrapped );
 
     void            SetRes              ( void );
 
@@ -333,7 +332,11 @@ public:
 
 protected:
 
+    // Descriptive reconstructed spelling; original spelling/access unknown.
+    friend class ui_bitmap_font;
+    friend class ui_truetype_font;
     f32                     m_AlphaTime;
+    f32                     m_HighlightAlpha;
 
     xarray<user*>           m_Users;
 
@@ -353,8 +356,18 @@ protected:
     xbitmap                 m_Mouse;
     xcolor                  m_MouseColor;
 
+    xbitmap                 m_ButtonBitmaps[19];
+    s32                     m_ScreenWidth;
+    s32                     m_ScreenHeight;
+
 #ifdef TARGET_PC
     xarray<ui_dialog*>      m_KillDialogStack;
+    xbool                   m_EnableCursor;
+    xbool                   m_UseTrueTypeFont;
+    xstring                 m_FontFaceName;
+    s32                     m_FontHeight;
+    f32                     m_FontWidthScale;
+    s32                     m_FontCharSet;
 #endif
 
 public:

@@ -603,29 +603,23 @@ const ui_manager::element* ui_manager::GetElement( s32 iElement ) const
 
 s32 ui_manager::LoadFont( const char* pName, const char* pPathName )
 {
-    // Check if font already exists
-    {
-        s32 ID = FindFont( pName );
-        if( ID != -1 )
-            return ID;
-    }
-
-    // Create font record
+    s32 ID = FindFont(pName);
+    if (ID != -1) return ID;
     font* pFont = new font;
-    ASSERT( pFont );
-
-    // Setup Font
     pFont->Name = pName;
-
-    // Create and load font
-    pFont->pFont = new ui_font;
-    ASSERT( pFont->pFont );
-    VERIFY( pFont->pFont->Load( pPathName ) );
-
-    // Add to array of fonts
+    if (m_UseTrueTypeFont)
+    {
+        ui_truetype_font* pBackend = new ui_truetype_font;
+        pFont->pFont = pBackend;
+        pBackend->Load(m_FontFaceName,m_FontHeight,m_FontWidthScale,m_FontCharSet);
+    }
+    else
+    {
+        ui_bitmap_font* pBackend = new ui_bitmap_font;
+        pFont->pFont = pBackend;
+        pBackend->Load(pPathName);
+    }
     m_Fonts.Append() = pFont;
-
-    // Return Font ID
     return m_Fonts.GetCount()-1;
 }
 
@@ -653,6 +647,7 @@ s32 ui_manager::FindFont( const char* pName ) const
 
 void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const char* pString ) const
 {
+    x_mem_owner Owner("ui_manager::RenderText");
     ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
 
     ui_font* pFont = m_Fonts[iFont]->pFont;
@@ -675,6 +670,7 @@ void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, const 
 
 void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const xwchar* pString ) const
 {
+    x_mem_owner Owner("ui_manager::RenderText");
     ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
 
     ui_font* pFont = m_Fonts[iFont]->pFont;
@@ -695,13 +691,13 @@ void ui_manager::RenderTextFormatted( s32 iFont, const irect& Position, s32 Flag
 */
 //=========================================================================
 
-void ui_manager::RenderText( s32 iFont, const irect& Position, s32 Flags, s32 Alpha, const xwchar* pString ) const
+void ui_manager::RenderText_Wrap( s32 iFont, const irect& Position, s32 Flags, const xcolor& Color, const xwstring& String )
 {
-    ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
-
+    x_mem_owner Owner("ui_manager::RenderText_Wrap");
     ui_font* pFont = m_Fonts[iFont]->pFont;
-
-    pFont->RenderText( Position, Flags, Alpha, pString );
+    xwstring Wrapped;
+    WordWrapString(iFont,Position,String,Wrapped);
+    pFont->RenderText(Position,Flags,Color,(const xwchar*)Wrapped,0);
 }
 
 //=========================================================================
@@ -1832,179 +1828,16 @@ void ui_manager::PopClipWindow( void )
 
 //=========================================================================
 
-const xwstring& ui_manager::WordWrapString( s32 iFont, const irect& r, const char* pString )
+void ui_manager::WordWrapString( s32 iFont, const irect& r, const xwstring& String, xwstring& Wrapped )
 {
-    static xwstring s;
-
-    s32 i;
-    s32 x           = 0;
-    s32 iString     = 0;
-    s32 iLineStart  = 0;
-    s32 iStringWrap = -1;
-    s32 cPrev       = 0;
-    s32 c;
-    s32 w;
-
-    ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
-    ui_font* pFont = m_Fonts[iFont]->pFont;
-
-    // Clear the string
-    s.Clear();
-
-    // Word Wrap Text
-    while( pString[iString] )
-    {
-        // Get Character
-        c = pString[iString++];
-
-        // Check for end of word
-        if( x_isspace(c) && !x_isspace(cPrev) )
-        {
-            iStringWrap = iString-1;
-        }
-
-        // Update previous character
-        cPrev = c;
-
-        // Advance cursor before checking wrap
-        w = pFont->GetCharacter(c).W;
-        x += w+1;
-
-        // Check for NewLine
-        if( c == '\n' )
-        {
-            // Copy String up to wrap point
-            for( i=iLineStart ; i<iString ; i++ )
-            {
-                s += pString[i];
-            }
-            
-            iLineStart  = iString;
-            iStringWrap = -1;
-            x           = 0;
-        }
-        else if( x > r.GetWidth() )
-        {
-            ASSERT( iStringWrap != -1 );
-
-            // Copy String up to wrap point
-            for( i=iLineStart ; i<iStringWrap ; i++ )
-            {
-                s += pString[i];
-            }
-            s += '\n';
-
-            // Skip Space
-            while( x_isspace(pString[i]) )
-                i++;
-
-            // Reset line scanner
-            iLineStart  = i;
-            iString     = i;
-            iStringWrap = -1;
-            x           = 0;
-        }
-    }
-
-    // Output last line
-    while( iLineStart < iString )
-        s += pString[iLineStart++];
-
-    // Return the string
-    return s;
+    Wrapped.Clear();
+    Wrapped.FreeExtra();
+    Wrapped = m_Fonts[iFont]->pFont->TextWrap((const xwchar*)String,r);
 }
 
 //=========================================================================
 
-const xwstring& ui_manager::WordWrapString( s32 iFont, const irect& r, const xwstring& String )
-{
-    static xwstring s;
 
-    s32 i;
-    s32 x           = 0;
-    s32 iString     = 0;
-    s32 iLineStart  = 0;
-    s32 iStringWrap = -1;
-    s32 cPrev       = 0;
-    s32 c;
-    s32 w;
-
-    ASSERT( (iFont >= 0) && (iFont < m_Fonts.GetCount()) );
-    ui_font* pFont = m_Fonts[iFont]->pFont;
-
-    // Clear the string
-    s.Clear();
-
-    // Word Wrap Text
-    while( String[iString] )
-    {
-        // Get Character
-        c = String[iString++];
-
-        // Skip Color Codes
-        if( (c & 0xff00) == 0xff00 )
-        {
-            iString++;
-        }
-        else
-        {
-            // Check for end of word
-            if( x_isspace(c) && !x_isspace(cPrev) )
-            {
-                iStringWrap = iString-1;
-            }
-
-            // Update previous character
-            cPrev = c;
-
-            // Advance cursor before checking wrap
-            w = pFont->GetCharacter(c).W;
-            x += w+1;
-
-            // Check for NewLine
-            if( c == '\n' )
-            {
-                // Copy String up to wrap point
-                for( i=iLineStart ; i<iString ; i++ )
-                {
-                    s += String[i];
-                }
-            
-                iLineStart  = iString;
-                iStringWrap = -1;
-                x           = 0;
-            }
-            else if( x > r.GetWidth() )
-            {
-                ASSERT( iStringWrap != -1 );
-
-                // Copy String up to wrap point
-                for( i=iLineStart ; i<iStringWrap ; i++ )
-                {
-                    s += String[i];
-                }
-                s += '\n';
-
-                // Skip Space
-                while( x_isspace(String[i]) )
-                    i++;
-
-                // Reset line scanner
-                iLineStart  = i;
-                iString     = i;
-                iStringWrap = -1;
-                x           = 0;
-            }
-        }
-    }
-
-    // Output last line
-    while( iLineStart < iString )
-        s += String[iLineStart++];
-
-    // Return the string
-    return s;
-}
 
 //=========================================================================
 

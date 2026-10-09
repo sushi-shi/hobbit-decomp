@@ -576,6 +576,7 @@ void audio_mgr::ResizeMemory(s32 NewSize)
 }
 
 //------------------------------------------------------------------------------
+RVA(0x257fa0, 0x73)
 f32 audio_mgr::GetLengthSeconds( const char* pIdentifier )
 {
 #ifdef TARGET_PC
@@ -669,6 +670,7 @@ f32 audio_mgr::GetLengthSeconds( const char* pIdentifier )
 
 //------------------------------------------------------------------------------
 
+RVA(0x258020, 0x5f)
 f32 audio_mgr::GetLengthSeconds( voice_id VoiceID )
 {
     // Error check.
@@ -2782,6 +2784,7 @@ s32 audio_mgr::GetPackageARAM( const char* pName )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25a610, 0x3f)
 audio_package* audio_mgr::FindPackageByName( const char* pFilename )
 {
     audio_package::package_link* pLink;
@@ -2819,6 +2822,7 @@ audio_package* audio_mgr::FindPackageByName( const char* pFilename )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25a650, 0x1d)
 char* audio_mgr::GetMusicType( const char* pFilename )
 {
     audio_package* pPackage = FindPackageByName( pFilename );
@@ -2834,6 +2838,7 @@ char* audio_mgr::GetMusicType( const char* pFilename )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25a670, 0x2c)
 s32 audio_mgr::GetMusicIntensity( const char* pFilename, music_intensity* &Intensity )
 {
     audio_package* pPackage = FindPackageByName( pFilename );
@@ -3208,6 +3213,7 @@ void audio_mgr::SetVoiceVolume( f32 Volume )
 
 //------------------------------------------------------------------------------
 
+RVA(0x25b000, 0x4c)
 u32 audio_mgr::GetUserData( const char* pIdentifier )
 {
     audio_package* pPackage;
