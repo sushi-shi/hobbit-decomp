@@ -24,31 +24,39 @@ anim_info::~anim_info(void) {}
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 void anim_info::GetRawKey(s32 iFrame, s32 iBone, anim_key& Key) const {
     iFrame = iFrame % m_nFrames;
     m_AnimKeys.GetRawKey(*m_pAnimGroup, iFrame, iBone, Key);
 }
+#endif
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 void anim_info::GetInterpKey(f32 Frame, s32 iBone, anim_key& Key) const {
     Frame = x_fmod(Frame, (f32)(m_nFrames - 1));
     m_AnimKeys.GetInterpKey(*m_pAnimGroup, Frame, iBone, Key);
 }
+#endif
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 void anim_info::GetRawKeys(s32 iFrame, anim_key* pKey) const {
     iFrame = iFrame % m_nFrames;
     m_AnimKeys.GetRawKeys(*m_pAnimGroup, iFrame, pKey);
 }
+#endif
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 void anim_info::GetInterpKeys(f32 Frame, anim_key* pKey) const {
     Frame = x_fmod(Frame, (f32)(m_nFrames - 1));
     m_AnimKeys.GetInterpKeys(*m_pAnimGroup, Frame, pKey);
 }
+#endif
 
 //=========================================================================
 

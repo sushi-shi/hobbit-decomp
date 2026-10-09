@@ -603,6 +603,7 @@ void anim_group::ComputeBoneL2W(
 
 //=========================================================================
 
+#if defined(HOBBIT_ANIMATION_LATER_LAYOUT)
 vector3 anim_group::GetEventPos(s32 iBone, const vector3& Offset, anim_key* pKey) const {
     matrix4 BoneM;
     matrix4 IdentM;
@@ -613,6 +614,7 @@ vector3 anim_group::GetEventPos(s32 iBone, const vector3& Offset, anim_key* pKey
     vector3 P = BoneM * Offset;
     return P;
 }
+#endif
 
 //=========================================================================
 

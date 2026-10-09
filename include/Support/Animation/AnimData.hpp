@@ -1208,5 +1208,39 @@ inline const anim_info& anim_group::GetAnimInfo(s32 iAnim) const {
 extern s32 g_extern_anim_link;
 
 //=========================================================================
+#if !defined(HOBBIT_ANIMATION_LATER_LAYOUT)
+// Complete surviving definitions, placed inline at their earlier shared API boundary.
+inline void anim_info::GetRawKey(s32 iFrame, s32 iBone, anim_key& Key) const {
+    iFrame = iFrame % m_nFrames;
+    m_AnimKeys.GetRawKey(*m_pAnimGroup, iFrame, iBone, Key);
+}
+
+inline void anim_info::GetInterpKey(f32 Frame, s32 iBone, anim_key& Key) const {
+    Frame = x_fmod(Frame, (f32)(m_nFrames - 1));
+    m_AnimKeys.GetInterpKey(*m_pAnimGroup, Frame, iBone, Key);
+}
+
+inline void anim_info::GetRawKeys(s32 iFrame, anim_key* pKey) const {
+    iFrame = iFrame % m_nFrames;
+    m_AnimKeys.GetRawKeys(*m_pAnimGroup, iFrame, pKey);
+}
+
+inline void anim_info::GetInterpKeys(f32 Frame, anim_key* pKey) const {
+    Frame = x_fmod(Frame, (f32)(m_nFrames - 1));
+    m_AnimKeys.GetInterpKeys(*m_pAnimGroup, Frame, pKey);
+}
+
+inline vector3 anim_group::GetEventPos(s32 iBone, const vector3& Offset, anim_key* pKey) const {
+    matrix4 BoneM;
+    matrix4 IdentM;
+    IdentM.Identity();
+
+    ComputeBoneL2W(iBone, IdentM, pKey, BoneM);
+
+    vector3 P = BoneM * Offset;
+    return P;
+}
+#endif
+
 #endif // END HOBBIT_ANIMDATA_HPP
 //=========================================================================

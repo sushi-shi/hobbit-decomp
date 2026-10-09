@@ -34,6 +34,7 @@ Animation_AnimEvent	36	35
 Animation_AnimGroup	19	19
 Animation_AnimInfo	3	3
 Animation_AnimKeyData	10	6
+Animation_AnimPlayer	12	1
 Animation_AnimTrack	13	4
 Animation_CharAnimPlayer	16	2
 CollisionMgr_CollisionMgr	7	7
@@ -93,7 +94,7 @@ UI_ui_radio	1	0
 UI_ui_slider	9	2
 UI_ui_text	1	0
 UI_ui_textbox	5	4
-UI_ui_win	26	26
+UI_ui_win	36	26
 aux_Bitmap_DefaultBMP	1	1
 aux_Bitmap_Load_BMP	2	2
 aux_Bitmap_Load_TGA	2	2
@@ -213,26 +214,38 @@ Animation_AnimKeyData	?GetRawKey@anim_keys@@ABEXABVanim_group@@HHAAUanim_key@@@Z
 Animation_AnimKeyData	?GetRawKeys@anim_keys@@ABEXABVanim_group@@HPAUanim_key@@@Z	60.9115	60.9115	1	4d9b415ebfe3	0x13fb20	60.9115	
 Animation_AnimKeyData	?ReleaseStreams@anim_key_block@@QAEXXZ	100.0000	100.0000	1	f72c976b3c59	0x13f6f0	100.0000	
 Animation_AnimKeyData	?anim_SetMaxAllowedDecompressedBytes@@YAXH@Z	100.0000	100.0000	1	ecbb0c556994	0x13f530	100.0000	
+Animation_AnimPlayer	??0simple_anim_player@@QAE@XZ	83.2909	83.2909	1	e466db2822be	0x13b4d0	83.2909	
+Animation_AnimPlayer	??1simple_anim_player@@QAE@XZ	9.0909	9.0909	1	1a4ef2b784f6	0x13b590	9.0909	
+Animation_AnimPlayer	?Advance@simple_anim_player@@QAEXM@Z	82.7174	82.7174	1	17e34a84c038	0x13b780	82.7174	
+Animation_AnimPlayer	?GetEndSpeed@simple_anim_player@@QAEMM@Z	87.5565	87.5565	1	5d0004f7c4e0	0x13bfb0	87.5565	
+Animation_AnimPlayer	?GetEventIndex@simple_anim_player@@QAEHPBD@Z	92.4091	92.4091	1	69f54c8a376d	0x13c220	92.4091	
+Animation_AnimPlayer	?GetEventPosition@simple_anim_player@@QAE?AUvector3@@H@Z	40.6900	40.6900	1	f61d408c7248	0x13c3a0	40.6900	
+Animation_AnimPlayer	?GetEventRotation@simple_anim_player@@QAE?AUradian3@@H@Z	20.2388	20.2388	1	011f16ee2233	0x13c520	20.2388	
+Animation_AnimPlayer	?GetInterpKeys@simple_anim_player@@QAEXPAUanim_key@@@Z	51.9636	51.9636	1	cb2c346a4ff2	0x13b910	51.9636	
+Animation_AnimPlayer	?GetStartSpeed@simple_anim_player@@QAEMM@Z	84.4151	84.4151	1	62a308a0ba13	0x13be70	84.4151	
+Animation_AnimPlayer	?SetAnim@simple_anim_player@@QAEXHH@Z	72.8958	72.8958	1	3de5a636d339	0x13b700	72.8958	
+Animation_AnimPlayer	?SetAnimGroup@simple_anim_player@@QAEXPBVanim_group@@@Z	100.0000	100.0000	1	481c4639c5e9	0x13b5c0	100.0000	
+Animation_AnimPlayer	?SetAnimGroup@simple_anim_player@@QAEXU?$rhandle@Vanim_group@@@@@Z	12.4157	12.4157	1	481c4639c5e9	0x13b5f0	12.4157	
 Animation_AnimTrack	??0anim_track_controller@@QAE@XZ	89.7500	89.7500	1	8bdb6bd67213	0x143280	89.7500	
 Animation_AnimTrack	??1anim_track_controller@@UAE@XZ	66.3684	66.3684	2	31d5e8ff1e06	0x1432e0	66.3684	
 Animation_AnimTrack	?Advance@anim_track_controller@@UAEXM@Z	71.8333	71.8333	2	b00d1e5ceafb	0x1438b0	71.8333	
 Animation_AnimTrack	?AllocBlendKeys@anim_track_controller@@QAEXXZ	40.1852	40.1852	1	b4d596feacff	0x1449e0	40.1852	
 Animation_AnimTrack	?Clear@anim_track_controller@@UAEXXZ	100.0000	100.0000	1	e24280600b84	0x143370	100.0000	
 Animation_AnimTrack	?FreeCachedData@anim_track_controller@@UAEXXZ	100.0000	100.0000	1	ce85ff6b86ce	0x1449c0	100.0000	
-Animation_AnimTrack	?GetInterpKey@anim_track_controller@@UAEXHAAUanim_key@@@Z	26.3053	26.3053	2	40d1120e6204	0x143dd0	26.3053	
+Animation_AnimTrack	?GetInterpKey@anim_track_controller@@UAEXHAAUanim_key@@@Z	34.1985	34.1985	2	40d1120e6204	0x143dd0	34.1985	
 Animation_AnimTrack	?GetInterpKeys@anim_track_controller@@UAEXPAUanim_key@@@Z	23.1691	23.1691	2	8ec579a734d9	0x143a40	23.1691	
 Animation_AnimTrack	?GetWeight@anim_track_controller@@UAEMXZ	100.0000	100.0000	1	df5fcaf5e452	0x144ae0	100.0000	
 Animation_AnimTrack	?MixKeys@anim_track_controller@@UAEXPAUanim_key@@@Z	24.4565	24.4565	2	228541bf117c	0x144110	24.6549	
-Animation_AnimTrack	?SetAnim@anim_track_controller@@QAEXHM@Z	40.3831	40.3831	2	c26a89a46085	0x1434b0	40.3831	
+Animation_AnimTrack	?SetAnim@anim_track_controller@@QAEXHM@Z	45.4416	45.4416	2	c26a89a46085	0x1434b0	45.4416	
 Animation_AnimTrack	?SetAnimGroup@anim_track_controller@@UAEXU?$rhandle@Vanim_group@@@@@Z	25.3625	25.3625	2	519615fa43aa	0x1433a0	25.3625	
 Animation_AnimTrack	?SetWeight@anim_track_controller@@UAEXM@Z	100.0000	100.0000	2	424b85a90196	0x144aa0	100.0000	
 Animation_CharAnimPlayer	??0char_anim_player@@QAE@XZ	99.9691	99.9691	1	3be2ef16fb7e	0x140450	99.9691	
 Animation_CharAnimPlayer	??0xcolor@@QAE@EEEE@Z	100.0000	100.0000	1	cpp:8ea1d51baf2b	0x13480	100.0000	
 Animation_CharAnimPlayer	??1char_anim_player@@QAE@XZ	77.4865	77.4865	1	bef469cf6330	0x1405d0	77.4865	
-Animation_CharAnimPlayer	?Advance@char_anim_player@@QAEXMAAUvector3@@AAM@Z	16.5428	16.5428	1	ef489eb9fe1d	0x140900	16.5428	
+Animation_CharAnimPlayer	?Advance@char_anim_player@@QAEXMAAUvector3@@AAM@Z	16.5428	7.4492	1	ef489eb9fe1d	0x140900	16.5428	
 Animation_CharAnimPlayer	?CalcBasisVectors@char_anim_player@@AAEXABUvector3@@AAU2@11@Z	57.5571	57.5571	1	f5acf2085ec8	0x142030	57.5571	
 Animation_CharAnimPlayer	?ClearTracks@char_anim_player@@QAEXXZ	63.3333	63.3333	1	1285ae0acabb	0x141c70	63.3333	
-Animation_CharAnimPlayer	?ComputeAnimToWorldM@char_anim_player@@AAEXAAVmatrix4@@@Z	48.0537	48.0537	1	de92a6df2602	0x141d70	48.0537	
+Animation_CharAnimPlayer	?ComputeAnimToWorldM@char_anim_player@@AAEXAAVmatrix4@@@Z	48.0537	45.5366	1	de92a6df2602	0x141d70	48.0537	
 Animation_CharAnimPlayer	?GetInterpKeys@char_anim_player@@AAEXPAUanim_key@@@Z	100.0000	100.0000	1	b47288e69382	0x1415b0	100.0000	
 Animation_CharAnimPlayer	?GetWorldAnimTranslation@char_anim_player@@QAE?AUvector3@@XZ	72.4931	72.4931	1	3a43643fde80	0x141180	72.4931	
 Animation_CharAnimPlayer	?PrepareRootKey@char_anim_player@@AAEXAAUanim_key@@@Z	44.2387	44.2387	1	daa4d94df712	0x141280	44.2387	
@@ -1016,7 +1029,7 @@ UI_ui_slider	?OnCursorExit@ui_slider@@UAEXPAVui_win@@@Z	99.9583	99.9583	1	f721d9
 UI_ui_slider	?OnCursorMove@ui_slider@@UAEXPAVui_win@@HH@Z	99.9381	99.9381	1	4281cbf01965	0x2a5f60	99.9381	
 UI_ui_slider	?OnLBDown@ui_slider@@UAEXPAVui_win@@@Z	88.3333	88.3333	1	7344753e44e0	0x2a5f10	88.3333	
 UI_ui_slider	?OnLBUp@ui_slider@@UAEXPAVui_win@@@Z	99.9375	99.9375	1	ff0182321dff	0x2a60a0	99.9375	
-UI_ui_slider	?OnPadNavigate@ui_slider@@UAEXPAVui_win@@HHH@Z	99.9307	99.9307	1	1e58c92e6a4c	0x2a5cc0	99.9307	
+UI_ui_slider	?OnPadNavigate@ui_slider@@UAEXPAVui_win@@HHH@Z	99.9802	99.9802	2	a9396b83eb48	0x2a5cc0	99.9802	
 UI_ui_slider	?Render@ui_slider@@UAEXHH@Z	88.8937	88.8937	1	83e8950aadc6	0x2a5ac0	88.8937	
 UI_ui_slider	?SetRange@ui_slider@@QAEXHH@Z	100.0000	100.0000	1	719505255ae3	0x2a5e20	100.0000	
 UI_ui_slider	?SetValue@ui_slider@@QAEXH@Z	99.9565	99.9565	1	6a4b81b51a74	0x2a5e90	99.9565	
@@ -1041,6 +1054,16 @@ UI_ui_win	?LocalToScreen@ui_win@@QBEXAAH0@Z	100.0000	100.0000	1	905acb81a43c	0x2
 UI_ui_win	?LocalToScreen@ui_win@@QBEXAAUirect@@@Z	100.0000	100.0000	1	905acb81a43c	0x2a3400	100.0000	
 UI_ui_win	?OnCursorEnter@ui_win@@UAEXPAV1@@Z	100.0000	100.0000	1	1af3d229d874	0x2a3540	100.0000	
 UI_ui_win	?OnCursorExit@ui_win@@UAEXPAV1@@Z	100.0000	100.0000	1	6cc4dfafd7d9	0x2a3550	100.0000	
+UI_ui_win	?OnKeyDown@ui_win@@UAEXPAV1@H@Z	99.8333	99.8333	1	376c8893df14	0x2a3560	99.8333	
+UI_ui_win	?OnKeyUp@ui_win@@UAEXPAV1@H@Z	99.8333	99.8333	1	d8e5398f2a97	0x2a3570	99.8333	
+UI_ui_win	?OnNotify@ui_win@@UAEXPAV1@0HPAX@Z	99.8333	99.8333	1	4bc1b9defe8c	0x2a34d0	99.8333	
+UI_ui_win	?OnPadBack@ui_win@@UAEXPAV1@@Z	99.8333	99.8333	1	704e2e198e00	0x2a3590	99.8333	
+UI_ui_win	?OnPadDelete@ui_win@@UAEXPAV1@@Z	99.8333	99.8333	1	a7bf142a30df	0x2a35a0	99.8333	
+UI_ui_win	?OnPadHelp@ui_win@@UAEXPAV1@@Z	99.8333	99.8333	1	f21eb573655f	0x2a35b0	99.8333	
+UI_ui_win	?OnPadNavigate@ui_win@@UAEXPAV1@HHH@Z	99.8333	99.8333	1	58136d262217	0x2a3580	99.8333	
+UI_ui_win	?OnPadShoulder2@ui_win@@UAEXPAV1@H@Z	99.8333	99.8333	1	5140b668d07f	0x2a35e0	99.8333	
+UI_ui_win	?OnPadShoulder@ui_win@@UAEXPAV1@H@Z	99.8333	99.8333	1	e8267f7ca5d4	0x2a35c0	99.8333	
+UI_ui_win	?OnUpdate@ui_win@@UAEXPAV1@M@Z	99.9565	99.9565	1	df548dc61ef0	0x2a34a0	99.9565	
 UI_ui_win	?Render@ui_win@@UAEXHH@Z	100.0000	100.0000	1	5940e8bd7b13	0x2a30e0	100.0000	
 UI_ui_win	?ScreenToLocal@ui_win@@QBEXAAH0@Z	100.0000	100.0000	1	28a7d5d599b7	0x2a33c0	100.0000	
 UI_ui_win	?ScreenToLocal@ui_win@@QBEXAAUirect@@@Z	100.0000	100.0000	1	28a7d5d599b7	0x2a3450	100.0000	

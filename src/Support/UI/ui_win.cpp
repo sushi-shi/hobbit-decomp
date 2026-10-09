@@ -501,6 +501,7 @@ void ui_win::ScreenToLocalCreate( irect& r ) const
 //=========================================================================
 //=========================================================================
 
+RVA(0x002a34a0, 0x2d)
 void ui_win::OnUpdate( ui_win* pWin, f32 DeltaTime )
 {
     (void)pWin;
@@ -515,6 +516,7 @@ void ui_win::OnUpdate( ui_win* pWin, f32 DeltaTime )
 
 //=========================================================================
 
+RVA(0x002a34d0, 0xf)
 void ui_win::OnNotify( ui_win* pWin, ui_win* pSender, s32 Command, void* pData )
 {
     (void)pWin;
@@ -606,6 +608,7 @@ void ui_win::OnCursorExit( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x002a3560, 0xf)
 void ui_win::OnKeyDown( ui_win* pWin, s32 Key )
 {
     (void)pWin;
@@ -617,6 +620,7 @@ void ui_win::OnKeyDown( ui_win* pWin, s32 Key )
 
 //=========================================================================
 
+RVA(0x002a3570, 0xf)
 void ui_win::OnKeyUp( ui_win* pWin, s32 Key )
 {
     (void)pWin;
@@ -628,6 +632,7 @@ void ui_win::OnKeyUp( ui_win* pWin, s32 Key )
 
 //=========================================================================
 
+RVA(0x002a3580, 0xf)
 void ui_win::OnPadNavigate( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats )
 {
     (void)pWin;
@@ -650,6 +655,7 @@ void ui_win::OnPadSelect( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x002a3590, 0xf)
 void ui_win::OnPadBack( ui_win* pWin )
 {
     (void)pWin;
@@ -661,6 +667,7 @@ void ui_win::OnPadBack( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x002a35a0, 0xf)
 void ui_win::OnPadDelete( ui_win* pWin )
 {
     (void)pWin;
@@ -672,6 +679,7 @@ void ui_win::OnPadDelete( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x002a35b0, 0xf)
 void ui_win::OnPadHelp( ui_win* pWin )
 {
     (void)pWin;
@@ -683,6 +691,7 @@ void ui_win::OnPadHelp( ui_win* pWin )
 
 //=========================================================================
 
+RVA(0x002a35c0, 0x12)
 void ui_win::OnPadShoulder( ui_win* pWin, s32 Direction )
 {
     (void)pWin;
@@ -695,6 +704,7 @@ void ui_win::OnPadShoulder( ui_win* pWin, s32 Direction )
 
 //=========================================================================
 
+RVA(0x002a35e0, 0x12)
 void ui_win::OnPadShoulder2( ui_win* pWin, s32 Direction )
 {
     (void)pWin;

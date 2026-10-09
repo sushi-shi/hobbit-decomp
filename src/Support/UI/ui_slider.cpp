@@ -279,7 +279,7 @@ RVA(0x2a5cc0, 0x14d) void ui_slider::OnPadNavigate( ui_win* pWin, s32 Code, s32 
 {
     xbool       Processed = FALSE;
     s32         dx = 0;
-    static s32  ScaleCounter = 0;
+    DATA(0x413048) static s32  ScaleCounter = 0;
 
     // Determine movement required
     switch( Code )
