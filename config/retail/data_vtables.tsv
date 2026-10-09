@@ -7,3 +7,4 @@ rva	size	name	kind	note
 0x2f9d44	0x24	??_7io_device_dvd@@6B@	primary	Natural io_device_dvd COMDAT; 9 exact slots and reviewed RTTI COL at 0x2f9d40; actual weak _E resolves to defined _G; config/evidence/io-dvd-vtable.json
 0x2fd350	0x4	??_7linear_key_ctrl@@6B@	primary	Actual one-slot vtable; /GR-; no COL emitted. Surrounding words are separate unrelated contributions.
 0x2fd3cc	0x4	??_7smooth_key_ctrl@@6B@	primary	Actual one-slot vtable; /GR-; no COL emitted. Surrounding words are separate unrelated contributions.
+0x2fcf74	0x8c	??_7ui_dlg_list@@6B@	primary	ui_dlg_list primary vtable: 35 PC slots, 140 bytes; natural shared UI declarations emit the same slot count.

@@ -112,6 +112,10 @@ void    draw_Vertex             ( const vector3& Vertex );
 void    draw_Vertex             ( f32 X, f32 Y, f32 Z );
 
 void    draw_UVs                ( const vector2* pUVs,    s32 Count, s32 Stride = sizeof(vector2) );
+#ifdef TARGET_PC
+// PC indexed UV-set variant; overload spelling reconstructed from its wrapper.
+void    draw_UVs                ( s32 UVSet, const vector2* pUVs, s32 Count, s32 Stride );
+#endif
 void    draw_Colors             ( const xcolor*  pColors, s32 Count, s32 Stride = sizeof(xcolor ) );
 void    draw_Verts              ( const vector3* pVerts,  s32 Count, s32 Stride = sizeof(vector3) );
                         

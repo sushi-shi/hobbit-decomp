@@ -5,6 +5,7 @@
 //==============================================================================
 
 #include <Support/scriptvm/xsc_vm_core.hpp>
+#include <rva.h>
 
 //==============================================================================
 //  Defines
@@ -14,35 +15,35 @@
 //  Adapter functions
 //==============================================================================
 
-static void xsc_fabs( u8* pArgs )
+RVA(0x2463f0, 0x18) static void xsc_fabs( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_abs( v );
 }
 
-static void xsc_iabs( u8* pArgs )
+RVA(0x246410, 0xf) static void xsc_iabs( u8* pArgs )
 {
     s32* pRet = (s32*)pArgs;
     s32  v    = vmarg_s32( pArgs );
     *pRet = x_abs( v );
 }
 
-static void xsc_sqr( u8* pArgs )
+RVA(0x246420, 0xf) static void xsc_sqr( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_sqr( v );
 }
 
-static void xsc_sqrt( u8* pArgs )
+RVA(0x246430, 0xb) static void xsc_sqrt( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_sqrt( v );
 }
 
-static void xsc_1sqrt( u8* pArgs )
+RVA(0x246440, 0x11) static void xsc_1sqrt( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
@@ -63,28 +64,28 @@ static void xsc_ceil( u8* pArgs )
     *pRet = x_ceil( v );
 }
 
-static void xsc_log( u8* pArgs )
+RVA(0x2464a0, 0xf) static void xsc_log( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_log( v );
 }
 
-static void xsc_log2( u8* pArgs )
+RVA(0x2464b0, 0x15) static void xsc_log2( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_log2( v );
 }
 
-static void xsc_log10( u8* pArgs )
+RVA(0x2464d0, 0xf) static void xsc_log10( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
     *pRet = x_log10( v );
 }
 
-static void xsc_exp( u8* pArgs )
+RVA(0x2464e0, 0x1f) static void xsc_exp( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
@@ -145,7 +146,7 @@ static void xsc_cos( u8* pArgs )
     *pRet = x_cos( v );
 }
 
-static void xsc_tan( u8* pArgs )
+RVA(0x246650, 0xd) static void xsc_tan( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );
@@ -166,7 +167,7 @@ static void xsc_acos( u8* pArgs )
     *pRet = x_acos( v );
 }
 
-static void xsc_atan( u8* pArgs )
+RVA(0x246680, 0xd) static void xsc_atan( u8* pArgs )
 {
     f32* pRet = (f32*)pArgs;
     f32  v    = vmarg_f32( pArgs );

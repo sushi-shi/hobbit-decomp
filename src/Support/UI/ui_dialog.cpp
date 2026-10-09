@@ -92,6 +92,7 @@ RVA(0x2a2400, 0x480) xbool ui_dialog::Create( s32                        UserID,
 //    m_BackgroundColor   = xcolor(20,40,40,224);
 //    m_BackgroundColor   = xcolor(20,30,40,224);
     m_BackgroundColor   = FECOL_DIALOG;
+    m_InputEnabled      = TRUE;
     m_pUserData         = pUserData;
 
     if( pDialogTem )
@@ -241,6 +242,9 @@ RVA(0x2a2960, 0x186) void ui_dialog::OnPadNavigate( ui_win* pWin, s32 Code, s32 
     (void)Presses;
     (void)Repeats;
 
+    if( !m_InputEnabled )
+        return;
+
     ui_manager::user*   pUser   = m_pManager->GetUser( m_UserID );
     s32                 x       = m_NavX;
     s32                 y       = m_NavY;
@@ -291,6 +295,14 @@ RVA(0x2a2960, 0x186) void ui_dialog::OnPadNavigate( ui_win* pWin, s32 Code, s32 
             m_pManager->SetCursorPos( m_UserID, cx, cy );
             m_NavX = x;
             m_NavY = y;
+            for( s32 i=0 ; i<m_Children.GetCount() ; i++ )
+            {
+                if( m_Children[i] == pWin )
+                {
+                    m_CurrentControl = i;
+                    break;
+                }
+            }
             break;
         }
 
@@ -346,6 +358,8 @@ RVA(0x2a2b00, 0xc8) xbool ui_dialog::GotoControl( s32 iControl )
         m_NavX = r.l + r.GetWidth() / 2;
         m_NavY = r.t + r.GetHeight() / 2;
 
+        m_CurrentControl = iControl;
+
         Success = TRUE;
     }
     return Success;
@@ -356,6 +370,7 @@ RVA(0x2a2b00, 0xc8) xbool ui_dialog::GotoControl( s32 iControl )
 RVA(0x2a2bd0, 0xe6) xbool ui_dialog::GotoControl( ui_control* pControl )
 {
     xbool   Success = FALSE;
+    s32     iControl = -1;
 
     ui_control* pChild = NULL;
 
@@ -363,7 +378,11 @@ RVA(0x2a2bd0, 0xe6) xbool ui_dialog::GotoControl( ui_control* pControl )
     for( s32 i=0 ; i<m_Children.GetCount() ; i++ )
     {
         if( m_Children[i] == pControl )
+        {
             pChild = (ui_control*)m_Children[i];
+            iControl = i;
+            break;
+        }
     }
     ASSERT( pChild );
 
@@ -382,6 +401,8 @@ RVA(0x2a2bd0, 0xe6) xbool ui_dialog::GotoControl( ui_control* pControl )
         const irect& r = pChild->GetNavPos( );
         m_NavX = r.l + r.GetWidth() / 2;
         m_NavY = r.t + r.GetHeight() / 2;
+
+        m_CurrentControl = iControl;
 
         Success = TRUE;
     }

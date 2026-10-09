@@ -378,7 +378,7 @@ ui_win* ui_win::FindChildByLabel( const char* Label ) const
 */
 //=========================================================================
 
-ui_win* ui_win::FindChildByID( s32 ID ) const
+RVA(0x002a3320, 0x28) ui_win* ui_win::FindChildByID( s32 ID ) const
 {
     for( s32 i=0 ; i<m_Children.GetCount() ; i++ )
     {

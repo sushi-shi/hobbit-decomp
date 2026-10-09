@@ -49,6 +49,10 @@ public:
 
     virtual void            OnPadNavigate       ( ui_win* pWin, s32 Code, s32 Presses, s32 Repeats );
                             
+    // Reconstructed descriptive API and nominal return type; original declaration unknown.
+    // Actual dialog-specific virtual forwards the current-control reselection result.
+    virtual xbool           RestoreCurrentControl( void ) { return GotoControl( m_CurrentControl ); }
+
     void                    SetBackgroundColor  ( xcolor Color );
     xcolor                  GetBackgroundColor  ( void ) const;
                             
@@ -71,7 +75,12 @@ protected:
     s32                     m_OldCursorX;
     s32                     m_OldCursorY;
     s32                     m_XRes,m_YRes;
+    xbool                   m_InputEnabled;
     void*                   m_pUserData;
+    s32                     m_CurrentControl;
+    // Reconstructed descriptive spelling; actual original member name is unknown.
+    // PC OpenDialog copies the registered dialog class name into this xstring.
+    xstring                 m_ClassName;
 };
 
 //==============================================================================

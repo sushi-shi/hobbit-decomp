@@ -38,6 +38,8 @@ public:
                                           ui_win*       pParent,
                                           s32           Flags );
 
+    // Actual capture-state override; original spelling/const qualifier unknown.
+    virtual xbool   IsMouseCaptured     ( void ) const { return m_MouseDown; }
     virtual void    Render              ( s32 ox=0, s32 oy=0 );
     virtual void    OnUpdate            ( f32 DeltaTime );
 

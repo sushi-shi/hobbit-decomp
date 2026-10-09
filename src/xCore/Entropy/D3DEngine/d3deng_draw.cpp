@@ -1,6 +1,5 @@
-// Imported original Tribes D3D8 platform source, revision 4aab7137.
-// Genuine enabled-state revision: PC methods individually proved; full Init/TU
-// storage order remains unclaimed. See docs/imports/cohort15-draw-enabled-version.json.
+// Tribes D3D8 source, revision 4aab7137; Hobbit dual-UV vertex format.
+// Initialization and full storage order remain unannotated.
 ///////////////////////////////////////////////////////////////////////////
 // INCLUDES
 ///////////////////////////////////////////////////////////////////////////
@@ -35,14 +34,14 @@ typedef void (*fnptr_dispatch)( void );
 // DRAW VERTEX
 ///////////////////////////////////////////////////////////////////////////
 
-#define D3DFVF_DRAWVERTEX_2D (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
-#define D3DFVF_DRAWVERTEX_3D (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+#define D3DFVF_DRAWVERTEX_2D (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX2)
+#define D3DFVF_DRAWVERTEX_3D (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX2)
 
 struct drawvertex3d
 {
     vector3     Position;
     D3DCOLOR    Color;
-    vector2     UV;
+    vector2     UV[2];
 };
 
 struct drawvertex2d
@@ -50,7 +49,7 @@ struct drawvertex2d
     vector3     Position;
     f32         RHW;
     D3DCOLOR    Color;
-    vector2     UV;
+    vector2     UV[2];
 };
 
 struct drawsprite
@@ -71,6 +70,7 @@ struct drawsprite
 xbool                       m_Initialized = FALSE;                  // Becomes TRUE when Initialized
 DATA(0x003f15e0)
 xbool                       m_bEnabled = 0;                         // Enable/Disable draw subsystem
+DATA(0x003f1604)
 xbool                       m_bBegin = FALSE;                       // TRUE when between begin/end
 
 draw_primitive              m_Primitive;                            // Primitive Type, see enum draw_primitive
@@ -81,21 +81,28 @@ xbool                       m_IsTextured;                           // TRUE for 
 matrix4                     m_L2W;                                  // L2W matrix for draw
 
 DATA(0x003f1550)
-const vector2*              m_pUVs;                                 // Pointer to UV array
-s32                         m_nUVs;                                 // Number of elements
-s32                         m_sUVs;                                 // Stride of elements
+const vector2*              m_pUVs[2];                                 // Pointer to UV array
+DATA(0x003f1538)
+s32                         m_nUVs[2];                                 // Number of elements
+DATA(0x003f1560)
+s32                         m_sUVs[2];                                 // Stride of elements
 
 DATA(0x003f14ec)
 const xcolor*               m_pColors;                              // Pointer to Color array
+DATA(0x003f1568)
 s32                         m_nColors;                              // Number of elements
+DATA(0x003f14f4)
 s32                         m_sColors;                              // Stride of elements
 
+DATA(0x003f1584)
 const vector3*              m_pVerts;                               // Poitner to vertex array
+DATA(0x003f1578)
 s32                         m_nVerts;                               // Number of elements
+DATA(0x003f15e8)
 s32                         m_sVerts;                               // Stride of elements
 
 DATA(0x003f14d0)
-vector2                     m_UV;                                   // Current UV
+vector2                     m_UV[2];                                   // Current UV
 DATA(0x003f1570)
 xcolor                      m_Color;                                // Current Color
 
@@ -115,8 +122,10 @@ IDirect3DIndexBuffer8*      m_pIndexQuads;                          // Index arr
 drawsprite*                 m_pSpriteBuffer;                        // Sprite Buffer
 s32                         m_iSprite;                              // Next Sprite Index
 
+DATA(0x003f14f0)
 fnptr_dispatch              m_pfnDispatch;                          // Dispatch Function
 
+DATA(0x003f1574)
 s32                         m_ZBias;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -205,11 +214,13 @@ void draw_Init( void )
 
     // Clear L2W matrix, UV, Color and Vertex
     m_L2W.Identity();
-    m_UV    = vector2( 0.0f, 0.0f );
+    m_UV[0] = vector2( 0.0f, 0.0f );
+    m_UV[1] = vector2( 0.0f, 0.0f );
     m_Color = xcolor( 255, 255, 255, 255 );
 
     // Clear pointers
-    m_pUVs    = NULL;
+    m_pUVs[0] = NULL;
+    m_pUVs[1] = NULL;
     m_pColors = NULL;
     m_pVerts  = NULL;
 
@@ -426,8 +437,10 @@ void draw_DispatchRects( void )
 
                 pd[3].Position.X = pd[2].Position.X;
                 pd[1].Position.X = pd[0].Position.X;
-                pd[3].UV.X = pd[2].UV.X;
-                pd[1].UV.X = pd[0].UV.X;
+                pd[3].UV[0].X = pd[2].UV[0].X;
+                pd[1].UV[0].X = pd[0].UV[0].X;
+                pd[3].UV[1].X = pd[2].UV[1].X;
+                pd[1].UV[1].X = pd[0].UV[1].X;
 
                 ps -= 2;
                 pd -= 4;
@@ -451,8 +464,10 @@ void draw_DispatchRects( void )
 
                 pd[3].Position.X = pd[2].Position.X;
                 pd[1].Position.X = pd[0].Position.X;
-                pd[3].UV.X = pd[2].UV.X;
-                pd[1].UV.X = pd[0].UV.X;
+                pd[3].UV[0].X = pd[2].UV[0].X;
+                pd[1].UV[0].X = pd[0].UV[0].X;
+                pd[3].UV[1].X = pd[2].UV[1].X;
+                pd[1].UV[1].X = pd[0].UV[1].X;
 
                 ps -= 2;
                 pd -= 4;
@@ -568,28 +583,32 @@ void draw_DispatchSprites( void )
                         pVertex2d->Position.Z = 0.5f;
                         pVertex2d->RHW        = 1.0f;
                         pVertex2d->Color      = Color;
-                        pVertex2d->UV         = vector2(U0,V0);
+                        pVertex2d->UV[0]         = vector2(U0,V0);
+                        pVertex2d->UV[1]         = vector2(U0,V0);
                         pVertex2d++;
                         pVertex2d->Position.X = pSprite->Position.X;
                         pVertex2d->Position.Y = pSprite->Position.Y+pSprite->WH.Y;
                         pVertex2d->Position.Z = 0.5f;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U0,V1);
+                        pVertex2d->UV[0]       = vector2(U0,V1);
+                        pVertex2d->UV[1]       = vector2(U0,V1);
                         pVertex2d++;
                         pVertex2d->Position.X = pSprite->Position.X+pSprite->WH.X;
                         pVertex2d->Position.Y = pSprite->Position.Y+pSprite->WH.Y;
                         pVertex2d->Position.Z = 0.5f;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U1,V1);
+                        pVertex2d->UV[0]       = vector2(U1,V1);
+                        pVertex2d->UV[1]       = vector2(U1,V1);
                         pVertex2d++;
                         pVertex2d->Position.X = pSprite->Position.X+pSprite->WH.X;
                         pVertex2d->Position.Y = pSprite->Position.Y;
                         pVertex2d->Position.Z = 0.5f;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U1,V0);
+                        pVertex2d->UV[0]       = vector2(U1,V0);
+                        pVertex2d->UV[1]       = vector2(U1,V0);
                         pVertex2d++;
                     }
                     else
@@ -601,22 +620,26 @@ void draw_DispatchSprites( void )
                         pVertex2d->Position = Center - v0;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U0,V0);
+                        pVertex2d->UV[0]       = vector2(U0,V0);
+                        pVertex2d->UV[1]       = vector2(U0,V0);
                         pVertex2d++;
                         pVertex2d->Position = Center - v1;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U0,V1);
+                        pVertex2d->UV[0]       = vector2(U0,V1);
+                        pVertex2d->UV[1]       = vector2(U0,V1);
                         pVertex2d++;
                         pVertex2d->Position = Center + v0;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U1,V1);
+                        pVertex2d->UV[0]       = vector2(U1,V1);
+                        pVertex2d->UV[1]       = vector2(U1,V1);
                         pVertex2d++;
                         pVertex2d->Position = Center + v1;
                         pVertex2d->RHW      = 1.0f;
                         pVertex2d->Color    = Color;
-                        pVertex2d->UV       = vector2(U1,V0);
+                        pVertex2d->UV[0]       = vector2(U1,V0);
+                        pVertex2d->UV[1]       = vector2(U1,V0);
                         pVertex2d++;
                     }
 
@@ -632,19 +655,23 @@ void draw_DispatchSprites( void )
                     // Contruct corner points of quad
                     pVertex3d->Position = Center + v0;
                     pVertex3d->Color    = Color;
-                    pVertex3d->UV       = vector2(U0,V0);
+                    pVertex3d->UV[0]       = vector2(U0,V0);
+                    pVertex3d->UV[1]       = vector2(U0,V0);
                     pVertex3d++;
                     pVertex3d->Position = Center + v1;
                     pVertex3d->Color    = Color;
-                    pVertex3d->UV       = vector2(U0,V1);
+                    pVertex3d->UV[0]       = vector2(U0,V1);
+                    pVertex3d->UV[1]       = vector2(U0,V1);
                     pVertex3d++;
                     pVertex3d->Position = Center - v0;
                     pVertex3d->Color    = Color;
-                    pVertex3d->UV       = vector2(U1,V1);
+                    pVertex3d->UV[0]       = vector2(U1,V1);
+                    pVertex3d->UV[1]       = vector2(U1,V1);
                     pVertex3d++;
                     pVertex3d->Position = Center - v1;
                     pVertex3d->Color    = Color;
-                    pVertex3d->UV       = vector2(U1,V0);
+                    pVertex3d->UV[0]       = vector2(U1,V0);
+                    pVertex3d->UV[1]       = vector2(U1,V0);
                     pVertex3d++;
 
                     // Advance to next sprite
@@ -788,30 +815,30 @@ RVA(0x0026c3a0, 0x55a) void draw_Begin( draw_primitive Primitive, u32 Flags )
     }
 
     // Clear list pointers
-    m_pUVs    = NULL;
+    m_pUVs[0] = NULL;
+    m_pUVs[1] = NULL;
     m_pColors = NULL;
     m_pVerts  = NULL;
 
     // Set in begin state
     m_bBegin = TRUE;
     m_Color = XCOLOR_WHITE;
-    m_UV.Zero();
+    m_UV[0].Zero();
+    m_UV[1].Zero();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 RVA(0x0026d9a0, 0x1f) void draw_End( void )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
 
-    // Flush any drawing we have queued up
-    m_pfnDispatch();
+    if( m_pfnDispatch )
+        m_pfnDispatch();
 
-    // Set D3D render states to normal for ZBUFFER
-    g_pd3dDevice->SetRenderState( D3DRS_ZENABLE, D3DZB_TRUE );
-    g_pd3dDevice->SetRenderState( D3DRS_ZBIAS, 0 );
-
-    // Clear in begin state
     m_bBegin = FALSE;
 }
 
@@ -875,8 +902,8 @@ void draw_UV( const vector2& UV )
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
-    m_pUVs = NULL;
-    m_UV = UV;
+    m_pUVs[0] = NULL;
+    m_UV[0] = UV;
 }
 
 RVA(0x0026dd10, 0x27)
@@ -888,23 +915,13 @@ void draw_UV( f32 U, f32 V )
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
-    m_pUVs = NULL;
-    m_UV.X = U;
-    m_UV.Y = V;
+    m_pUVs[0] = NULL;
+    m_UV[0].X = U;
+    m_UV[0].Y = V;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-#if defined(HOBBIT_DRAW_LATER_AREA51_IMPLEMENTATION)
-void draw_Color( const xcolor& Color )
-{
-    ASSERT( m_bBegin );
-    ASSERT( m_Primitive != DRAW_SPRITES );
-
-    m_pColors = NULL;
-    m_Color = Color;
-}
-#else
 // Earlier PC by-value method and enabled guard; complete original body retained above.
 RVA(0x0026ddd0, 0x33)
 void draw_Color( xcolor Color )
@@ -917,7 +934,6 @@ void draw_Color( xcolor Color )
     m_pColors = NULL;
     m_Color = Color;
 }
-#endif
 
 RVA(0x0026de10, 0x64)
 void draw_Color( f32 R, f32 G, f32 B, f32 A )
@@ -939,13 +955,17 @@ void draw_Color( f32 R, f32 G, f32 B, f32 A )
 
 RVA(0x0026de80, 0x131) void draw_Vertex( const vector3& Vertex )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
     if( m_Is2D )
     {
         // Setup vertex in buffer
-        m_pActiveBuffer2d->UV       = m_UV;
+        m_pActiveBuffer2d->UV[0]       = m_UV[0];
+        m_pActiveBuffer2d->UV[1]       = m_UV[1];
         m_pActiveBuffer2d->Color    = m_Color;
         m_pActiveBuffer2d->Position = Vertex;
         m_pActiveBuffer2d->RHW      = 1.0f;
@@ -961,7 +981,8 @@ RVA(0x0026de80, 0x131) void draw_Vertex( const vector3& Vertex )
     else
     {
         // Setup vertex in buffer
-        m_pActiveBuffer3d->UV       = m_UV;
+        m_pActiveBuffer3d->UV[0]       = m_UV[0];
+        m_pActiveBuffer3d->UV[1]       = m_UV[1];
         m_pActiveBuffer3d->Color    = m_Color;
         m_pActiveBuffer3d->Position = Vertex;
 
@@ -977,13 +998,17 @@ RVA(0x0026de80, 0x131) void draw_Vertex( const vector3& Vertex )
 
 RVA(0x0026dfc0, 0x138) void draw_Vertex( f32 X, f32 Y, f32 Z )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
     if( m_Is2D )
     {
         // Setup vertex in buffer
-        m_pActiveBuffer2d->UV       = m_UV;
+        m_pActiveBuffer2d->UV[0]       = m_UV[0];
+        m_pActiveBuffer2d->UV[1]       = m_UV[1];
         m_pActiveBuffer2d->Color    = m_Color;
         m_pActiveBuffer2d->Position.Set( X, Y, Z );
         m_pActiveBuffer2d->RHW      = 1.0f;
@@ -999,7 +1024,8 @@ RVA(0x0026dfc0, 0x138) void draw_Vertex( f32 X, f32 Y, f32 Z )
     else
     {
         // Setup vertex in buffer
-        m_pActiveBuffer3d->UV       = m_UV;
+        m_pActiveBuffer3d->UV[0]       = m_UV[0];
+        m_pActiveBuffer3d->UV[1]       = m_UV[1];
         m_pActiveBuffer3d->Color    = m_Color;
         m_pActiveBuffer3d->Position.Set( X, Y, Z );
 
@@ -1015,18 +1041,30 @@ RVA(0x0026dfc0, 0x138) void draw_Vertex( f32 X, f32 Y, f32 Z )
 
 ///////////////////////////////////////////////////////////////////////////
 
-RVA(0x0026e100, 0x1a) void draw_UVs( const vector2* pUVs, s32 Count, s32 Stride )
+// PC indexed UV-set method; overload spelling reconstructed from its wrapper.
+RVA(0x0026e120, 0x2f) void draw_UVs( s32 UVSet, const vector2* pUVs, s32 Count, s32 Stride )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
-    m_pUVs = pUVs;
-    m_nUVs = Count;
-    m_sUVs = Stride;
+    m_pUVs[UVSet] = pUVs;
+    m_nUVs[UVSet] = Count;
+    m_sUVs[UVSet] = Stride;
+}
+
+RVA(0x0026e100, 0x1a) void draw_UVs( const vector2* pUVs, s32 Count, s32 Stride )
+{
+    draw_UVs( 0, pUVs, Count, Stride );
 }
 
 RVA(0x0026e150, 0x27) void draw_Colors( const xcolor*  pColors, s32 Count, s32 Stride )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
@@ -1037,6 +1075,9 @@ RVA(0x0026e150, 0x27) void draw_Colors( const xcolor*  pColors, s32 Count, s32 S
 
 RVA(0x0026e180, 0x27) void draw_Verts( const vector3* pVerts,  s32 Count, s32 Stride )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
@@ -1049,6 +1090,9 @@ RVA(0x0026e180, 0x27) void draw_Verts( const vector3* pVerts,  s32 Count, s32 St
 
 RVA(0x0026e1e0, 0x368) void draw_Index( s32 Index )
 {
+    if( !m_bEnabled )
+        return;
+
     ASSERT( m_bBegin );
     ASSERT( m_Primitive != DRAW_SPRITES );
 
@@ -1061,14 +1105,23 @@ RVA(0x0026e1e0, 0x368) void draw_Index( s32 Index )
         if( m_Is2D )
         {
             // Setup vertex in buffer
-            if( m_pUVs )
+            if( m_pUVs[0] )
             {
-                ASSERT( Index < m_nUVs );
-                m_pActiveBuffer2d->UV = m_pUVs[Index];
+                ASSERT( Index < m_nUVs[0] );
+                m_pActiveBuffer2d->UV[0] = m_pUVs[0][Index];
             }
             else
             {
-                m_pActiveBuffer2d->UV = m_UV;
+                m_pActiveBuffer2d->UV[0] = m_UV[0];
+            }
+            if( m_pUVs[1] )
+            {
+                ASSERT( Index < m_nUVs[1] );
+                m_pActiveBuffer2d->UV[1] = m_pUVs[1][Index];
+            }
+            else
+            {
+                m_pActiveBuffer2d->UV[1] = m_UV[1];
             }
             if( m_pColors )
             {
@@ -1095,19 +1148,28 @@ RVA(0x0026e1e0, 0x368) void draw_Index( s32 Index )
         else
         {
             // Setup vertex in buffer
-            if( m_pUVs )
+            if( m_pUVs[0] )
             {
-                ASSERT( Index < m_nUVs );
-                m_pActiveBuffer3d->UV = m_pUVs[Index];
+                ASSERT( Index < m_nUVs[0] );
+                m_pActiveBuffer3d->UV[0] = *((const vector2*)(((const byte*)m_pUVs[0])+m_sUVs[0]*Index));
             }
             else
             {
-                m_pActiveBuffer3d->UV = m_UV;
+                m_pActiveBuffer3d->UV[0] = m_UV[0];
+            }
+            if( m_pUVs[1] )
+            {
+                ASSERT( Index < m_nUVs[1] );
+                m_pActiveBuffer3d->UV[1] = *((const vector2*)(((const byte*)m_pUVs[1])+m_sUVs[1]*Index));
+            }
+            else
+            {
+                m_pActiveBuffer3d->UV[1] = m_UV[1];
             }
             if( m_pColors )
             {
                 ASSERT( Index < m_nColors );
-                m_pActiveBuffer3d->Color = m_pColors[Index];
+                m_pActiveBuffer3d->Color = *((const xcolor*)(((const byte*)m_pColors)+m_sColors*Index));
             }
             else
             {
@@ -1115,7 +1177,7 @@ RVA(0x0026e1e0, 0x368) void draw_Index( s32 Index )
             }
 
             ASSERT( Index < m_nVerts );
-            m_pActiveBuffer3d->Position = m_pVerts[Index];
+            m_pActiveBuffer3d->Position = *((const vector3*)(((const byte*)m_pVerts)+m_sVerts*Index));
 
             // Advance buffer pointer
             m_pActiveBuffer3d++;
@@ -1132,6 +1194,9 @@ RVA(0x0026e1e0, 0x368) void draw_Index( s32 Index )
 
 RVA(0x0026e550, 0x47) void draw_Execute( const s16* pIndices, s32 NIndices )
 {
+    if( !m_bEnabled )
+        return;
+
     s32     i;
 
     ASSERT( m_bBegin );

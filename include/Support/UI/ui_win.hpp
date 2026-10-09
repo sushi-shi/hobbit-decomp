@@ -91,6 +91,9 @@ public:
     virtual void            SetPosition         ( const irect& Position );
     virtual const irect&    GetPosition         ( void ) const;
     virtual const irect&    GetCreatePosition   ( void ) const;
+    // Reconstructed descriptive API; original spelling and const qualifier unknown.
+    // Actual mouse-capture query: base FALSE, slider returns its xbool mouse-down state.
+    virtual xbool           IsMouseCaptured      ( void ) const { return FALSE; }
     s32                     GetWidth            ( void ) const;
     s32                     GetHeight           ( void ) const;
     ui_win*                 GetWindowAtXY       ( s32 x, s32 y ) const;
@@ -106,6 +109,10 @@ public:
     virtual const xcolor&   GetLabelColor       ( void ) const;
     virtual const xwstring& GetLabel            ( void ) const;
     virtual void            SetLabelFlags       ( u32 Flags );
+
+    // Reconstructed descriptive API and nominal return type; original declaration unknown.
+    // Preserve the actual assignment callee return in EAX.
+    virtual const xstring&  SetFontName          ( const char* Name ) { return m_FontName = Name; }
 
     void                    SetControlID        ( s32 ID );
     s32                     GetControlID        ( void ) const;

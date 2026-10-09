@@ -163,6 +163,9 @@ struct anim_key_stream {
 
 private:
     void GrabKey(s32 iFrame, anim_key& Key);
+#if !defined(HOBBIT_ANIMATION_LATER_KEY_ACCESS)
+    void GrabAndInterpKeys(s32 iFrame, f32 T, anim_key& Key);
+#endif
 
     static s32 s_SF;
     static s32 s_RF;

@@ -8,7 +8,7 @@ view and computed once per process:
     the reviewed instruction/typed-data manifest supplies admitted fields
     while preserving its evidence and executable hash. No pointer-sized
     integer scan is promoted to relocation evidence;
-  * the admitted decoded E8/E9 rel32 call index (target -> call/jmp sites);
+  * the Gruntz E8/E9 rel32 candidate index (target -> call/jmp sites);
   * the printable-string table outside .text.
 
 Nothing here knows what a label MEANS - that is hobbit.sema.index's job.
@@ -119,29 +119,24 @@ class Image:
         return out
 
     # --- .text call graph ---------------------------------------------------
+    # Ported from Gruntz 7d4bd55b99e32f084834d991badf7609889481f4, sema/image.py.
 
     @property
     def call_index(self) -> dict[int, list[tuple[int, int]]]:
-        """{target_rva: [(site_rva, opcode)]} for admitted decoded E8/E9 rel32 instructions in .text; the
-        hash-bound census proves boundaries and bytes revalidate each target."""
+        """{target_rva: [(site_rva, opcode)]} for every E8/E9 rel32 in .text
+        whose target lands back in .text."""
         if self._calls is None:
-            import hashlib
-            from hobbit.core.paths import RETAIL
-            from hobbit.core.tsv import read
-            path = RETAIL / "pc/direct_branches.tsv"
-            banner, header, rows = read(path)
-            if "# image-sha256: " + hashlib.sha256(self.pe.data).hexdigest() not in banner:
-                raise ValueError(f"{path}: direct branch evidence does not identify this image")
+            sec = self.pe.section(".text")
+            lo, rp, rsz = sec["va"], sec["rptr"], sec["rsize"]
+            tb = self.pe.data[rp:rp + rsz]
             idx: dict[int, list[tuple[int, int]]] = {}
-            for row in rows:
-                site, target = int(row["site_rva"], 0), int(row["target_rva"], 0)
-                op = int(row["opcode"], 0)
-                code = self.read(site, 5)
-                if (op not in (0xe8, 0xe9) or code is None or code[0] != op
-                        or site + 5 + struct.unpack_from("<i", code, 1)[0] != target
-                        or not self.is_text(site) or not self.is_text(target)):
-                    raise ValueError(f"{path}: invalid decoded direct branch at {site:#x}")
-                idx.setdefault(target, []).append((site, op))
+            for i in range(len(tb) - 4):
+                op = tb[i]
+                if op != 0xE8 and op != 0xE9:
+                    continue
+                tgt = lo + i + 5 + struct.unpack_from("<i", tb, i + 1)[0]
+                if self.text_lo <= tgt < self.text_hi:
+                    idx.setdefault(tgt, []).append((lo + i, op))
             self._calls = idx
         return self._calls
 

@@ -62180,6 +62180,9 @@ site_rva	kind
 0x2fcfa0	dir32
 0x2fcfa4	dir32
 0x2fcfac	dir32
+0x2fcfb0	dir32
+0x2fcfb4	dir32
+0x2fcfcc	dir32
 0x2fcfd0	dir32
 0x2fcfd4	dir32
 0x2fcfd8	dir32
@@ -69472,6 +69475,8 @@ site_rva	kind
 0x355cec	dir32
 0x355d34	dir32
 0x355d60	dir32
+0x355da4	dir32
+0x355ddc	dir32
 0x355dec	dir32
 0x355e1c	dir32
 0x355e4c	dir32

@@ -335,6 +335,11 @@ inline void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, 
     s_RO = s_SO + s_ScaleFormatOverhead[s_SF] + s_ScaleFormatSize[s_SF] * nFrames;
     s_TO = s_RO + s_RotationFormatOverhead[s_RF] + s_RotationFormatSize[s_RF] * nFrames;
 
+    GrabAndInterpKeys(iFrame, T, Key);
+}
+
+RVA(0x140000, 0x42a)
+void anim_key_stream::GrabAndInterpKeys(s32 iFrame, f32 T, anim_key& Key) {
     // The earlier PC decoder completes constant streams once, and interpolates
     // only varying streams. Packed vector records have three genuine floats.
     s32 nHandled = 0;
@@ -343,7 +348,9 @@ inline void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, 
         ++nHandled;
     } else if (s_SF == SINGLE_VALUE) {
         const vector3p& V = ((vector3p*)(s_pData + s_SO))[0];
-        Key.Scale.Set(V.X, V.Y, V.Z);
+        Key.Scale.X = V.X;
+        Key.Scale.Y = V.Y;
+        Key.Scale.Z = V.Z;
         ++nHandled;
     }
 
@@ -351,7 +358,8 @@ inline void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, 
         const u16* pR = &((u16*)(s_pData + s_RO))[iFrame << 2];
         quaternion Q0;
         quaternion Q1;
-        Q0.X = ((f32)pR[0] * (2.0f / 65535.0f)) - 1.0f;
+        // Packed quaternion factor: 2.0f / 65535.0f rounded to f32.
+        Q0.X = ((f32)pR[0] * DATA_COMPGEN(0x002f3bf0, 0.00003051804378628731f)) - 1.0f;
         Q0.Y = ((f32)pR[1] * (2.0f / 65535.0f)) - 1.0f;
         Q0.Z = ((f32)pR[2] * (2.0f / 65535.0f)) - 1.0f;
         Q0.W = ((f32)pR[3] * (2.0f / 65535.0f)) - 1.0f;
@@ -393,11 +401,15 @@ inline void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, 
     }
 
     if (s_TF == CONSTANT_VALUE) {
-        Key.Translation.Zero();
+        Key.Translation.X = 0.0f;
+        Key.Translation.Y = 0.0f;
+        Key.Translation.Z = 0.0f;
         ++nHandled;
     } else if (s_TF == SINGLE_VALUE) {
         const vector3p& V = ((vector3p*)(s_pData + s_TO))[0];
-        Key.Translation.Set(V.X, V.Y, V.Z);
+        Key.Translation.X = V.X;
+        Key.Translation.Y = V.Y;
+        Key.Translation.Z = V.Z;
         ++nHandled;
     }
     if (nHandled == 3)
@@ -406,18 +418,26 @@ inline void anim_key_stream::GetInterpKey(byte* pData, s32 nFrames, s32 iFrame, 
     if (s_SF == PRECISION_32) {
         const vector3p& V0 = ((vector3p*)(s_pData + s_SO))[iFrame];
         const vector3p& V1 = ((vector3p*)(s_pData + s_SO))[iFrame+1];
-        Key.Scale.Set(V0.X + T*(V1.X-V0.X), V0.Y + T*(V1.Y-V0.Y), V0.Z + T*(V1.Z-V0.Z));
+        Key.Scale.X = V0.X + T*(V1.X-V0.X);
+        Key.Scale.Y = V0.Y + T*(V1.Y-V0.Y);
+        Key.Scale.Z = V0.Z + T*(V1.Z-V0.Z);
     }
     if (s_RF == CONSTANT_VALUE) {
-        Key.Rotation.Identity();
+        Key.Rotation.X = 0.0f;
+        Key.Rotation.Y = 0.0f;
+        Key.Rotation.Z = 0.0f;
+        Key.Rotation.W = 1.0f;
     } else if (s_RF == PRECISION_32) {
-        Key.Rotation = Blend(((quaternion*)(s_pData + s_RO))[iFrame],
-                             ((quaternion*)(s_pData + s_RO))[iFrame+1], T);
+        const quaternion& Q0 = ((quaternion*)(s_pData + s_RO))[iFrame];
+        const quaternion& Q1 = ((quaternion*)(s_pData + s_RO))[iFrame+1];
+        Key.Rotation = Blend(Q0, Q1, T);
     }
     if (s_TF == PRECISION_32) {
         const vector3p& V0 = ((vector3p*)(s_pData + s_TO))[iFrame];
         const vector3p& V1 = ((vector3p*)(s_pData + s_TO))[iFrame+1];
-        Key.Translation.Set(V0.X + T*(V1.X-V0.X), V0.Y + T*(V1.Y-V0.Y), V0.Z + T*(V1.Z-V0.Z));
+        Key.Translation.X = V0.X + T*(V1.X-V0.X);
+        Key.Translation.Y = V0.Y + T*(V1.Y-V0.Y);
+        Key.Translation.Z = V0.Z + T*(V1.Z-V0.Z);
     }
 }
 #endif

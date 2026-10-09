@@ -688,7 +688,7 @@ const xwstring& ui_listbox::GetSelectedItemLabel( void ) const
 
 //=========================================================================
 
-s32 ui_listbox::GetSelectedItemData( void ) const
+RVA(0x2a4c60, 0x14) s32 ui_listbox::GetSelectedItemData( void ) const
 {
     ASSERT( (m_iSelection >= 0) && (m_iSelection < m_Items.GetCount()) );
 
@@ -753,7 +753,7 @@ s32 ui_listbox::FindItemByData( s32 Data )
 
 //=========================================================================
 
-s32 ui_listbox::GetSelection( void ) const
+RVA(0x2a4c80, 0x7) s32 ui_listbox::GetSelection( void ) const
 {
     return m_iSelection;
 }

@@ -41,12 +41,12 @@ enum controls
     IDC_LIST
 };
 
-ui_manager::control_tem ListControls[] =
+DATA(0x355d9c) ui_manager::control_tem ListControls[] =
 {
     { IDC_LIST, 0, "listbox", 0, 0, 0, 0, 0, 0, 1, 1, ui_win::WF_VISIBLE },
 };
 
-ui_manager::dialog_tem ListDialog =
+DATA(0x355dcc) ui_manager::dialog_tem ListDialog =
 {
     0,
     1, 1,
@@ -59,7 +59,7 @@ ui_manager::dialog_tem ListDialog =
 //  Factory function
 //=========================================================================
 
-void ui_dlg_list_register( ui_manager* pManager )
+RVA(0x2a6130, 0x19) void ui_dlg_list_register( ui_manager* pManager )
 {
     pManager->RegisterDialogClass( "ui_list", &ListDialog, &ui_dlg_list_factory );
 }
@@ -68,7 +68,7 @@ void ui_dlg_list_register( ui_manager* pManager )
 //  Factory function
 //=========================================================================
 
-ui_win* ui_dlg_list_factory( s32 UserID, ui_manager* pManager, ui_manager::dialog_tem* pDialogTem, const irect& Position, ui_win* pParent, s32 Flags, void* pUserData )
+RVA(0x2a6150, 0x7f) ui_win* ui_dlg_list_factory( s32 UserID, ui_manager* pManager, ui_manager::dialog_tem* pDialogTem, const irect& Position, ui_win* pParent, s32 Flags, void* pUserData )
 {
     ui_dlg_list* pDialog = new ui_dlg_list;
     pDialog->Create( UserID, pManager, pDialogTem, Position, pParent, Flags, pUserData );
@@ -80,20 +80,20 @@ ui_win* ui_dlg_list_factory( s32 UserID, ui_manager* pManager, ui_manager::dialo
 //  ui_dlg_list
 //=========================================================================
 
-ui_dlg_list::ui_dlg_list( void )
+RVA(0x2a61d0, 0x12) ui_dlg_list::ui_dlg_list( void )
 {
 }
 
 //=========================================================================
 
-ui_dlg_list::~ui_dlg_list( void )
+RVA(0x2a6210, 0x4f) ui_dlg_list::~ui_dlg_list( void )
 {
     Destroy();
 }
 
 //=========================================================================
 
-xbool ui_dlg_list::Create( s32                        UserID,
+RVA(0x2a6260, 0xfa) xbool ui_dlg_list::Create( s32                        UserID,
                            ui_manager*                pManager,
                            ui_manager::dialog_tem*    pDialogTem,
                            const irect&               Position,
@@ -114,7 +114,7 @@ xbool ui_dlg_list::Create( s32                        UserID,
     Success = ui_dialog::Create( UserID, pManager, pDialogTem, Position, pParent, Flags );
 
     m_pResultPtr        = 0;
-    m_BackgroundColor   = FECOL_DIALOG2;
+    m_BackgroundColor   = xcolor(0,20,30,255);
 
     m_pList = (ui_listbox*)FindChildByID( IDC_LIST );
 
@@ -187,7 +187,7 @@ void ui_dlg_list::SetResultPtr( s32* pResultPtr )
 
 //=========================================================================
 
-void ui_dlg_list::OnNotify( ui_win* pWin, ui_win* pSender, s32 Command, void* pData )
+RVA(0x2a6480, 0x70) void ui_dlg_list::OnNotify( ui_win* pWin, ui_win* pSender, s32 Command, void* pData )
 {
     (void)pWin;
     (void)pSender;
@@ -211,7 +211,7 @@ void ui_dlg_list::OnNotify( ui_win* pWin, ui_win* pSender, s32 Command, void* pD
 
 //=========================================================================
 
-void ui_dlg_list::OnLBDown ( ui_win* pWin )
+RVA(0x2a64f0, 0x1e) void ui_dlg_list::OnLBDown ( ui_win* pWin )
 {
     (void)pWin;
 #ifdef TARGET_PC
@@ -225,13 +225,14 @@ void ui_dlg_list::OnLBDown ( ui_win* pWin )
 
 //=========================================================================
 
-void ui_dlg_list::OnCursorMove ( ui_win* pWin, s32 x, s32 y )
+RVA(0x2a6510, 0x36) void ui_dlg_list::OnCursorMove ( ui_win* pWin, s32 x, s32 y )
 {
     (void)pWin;
     (void)x;
     (void)y;
 #ifdef TARGET_PC
-    if( m_Position.PointInRect( x, y ) )
+    if( (x >= m_Position.l) && (x <= m_Position.r) &&
+        (y >= m_Position.t) && (y <= m_Position.b) )
         m_InsideListBox = TRUE;
     else
         m_InsideListBox = FALSE;

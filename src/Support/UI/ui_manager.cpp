@@ -1656,6 +1656,7 @@ ui_dialog* ui_manager::OpenDialog( s32 UserID, const char* ClassName, irect Posi
         pDialog = (ui_dialog*)pFactory( UserID, this, pDialogTem, Position, pParent, Flags, pUserData );
         ASSERT( pDialog );
 
+        pDialog->m_ClassName = ClassName;
         pDialog->m_CreatePosition = CreatePosition;
         pDialog->m_XRes = XRes;
         pDialog->m_YRes = YRes;
