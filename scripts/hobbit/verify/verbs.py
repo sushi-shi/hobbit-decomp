@@ -260,26 +260,16 @@ def cmd_status(argv) -> int:
 
 
 def refresh_readme_block(report=None) -> bool:
-    """Refresh derived scores only when the report's source evidence is current.
+    """Re-render the derived block from the comparison report and ledger.
 
-    The ledger remains manual; rendering must never bank stale measurements
-    against changed source or mutate the baseline.
+    Follow Gruntz verify/verbs.py at 7d4bd55b99e32f084834d991badf7609889481f4:
+    rendering does not gate on native-object age or fingerprint freshness.
+    The build graph refreshes measurement inputs before this edge; standalone
+    rendering describes the supplied report. The banked ledger stays manual.
     """
     from hobbit.model import resolve
     from hobbit.verify.universe import engine_universe
-    doc, cur, base, fp, stale, rvas = load_state(report)
-    observed = _report_object_age(report)
-    if observed is not None and observed[1] > 1.0:
-        print("README score refresh refused: report predates native objects; "
-              "run `hobbit build` before refreshing measured scores.", file=sys.stderr)
-        return False
-    # fingerprinter discovers stale units lazily when a function is queried.
-    for unit, name in cur:
-        fp(unit, name)
-    if stale:
-        print("README score refresh refused: source fingerprints are stale; "
-              "run `hobbit build` before refreshing measured scores.", file=sys.stderr)
-        return False
+    doc, cur, base, fp, _stale, rvas = load_state(report)
     model = resolve()
     target_doc, target_cur, sizes, other = rm.target_rollup(doc, model, rvas)
     umeas = scores.unit_measures(target_doc)

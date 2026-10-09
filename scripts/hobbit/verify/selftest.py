@@ -4406,40 +4406,28 @@ class ReadmeFreshnessControls(unittest.TestCase):
                 save.assert_not_called()
             self.assertEqual(baseline.read_bytes(), before)
 
-    def test_stale_evidence_refuses_before_model_or_ledger(self):
-        from hobbit.verify import readme as rm, verbs
-        import contextlib
-        import io
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td)
-            path, refresh = self._refresh(root)
-            baseline = root / "baseline.tsv"
-            baseline.write_text("banked evidence\n")
-            path.write_text("# Fixture\nexisting measured scores\n")
-            before = path.read_bytes(), baseline.read_bytes()
-            base = {("unit", "function"): {"best": 100, "hist": 100}}
-            with mock.patch.object(verbs, "load_state", return_value=(
-                    {}, {}, base, {}, {"unit"}, {})), \
-                    mock.patch("hobbit.model.resolve") as resolve, \
-                    mock.patch.object(verbs, "bank_rows") as bank, \
-                    mock.patch.object(rm, "render_block") as render, \
-                    contextlib.redirect_stderr(io.StringIO()) as err:
-                self.assertFalse(refresh())
-                resolve.assert_not_called()
-                bank.assert_not_called()
-                render.assert_not_called()
-            self.assertIn("refresh refused", err.getvalue())
-            self.assertEqual(before, (path.read_bytes(), baseline.read_bytes()))
-            self.assertEqual(base, {("unit", "function"): {"best": 100, "hist": 100}})
-
-    def test_lazy_source_fingerprints_are_checked_before_banking(self):
+    def test_stale_fingerprints_do_not_block_rendering_or_write_the_bank(self):
         from hobbit.verify import verbs
-        import contextlib
-        import io
         with tempfile.TemporaryDirectory() as td:
             path, refresh = self._refresh(Path(td))
-            before = path.read_bytes()
-            from hobbit.verify import fingerprints
+            baseline = Path(td) / "baseline.tsv"
+            baseline.write_text("banked evidence\n")
+            before = baseline.read_bytes()
+            with mock.patch.object(verbs, "load_state", return_value=(
+                    {}, {}, {}, {}, {"unit"}, {})), \
+                    mock.patch.object(verbs, "_report_object_age",
+                                      side_effect=AssertionError("renderer age gate")), \
+                    mock.patch.object(verbs.bl, "write") as save:
+                self.assertTrue(refresh())
+                self.assertFalse(refresh())
+                save.assert_not_called()
+            self.assertIn("MAX by module:", path.read_text())
+            self.assertEqual(baseline.read_bytes(), before)
+
+    def test_lazy_stale_fingerprint_still_renders_the_report(self):
+        from hobbit.verify import verbs, fingerprints
+        with tempfile.TemporaryDirectory() as td:
+            path, refresh = self._refresh(Path(td))
             source = Path(td) / "unit.cpp"
             source.write_text("void function() {}\n")
             cached_hash = fingerprints.cpp_hash(str(source))
@@ -4450,17 +4438,13 @@ class ReadmeFreshnessControls(unittest.TestCase):
                         {("unit", "function"): "old-function-hash"})):
                 fingerprint, _, stale = fingerprints.fingerprinter()
             self.assertFalse(stale, "staleness is discovered lazily")
-
             with mock.patch.object(verbs, "load_state", return_value=(
-                    {}, {("unit", "function"): 100}, {}, fingerprint, stale, {})), \
-                    mock.patch.object(verbs, "bank_rows") as bank, \
-                    mock.patch("hobbit.model.resolve") as resolve, \
-                    contextlib.redirect_stderr(io.StringIO()):
-                self.assertFalse(refresh())
-                bank.assert_not_called()
-                resolve.assert_not_called()
+                    {}, {("unit", "function"): 50}, {}, fingerprint, stale, {})), \
+                    mock.patch.object(verbs.bl, "write") as save:
+                self.assertTrue(refresh())
+                save.assert_not_called()
             self.assertEqual(stale, {"unit"})
-            self.assertEqual(path.read_bytes(), before)
+            self.assertIn("MAX by module:", path.read_text())
 
     def test_table_reports_current_source_max_and_historical_peak(self):
         from hobbit.verify import readme as rm
@@ -4480,10 +4464,8 @@ class ReadmeFreshnessControls(unittest.TestCase):
         self.assertNotIn("## Match status", block)
         self.assertEqual(ledger, original)
 
-    def test_report_older_than_native_object_is_refused_then_refreshes(self):
+    def test_report_older_than_native_object_still_renders(self):
         from hobbit.verify import verbs
-        import contextlib
-        import io
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
             real_age = verbs._report_object_age
@@ -4495,24 +4477,16 @@ class ReadmeFreshnessControls(unittest.TestCase):
             obj.write_bytes(b"native object fixture")
             os.utime(report, (1000, 1000))
             os.utime(obj, (1002, 1002))
-            before = path.read_bytes(), report.read_bytes(), obj.read_bytes()
+            before = report.read_bytes(), obj.read_bytes()
             with mock.patch.object(verbs, "REPO", root), \
                     mock.patch.object(verbs, "_report_object_age", real_age), \
-                    mock.patch.object(verbs, "bank_rows", wraps=verbs.bank_rows) as bank, \
-                    mock.patch("hobbit.model.resolve", wraps=__import__(
-                        "hobbit.model", fromlist=["resolve"]).resolve) as resolve, \
-                    contextlib.redirect_stderr(io.StringIO()) as err:
-                self.assertFalse(refresh(report))
-                bank.assert_not_called()
-                resolve.assert_not_called()
-                self.assertEqual(before, (path.read_bytes(), report.read_bytes(), obj.read_bytes()))
-                os.utime(report, (1002, 1002))
+                    mock.patch.object(verbs.bl, "write") as save:
+                self.assertGreater(real_age(report)[1], 1.0)
                 self.assertTrue(refresh(report))
-                bank.assert_called_once()
                 self.assertFalse(refresh(report))
-            self.assertIn("report predates native objects", err.getvalue())
-            self.assertEqual(report.read_bytes(), before[1])
-            self.assertEqual(obj.read_bytes(), before[2])
+                save.assert_not_called()
+            self.assertIn("MAX by module:", path.read_text())
+            self.assertEqual(before, (report.read_bytes(), obj.read_bytes()))
 
     def test_readme_is_not_a_bank_input(self):
         # writing it must never be able to block `bank`
